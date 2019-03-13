@@ -1,0 +1,31 @@
+{
+  "name": "cs2102-group-18",
+  "version": "1.0.0",
+  "private": true,
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "DEBUG=app:* node app/scripts/start.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Ang-YC/cs2102-group-18.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Ang-YC/cs2102-group-18/issues"
+  },
+  "homepage": "https://github.com/Ang-YC/cs2102-group-18#readme",
+  "dependencies": {
+    "cookie-parser": "^1.4.4",
+    "debug": "^4.1.1",
+    "dotenv": "^7.0.0",
+    "express": "^4.16.4",
+    "hbs": "^4.0.3",
+    "http-errors": "^1.7.2",
+    "morgan": "^1.9.1",
+    "pg": "^7.8.2"
+  }
+}
