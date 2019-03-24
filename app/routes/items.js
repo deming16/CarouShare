@@ -8,15 +8,15 @@ router.get('/test', function (req, res, next) {
   res.send('test items');
 });
 
-// @route   GET items/test
-// @desc    Test get items
+// @route   GET items
+// @desc    Get all items
 // @access  Public
 router.get('/', function (req, res, next) {
   res.send(`Retrieving all items`);
 });
 
-// @route   GET items/test
-// @desc    Test get items
+// @route   GET items/:user
+// @desc    Get all items for user
 // @access  Public
 router.get('/:user', function (req, res, next) {
   res.send(`Retrieving items for ${req.params.user}`);
