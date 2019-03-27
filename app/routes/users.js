@@ -22,6 +22,13 @@ router.get('/:user', function (req, res, next) {
     res.send(`Retrieving user ${req.params.user}`);
 });
 
+// @route   GET users/notifications/:user
+// @desc    Get updates on info user subscribed to
+// @access  Private
+router.get('/notifications/:user', function (req, res, next) {
+    res.send(`Update notification for user ${req.params.user}`);
+});
+
 // @route   POST user/add
 // @desc    Add new user
 // @access  Private
