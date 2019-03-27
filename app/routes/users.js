@@ -22,4 +22,18 @@ router.get('/:user', function (req, res, next) {
     res.send(`Retrieving user ${req.params.user}`);
 });
 
+// @route   POST user/add
+// @desc    Add new user
+// @access  Private
+router.post('/users/add', function (req, res, next) {
+    res.send(`User added`);
+});
+
+// @route   PUT users/update/:user
+// @desc    Update user
+// @access  Private
+router.put('/users/update/:user', function (req, res, next) {
+    res.send(`User ${req.params.user} updated`);
+});
+
 module.exports = router;
