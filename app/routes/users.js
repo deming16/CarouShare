@@ -13,6 +13,7 @@ router.get('/test', function (req, res, next) {
 // @access  Public
 router.get('/', function (req, res, next) {
     res.send('Retrieving all users');
+    // SELECT uid FROM Users;
 });
 
 // @route   GET users/:user
@@ -20,6 +21,7 @@ router.get('/', function (req, res, next) {
 // @access  Public
 router.get('/:user', function (req, res, next) {
     res.send(`Retrieving user ${req.params.user}`);
+    // SELECT * FROM Users WHERE uid = ${req.params.user}
 });
 
 // @route   GET users/notifications/:user

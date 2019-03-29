@@ -13,6 +13,7 @@ router.get('/test', function (req, res, next) {
 // @access  Public
 router.get('/', function (req, res, next) {
   res.send(`Retrieving all items`);
+  // 'SELECT * FROM Item;' 
 });
 
 // @route   GET items/:item
@@ -20,6 +21,7 @@ router.get('/', function (req, res, next) {
 // @access  Public
 router.get('/:item', function (req, res, next) {
   res.send(`Retrieving item ${req.params.item}`);
+  // 'SELECT * FROM Item WHERE ${req.params.item} = iid;'
 });
 
 // @route   POST items/add
