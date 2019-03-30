@@ -20,27 +20,31 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Routes
-// Homepage and validation routes
+// Homepage and account routes
 const indexRouter = require('./routes/index');
-const loginRouter = require('./routes/login');
-const signupRouter = require('./routes/signup');
+const loginRouter = require('./routes/account/login');
+const signupRouter = require('./routes/account/signup');
 app.use('/', indexRouter);
-app.use('/login', loginRouter);
-app.use('/signup', signupRouter);
+app.use('/account/login', loginRouter);
+app.use('/account/signup', signupRouter);
+
+// Profile routes
+const usersRouter = require('./routes/profile/index');
+const followsRouter = require('./routes/profile/follows');
+const likesRouter = require('./routes/profile/likes');
+app.use('/profile/follows', followsRouter);
+app.use('/profile/likes', likesRouter);
+app.use('/profile', usersRouter);
 
 // User dashboard and contents routes
 const dashboardRouter = require('./routes/dashboard');
-const followsRouter = require('./routes/follows');
-const likesRouter = require('./routes/likes');
 app.use('/dashboard', dashboardRouter);
-app.use('/follows', followsRouter);
-app.use('/likes', likesRouter);
 
-// Browsing routes
+
+// items routes
 const itemsRouter = require('./routes/items');
-const usersRouter = require('./routes/users');
 app.use('/items', itemsRouter);
-app.use('/users', usersRouter);
+
 
 // Catch 404 and forward to error handler
 app.use((req, res, next) => {

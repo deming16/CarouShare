@@ -1,11 +1,11 @@
 var express = require('express');
 var router = express.Router();
 
-// @route   GET follows
-// @desc    Display Follow List
+// @route   GET profile/likes
+// @desc    Display Likes List
 // @access  Public
 router.get('/', function (req, res, next) {
-  res.render('follows');
+  res.render('profile/likes');
 });
 
 module.exports = router;
