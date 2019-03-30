@@ -1,8 +1,15 @@
-<h1>{{user.uid}}'s Profile</h1>
-<h2>personal details</h2>
-<ul>
-  <li>mobile - {{user.mobile}}</li>
-  <li>email - {{user.email}}</li>
-  <li>address - {{user.address}}</li>
-</ul>
-<h3>email, address mobile</h3>
+<header id="main-header">
+  <div class="primary-overlay">
+    {{> _navbar}}
+  </div>
+</header>
+
+<div class="container">
+  <h1>{{user.uid}}'s Profile</h1>
+  <h2>personal details</h2>
+  <ul>
+    <li>mobile - {{user.mobile}}</li>
+    <li>email - {{user.email}}</li>
+    <li>address - {{user.address}}</li>
+  </ul>
+</div>

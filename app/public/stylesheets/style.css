@@ -1,8 +1,21 @@
 body {
-  padding: 50px;
+  padding: 0px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
 a {
   color: #00B7FF;
 }
+
+#main-header {
+  background: url('../img/headerBackground.png');
+  background-attachment: fixed;
+  background-position: center;
+  min-height: 500px;
+}
+
+#main-header .primary-overlay {
+  background: #CB4335;
+  min-height: 500px;
+  opacity: 0.9;
+} 
