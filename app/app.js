@@ -1,5 +1,6 @@
 const createError = require('http-errors');
 const express = require('express');
+const hbs = require('hbs');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
