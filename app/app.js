@@ -40,7 +40,6 @@ app.use('/profile', usersRouter);
 const dashboardRouter = require('./routes/dashboard');
 app.use('/dashboard', dashboardRouter);
 
-
 // items routes
 const itemsRouter = require('./routes/items');
 app.use('/items', itemsRouter);

@@ -82,7 +82,7 @@ CREATE TABLE Listing (
 	title				VARCHAR(64),
 	status				VARCHAR(64),
 	delivery_method		VARCHAR(64),
-	min_bid				NUMERIC,
+	min_bid				NUMERIC,2
 	succ_bid			NUMERIC,
 	bid_start			TIMESTAMP,
 	bid_end				TIMESTAMP,
