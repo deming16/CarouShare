@@ -1,11 +1,11 @@
 var express = require('express');
 var router = express.Router();
 
-// @route   GET index
-// @desc    Display home page
+// @route   GET login
+// @desc    Display login page
 // @access  Public
 router.get('/', function (req, res, next) {
-    res.render('index', { title: 'Express' });
+  res.render('login');
 });
 
 module.exports = router;
