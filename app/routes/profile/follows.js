@@ -25,7 +25,6 @@ router.get('/following/:user', function (req, res, next) {
       if (result.rows.length == 0) {
         res.send('this user is not following anyone');
       } else {
-        console.log(result.rows);
         res.render('profile/follows', { isFollower: false, list: result.rows });
       }
     });
