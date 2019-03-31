@@ -2,19 +2,14 @@ var express = require('express');
 var router = express.Router();
 const db = require('../../db');
 
-// @route   GET profile/test
-// @desc    Test profile route
-// @access  Public
-router.get('/test', function (req, res, next) {
-    res.send('respond with a resource');
-});
-
 // @route   GET /profile
 // @desc    Get all users
 // @access  Public
 router.get('/', function (req, res, next) {
-    res.render('profile/index');
-    // SELECT uid FROM Users;
+    db.query('SELECT uid FROM Users')
+        .then(result => {
+            res.render('profile/index', { users: result.rows });
+        });
 });
 
 // @route   GET profile/:user
@@ -23,9 +18,13 @@ router.get('/', function (req, res, next) {
 router.get('/:user', function (req, res, next) {
     db.query('SELECT * FROM Users WHERE uid = $1::text', [req.params.user])
         .then(result => {
-            res.render('profile/userProfile', { user: result.rows[0] });
-        });
+            if (result.rows.length === 0) {
+                res.send('user does not exist');
+            } else {
+                res.render('profile/userProfile', { user: result.rows[0] });
+            }
 
+        });
 });
 
 module.exports = router;

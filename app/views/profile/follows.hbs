@@ -1,1 +1,17 @@
-<h1>Follow List</h1>
+{{#if isFollower}}
+<h1>Followers</h1>
+{{else}}
+<h1>Following</h1>
+{{/if}}
+
+<ul>
+  {{#if isFollower}}
+  {{#each list}}
+  <li>{{this.follower}}</li>
+  {{/each}}
+  {{else}}
+  {{#each list}}
+  <li>{{this.followee}}</li>
+  {{/each}}
+  {{/if}}
+</ul>
