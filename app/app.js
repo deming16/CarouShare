@@ -82,20 +82,10 @@ const indexRouter = require('./routes/index');
 app.use('/', indexRouter);
 
 // Profile routes
-const usersRouter = require('./routes/profile/index');
-const followsRouter = require('./routes/profile/follows');
-const likesRouter = require('./routes/profile/likes');
-app.use('/profile/follows', followsRouter);
-app.use('/profile/likes', likesRouter);
-app.use('/profile', usersRouter);
+const usersRouter = require('./routes/user');
+app.use('/user', usersRouter);
 
-// User dashboard and contents routes
-const dashboardRouter = require('./routes/dashboard');
-app.use('/dashboard', dashboardRouter);
 
-// items routes
-const itemsRouter = require('./routes/items');
-app.use('/items', itemsRouter);
 
 // Catch 404 and forward to error handler
 app.use((req, res, next) => {

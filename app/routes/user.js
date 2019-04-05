@@ -1,18 +1,8 @@
 var express = require('express');
 var router = express.Router();
-const db = require('../../db');
+const db = require('../db');
 
-// @route   GET /profile
-// @desc    Get all users
-// @access  Public
-router.get('/', function (req, res, next) {
-    db.query('SELECT uid FROM Users')
-        .then(result => {
-            res.render('profile/index', { users: result.rows });
-        });
-});
-
-// @route   GET profile/:user
+// @route   GET user/:user
 // @desc    Get info on one user
 // @access  Public
 router.get('/:user', function (req, res, next) {
@@ -21,7 +11,7 @@ router.get('/:user', function (req, res, next) {
             if (result.rows.length === 0) {
                 res.send('user does not exist');
             } else {
-                res.render('profile/userProfile', { user: result.rows[0] });
+                res.render('user', { user: result.rows[0] });
             }
 
         });
