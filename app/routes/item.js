@@ -43,4 +43,11 @@ router.post('/:itemId/like/delete', (req, res, next) => {
   res.send(`Item ${req.params.itemId} Unliked`);
 });
 
+// @route   POST item/:itemId/review
+// @desc    Add new review for item
+// @access  Private
+router.post('/:itemId/review', (req, res, next) => {
+  res.send(`Review added for item ${req.params.itemId}`);
+});
+
 module.exports = router;
