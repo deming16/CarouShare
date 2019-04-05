@@ -81,9 +81,11 @@ app.use((req, res, next) => {
 const indexRouter = require('./routes/index');
 const userRouter = require('./routes/user');
 const adminRouter = require('./routes/admin');
+const itemRouter = require('./routes/item');
 app.use('/', indexRouter);
 app.use('/user', userRouter);
 app.use('/admin', adminRouter);
+app.use('/item', itemRouter);
 
 
 
