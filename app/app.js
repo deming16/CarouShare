@@ -79,11 +79,11 @@ app.use((req, res, next) => {
 
 // Routes
 const indexRouter = require('./routes/index');
+const userRouter = require('./routes/user');
+const adminRouter = require('./routes/admin');
 app.use('/', indexRouter);
-
-// Profile routes
-const usersRouter = require('./routes/user');
-app.use('/user', usersRouter);
+app.use('/user', userRouter);
+app.use('/admin', adminRouter);
 
 
 
