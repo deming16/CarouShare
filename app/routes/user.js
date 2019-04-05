@@ -1,12 +1,24 @@
 var express = require('express');
 var router = express.Router();
+
+const passport = require('passport');
+const { User } = require('../schemas/');
 const db = require('../db');
 
 // @route   GET /user
 // @desc    Get current user
 // @access  Private
 router.get('/', (req, res, next) => {
-    res.send('This page should give profile of current user');
+    if (req.isAuthenticated()) {
+        const query = 'SELECT uid, email, address, mobile FROM Users WHERE uid = $1::text';
+        db.query(query, [req.user.username])
+            .then(result => {
+                res.json(result.rows[0]);
+            });
+    } else {
+        res.redirect('/login');
+    }
+
 });
 
 
