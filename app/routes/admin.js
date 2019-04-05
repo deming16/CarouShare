@@ -14,21 +14,34 @@ router.get('/', (req, res, next) => {
 // @desc    Get Item list
 // @access  Private
 router.get('/item', (req, res, next) => {
-  res.send('Item list for admin');
+  const query = "select * from Items"
+  db.query(query)
+    .then(result => {
+      res.json(result.rows);
+    });
+
 });
 
 // @route   GET /admin/listing
 // @desc    Get Listing list
 // @access  Private
 router.get('/listing', (req, res, next) => {
-  res.send('Listing list for admin');
+  const query = "select * from Listings"
+  db.query(query)
+    .then(result => {
+      res.json(result.rows);
+    });
 });
 
 // @route   GET /admin/user
 // @desc    Get user list
 // @access  Private
 router.get('/user', (req, res, next) => {
-  res.send('User list for admin');
+  const query = "select * from Users"
+  db.query(query)
+    .then(result => {
+      res.json(result.rows);
+    });
 });
 
 module.exports = router;
