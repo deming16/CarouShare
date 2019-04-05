@@ -8,7 +8,15 @@ const { ERRORS } = require('../utils/errors');
 const db = require('../db/');
 
 router.get('/', (req, res, next) => {
-    res.render('index');
+    const query = "select * from ListingViews order by time_created";
+    db.query(query)
+        .then(result => {
+            if (result.rows.length === 0) {
+                res.send('There are no listings');
+            } else {
+                res.render('index', { listing: result.rows });
+            }
+        })
 });
 
 router.get('/login', (req, res, next) => {
