@@ -22,11 +22,25 @@ router.post('/:itemId', (req, res, next) => {
   res.send(`Item ${req.params.itemId} updated`);
 });
 
-// @route   POST items/:itemId/delete
+// @route   POST item/:itemId/delete
 // @desc    Delete item
 // @access  Private
 router.post('/:itemId/delete', (req, res, next) => {
   res.send(`Item ${req.params.itemId} deleted`);
+});
+
+// @route   POST item/:itemId/like
+// @desc    Add like for item
+// @access  Private
+router.post('/:itemId/like', (req, res, next) => {
+  res.send(`Item ${req.params.itemId} liked`);
+});
+
+// @route   POST item/:itemId/like/delete
+// @desc    Remove like for item
+// @access  Private
+router.post('/:itemId/like/delete', (req, res, next) => {
+  res.send(`Item ${req.params.itemId} Unliked`);
 });
 
 module.exports = router;
