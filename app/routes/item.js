@@ -23,7 +23,7 @@ router.post('/:itemId', (req, res, next) => {
 });
 
 // @route   POST items/:itemId/delete
-// @desc    Update item
+// @desc    Delete item
 // @access  Private
 router.post('/:itemId/delete', (req, res, next) => {
   res.send(`Item ${req.params.itemId} deleted`);

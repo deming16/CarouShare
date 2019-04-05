@@ -82,10 +82,12 @@ const indexRouter = require('./routes/index');
 const userRouter = require('./routes/user');
 const adminRouter = require('./routes/admin');
 const itemRouter = require('./routes/item');
+const listingRouter = require('./routes/listing');
 app.use('/', indexRouter);
 app.use('/user', userRouter);
 app.use('/admin', adminRouter);
 app.use('/item', itemRouter);
+app.use('/listing', listingRouter);
 
 
 
