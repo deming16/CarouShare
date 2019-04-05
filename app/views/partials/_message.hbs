@@ -1,0 +1,20 @@
+<div id="modal-message" class="modal">
+    <div class="modal-content">
+        <p>{{@message.body}}</p>
+    </div>
+    <div class="modal-footer">
+        <a href="#!" class="modal-close waves-effect waves-red btn-flat">OK</a>
+    </div>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var elems = document.querySelectorAll('.modal');
+        M.Modal.init(elems);
+
+        var elem = document.getElementById('modal-message');
+        var instance = M.Modal.getInstance(elem);
+        if (instance && '{{@message.body}}') {
+            instance.open();
+        }
+    });
+</script>

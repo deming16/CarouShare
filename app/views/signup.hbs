@@ -1,0 +1,52 @@
+{{#> _base title="Sign Up" hideNav=true }}
+{{#*inline "contents"}}
+<div class="full-bg red darken-3">
+    <div class="page-login-bg pos-absolute absolute-fit"></div>
+    <h3 class="white-text no-margin mb-2 pos-relative">
+        <a href="/" class="link-normal">{{@config.siteTitle}}</a>
+    </h3>
+    <div class="page-login-box pos-relative z-depth-3">
+        <div class="row">
+            <form class="col s12" method="POST" action="/signup">
+                <div class="row">
+                    <h4 class="col s12 text-center no-margin">Sign Up</h4>
+                </div>
+                <div class="row mb-0">
+                    <div class="input-field col s12 red-text text-darken-1">
+                        <input id="username" name="username" type="text" class="validate">
+                        <label for="username">Username</label>
+                    </div>
+                </div>
+                <div class="row mb-0">
+                    <div class="input-field col s12 red-text text-darken-1">
+                        <input id="email" name="email" type="email" class="validate">
+                        <label for="email">Email</label>
+                    </div>
+                </div>
+                <div class="row mb-0">
+                    <div class="input-field col s12 red-text text-darken-1">
+                        <input id="address" name="address" type="text" class="validate">
+                        <label for="address">Address</label>
+                    </div>
+                </div>
+                <div class="row mb-0">
+                    <div class="input-field col s12 red-text text-darken-1">
+                        <input id="phone" name="phone" type="text" class="validate">
+                        <label for="phone">Phone number</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s12 red-text text-darken-1">
+                        <input id="password" name="password" type="password" class="validate">
+                        <label for="password">Password</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <button class="col offset-s3 s6 btn waves-effect waves-light red darken-1" type="submit">Sign Up</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{{/inline}}
+{{/_base}}

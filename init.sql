@@ -1,118 +1,120 @@
-DROP TABLE IF EXISTS Account CASCADE;
-DROP TABLE IF EXISTS Administrator CASCADE;
+DROP TABLE IF EXISTS Accounts CASCADE;
+DROP TABLE IF EXISTS Admins CASCADE;
 DROP TABLE IF EXISTS Users CASCADE;
-DROP TABLE IF EXISTS Follow CASCADE;
-DROP TABLE IF EXISTS Review CASCADE;
-DROP TABLE IF EXISTS ReviewSection CASCADE;
-DROP TABLE IF EXISTS Item CASCADE;
-DROP TABLE IF EXISTS UsersLikeItem CASCADE;
-DROP TABLE IF EXISTS Bid CASCADE;
-DROP TABLE IF EXISTS Listing CASCADE;
-DROP TABLE IF EXISTS Loan CASCADE;
+DROP TABLE IF EXISTS Follows CASCADE;
+DROP TABLE IF EXISTS Items CASCADE;
+DROP TABLE IF EXISTS Reviews CASCADE;
+DROP TABLE IF EXISTS ReviewSections CASCADE;
+DROP TABLE IF EXISTS UserLikeItems CASCADE;
+DROP TABLE IF EXISTS Listings CASCADE;
+DROP TABLE IF EXISTS Bids CASCADE;
+DROP TABLE IF EXISTS Loans CASCADE;
 
-CREATE TABLE Account (
-	uid					VARCHAR(32),
-	password			VARCHAR(32) NOT NULL,
-	PRIMARY KEY (uid)
+CREATE TABLE Accounts (
+    uid                 VARCHAR(64),
+    password            VARCHAR(64) NOT NULL,
+    time_created        TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (uid)
 );
 
-CREATE TABLE Administrator (
-	uid					VARCHAR(32),
-	PRIMARY KEY (uid),
-	FOREIGN KEY (uid) REFERENCES Account
+CREATE TABLE Admins (
+    uid                 VARCHAR(64),
+    PRIMARY KEY (uid),
+    FOREIGN KEY (uid) REFERENCES Accounts
 );
 
 CREATE TABLE Users (
-	uid					VARCHAR(32),
-	email				VARCHAR(64),
-	address				VARCHAR(255),
-	mobile				VARCHAR(20),
-	last_read			TIMESTAMP,
-	PRIMARY KEY (uid),
-	FOREIGN KEY (uid) references Account
+    uid                 VARCHAR(64),
+    email               VARCHAR(255),
+    address             VARCHAR(255),
+    mobile              VARCHAR(20),
+    time_lastread       TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (uid),
+    FOREIGN KEY (uid) references Accounts
 );
 
-CREATE TABLE Follow (
-	follower			VARCHAR(32),
-	followee			VARCHAR(32),
-	PRIMARY KEY (follower, followee),
-	FOREIGN KEY (follower) REFERENCES Users,
-	FOREIGN KEY (followee) REFERENCES Users
+CREATE TABLE Follows (
+    follower_uid        VARCHAR(64) NOT NULL,
+    followee_uid        VARCHAR(64) NOT NULL,
+    time_created        TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (follower_uid, followee_uid),
+    FOREIGN KEY (follower_uid) REFERENCES Users,
+    FOREIGN KEY (followee_uid) REFERENCES Users
 );
 
-CREATE TABLE Item (
-	iid 				INTEGER,
-	item_owner			VARCHAR(32),
-	item_name			VARCHAR(64) NOT NULL,
-	category			VARCHAR(64) NOT NULL,
-	status 				VARCHAR(64) NOT NULL,
-	photo				VARCHAR(255),
-	description			VARCHAR(255),
-	PRIMARY KEY (iid),
-	FOREIGN KEY (item_owner) references Users
-);
-CREATE TABLE Review (
-	rid					INTEGER,
-	item				INTEGER,
-	Users 				VARCHAR(32),
-	PRIMARY KEY (rid),
-	FOREIGN KEY (item) REFERENCES Item,
-	FOREIGN KEY (Users) REFERENCES Users
+CREATE TABLE Items (
+    iid                 SERIAL,
+    owner_uid           VARCHAR(64) NOT NULL,
+    item_name           VARCHAR(64) NOT NULL,
+    category            VARCHAR(64) NOT NULL,
+    status              VARCHAR(64),
+    photo               VARCHAR(255),
+    description         TEXT,
+    time_created        TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (iid),
+    FOREIGN KEY (owner_uid) references Users
 );
 
-CREATE TABLE ReviewSection (
-	sname 				VARCHAR(64),
-	review  			INTEGER,
-	content				TEXT NOT NULL,
-	PRIMARY KEY (sname, review),
-	FOREIGN KEY (review) REFERENCES Review
+CREATE TABLE Reviews (
+    rid                 SERIAL,
+    item_iid            INTEGER NOT NULL,
+    user_uid            VARCHAR(64) NOT NULL,
+    time_created        TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (rid),
+    FOREIGN KEY (item_iid) REFERENCES Items,
+    FOREIGN KEY (user_uid) REFERENCES Users
 );
 
-CREATE TABLE UsersLikeItem (
-	users 				VARCHAR(32),
-	item 				INTEGER,
-	PRIMARY KEY (users, item),
-	FOREIGN KEY (users) REFERENCES users,
-	FOREIGN KEY (item) REFERENCES Item
+CREATE TABLE ReviewSections (
+    sname               VARCHAR(64) NOT NULL,
+    review_rid          INTEGER NOT NULL,
+    content             TEXT NOT NULL,
+    time_created        TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (sname, review_rid),
+    FOREIGN KEY (review_rid) REFERENCES Reviews
 );
 
-CREATE TABLE Listing (
-	lid 				INTEGER,
-	item 				INTEGER,
-	title				VARCHAR(64),
-	status				VARCHAR(64),
-	delivery_method		VARCHAR(64),
-	min_bid				NUMERIC,2
-	succ_bid			NUMERIC,
-	bid_start			TIMESTAMP,
-	bid_end				TIMESTAMP,
-	create_time			TIMESTAMP,
-	PRIMARY KEY (lid),
-	FOREIGN KEY (item) REFERENCES Item
+CREATE TABLE UserLikeItems (
+    user_uid            VARCHAR(64) NOT NULL,
+    item_iid            INTEGER NOT NULL,
+    time_created        TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (user_uid, item_iid),
+    FOREIGN KEY (user_uid) REFERENCES Users,
+    FOREIGN KEY (item_iid) REFERENCES Items
 );
 
-CREATE TABLE Bid (
-	biid 				INTEGER,
-	bidder 				VARCHAR(32),
-	points				NUMERIC NOT NULL,
-	listing 			INTEGER,
-	PRIMARY KEY (biid),
-	FOREIGN KEY (bidder) REFERENCES Users,
-	FOREIGN KEY (listing) REFERENCES Listing,
-	CHECK(points >= 0)
+CREATE TABLE Listings (
+    lid                 SERIAL,
+    item_iid            INTEGER NOT NULL,
+    title               VARCHAR(64) NOT NULL,
+    status              VARCHAR(64),
+    delivery_method     VARCHAR(64),
+    min_bid             NUMERIC(16, 2) NOT NULL DEFAULT 0,
+    time_ending         TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    time_created        TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (lid),
+    FOREIGN KEY (item_iid) REFERENCES Items,
+    CHECK (min_bid >= 0)
 );
-CREATE TABLE Loan (
-	loid				INTEGER,
-	loaner				VARCHAR(32),
-	borrower 			VARCHAR(32),
-	listing 			INTEGER,
-	start_loan 			TIMESTAMP,
-	end_loan			TIMESTAMP,
-	bid 				INTEGER NOT NULL,
-	status 				VARCHAR(64),
-	PRIMARY KEY (loid),
-	FOREIGN KEY (loaner) REFERENCES Users,
-	FOREIGN KEY (borrower) REFERENCES Users,
-	FOREIGN KEY (listing) REFERENCES Listing,
-	CHECK (bid >= 0)
+
+CREATE TABLE Bids (
+    biid                SERIAL,
+    bidder_uid          VARCHAR(64) NOT NULL,
+    listing_lid         INTEGER NOT NULL,
+    amount              NUMERIC(16, 2) NOT NULL DEFAULT 0,
+    time_start          TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    time_end            TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    time_created        TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (biid),
+    FOREIGN KEY (bidder_uid) REFERENCES Users,
+    FOREIGN KEY (listing_lid) REFERENCES Listings,
+    CHECK (amount >= 0),
+    CHECK (time_start <= time_end)
+);
+
+CREATE TABLE Loans (
+    bid_biid            INTEGER NOT NULL,
+    status              VARCHAR(64),
+    PRIMARY KEY (bid_biid),
+    FOREIGN KEY (bid_biid) REFERENCES Bids
 );

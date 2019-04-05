@@ -5,12 +5,48 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 
+// Authentication
+const session = require('express-session');
+const FileStore = require('session-file-store')(session);
+const passport = require('passport');
+const LocalStrategy = require('passport-local').Strategy;
+
+const db = require('./db/');
+const { ERRORS } = require('./utils/errors');
+
 const app = express();
 
 // View engine setup
 hbs.registerPartials(__dirname + '/views/partials');
+hbs.localsAsTemplateData(app);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
+app.locals.config = {
+    siteTitle: 'CarouShare'
+};
+
+// Authentications
+passport.use(
+    new LocalStrategy(async (username, password, done) => {
+        try {
+            const output = await db.query('SELECT * FROM Accounts WHERE uid = $1::text', [username]);
+            if (output.rows.length <= 0) ERRORS.invalidUsernameOrPassword();
+
+            // Password check
+            const user = output.rows[0];
+            if (user.password !== password) ERRORS.invalidUsernameOrPassword();
+            return done(null, user);
+        } catch (e) {
+            return done(e);
+        }
+    })
+);
+passport.serializeUser((user, done) => {
+    done(null, user.uid);
+});
+passport.deserializeUser((username, done) => {
+    done(null, { username: username });
+});
 
 // Other middlewares
 app.use(logger('dev'));
@@ -19,14 +55,31 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Auth middlewares
+app.use(
+    session({
+        store: new FileStore(),
+        secret: 'cs2102',
+        resave: false,
+        saveUninitialized: true
+    })
+);
+app.use(passport.initialize());
+app.use(passport.session());
+app.use((req, res, next) => {
+    res.locals.auth = {
+        user: req.user
+    };
+    res.locals.message = {
+        body: req.query.message_body,
+        type: req.query.message_type
+    };
+    next();
+});
+
 // Routes
-// Homepage and account routes
 const indexRouter = require('./routes/index');
-const loginRouter = require('./routes/account/login');
-const signupRouter = require('./routes/account/signup');
 app.use('/', indexRouter);
-app.use('/account/login', loginRouter);
-app.use('/account/signup', signupRouter);
 
 // Profile routes
 const usersRouter = require('./routes/profile/index');
@@ -43,7 +96,6 @@ app.use('/dashboard', dashboardRouter);
 // items routes
 const itemsRouter = require('./routes/items');
 app.use('/items', itemsRouter);
-
 
 // Catch 404 and forward to error handler
 app.use((req, res, next) => {

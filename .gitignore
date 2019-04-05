@@ -1,3 +1,6 @@
+# Custom
+sessions/
+
 # Default
 .DS_Store
 Thumbs.db

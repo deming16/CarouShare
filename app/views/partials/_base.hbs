@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>{{#if title}}{{title}} - {{@config.siteTitle}}{{else}}{{@config.siteTitle}}{{/if}}</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link rel="stylesheet" href="/stylesheets/style.css" />
+</head>
+
+<body>
+    {{#unless hideNav}}
+    <nav>
+        <div class="nav-wrapper red darken-1">
+            <a href="/" class="brand-logo">{{@config.siteTitle}}</a>
+            <a href="#" data-target="sidenav-mobile" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+            <ul class="right hide-on-med-and-down">
+                {{> _nav}}
+            </ul>
+        </div>
+    </nav>
+    <ul class="sidenav" id="sidenav-mobile">
+        {{> _nav}}
+    </ul>
+    {{/unless}}
+    {{#> contents}}{{/contents}}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var elems = document.querySelectorAll('.sidenav');
+            var instances = M.Sidenav.init(elems);
+        });
+    </script>
+    {{> _message}}
+</body>
+
+</html>
