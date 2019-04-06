@@ -1,0 +1,88 @@
+{{#> _base }}
+{{#*inline "contents"}}
+
+<div class="container">
+  <div class="row">
+    <h1>Admin Page - {{heading}}</h1>
+    <a class="waves-effect waves-light btn" href="/admin/item">Items</a>
+    <a class="waves-effect waves-light btn" href="/admin/listing">Listings</a>
+    <a class="waves-effect waves-light btn" href="/admin/user">Users</a>
+    {{#if isItemList}}
+    <table>
+      <thead>
+        <tr>
+          <th>Owner Name</th>
+          <th>Item Name</th>
+          <th>Category</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {{#each list}}
+        <tr>
+          <td>{{this.owner_uid}}</td>
+          <td>{{this.item_name}}</td>
+          <td>{{this.category}}</td>
+          <td>{{this.status}}</td>
+        </tr>
+        {{/each}}
+      </tbody>
+    </table>
+    {{/if}}
+
+    {{#if isListingList}}
+    <table>
+      <thead>
+        <tr>
+          <th>Item Name</th>
+          <th>Title</th>
+          <th>Status</th>
+          <th>Delivery Method</th>
+          <th>Min Bid</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {{#each list}}
+        <tr>
+          <td>{{this.item_iid}}</td>
+          <td>{{this.title}}</td>
+          <td>{{this.status}}</td>
+          <td>{{this.delivery_method}}</td>
+          <td>${{this.min_bid}}</td>
+        </tr>
+        {{/each}}
+      </tbody>
+    </table>
+    {{/if}}
+
+    {{#if isUserList}}
+    <table>
+      <thead>
+        <tr>
+          <th>Username</th>
+          <th>Email</th>
+          <th>Address</th>
+          <th>Mobile</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {{#each list}}
+        <tr>
+          <td>{{this.uid}}</td>
+          <td>{{this.email}}</td>
+          <td>{{this.address}}</td>
+          <td>{{this.mobile}}</td>
+        </tr>
+        {{/each}}
+      </tbody>
+    </table>
+    {{/if}}
+
+  </div>
+</div>
+
+{{/inline}}
+{{/_base}}

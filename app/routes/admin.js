@@ -6,7 +6,7 @@ const db = require('../db');
 // @desc    Get admin home page
 // @access  Private
 router.get('/', (req, res, next) => {
-  res.send('Admin home page, only display if account is admin');
+  res.render('admin', { heading: 'Home' });
 });
 
 
@@ -17,7 +17,7 @@ router.get('/item', (req, res, next) => {
   const query = "select * from Items"
   db.query(query)
     .then(result => {
-      res.json(result.rows);
+      res.render('admin', { list: result.rows, isItemList: true, heading: 'Items' });
     });
 
 });
@@ -29,7 +29,7 @@ router.get('/listing', (req, res, next) => {
   const query = "select * from Listings"
   db.query(query)
     .then(result => {
-      res.json(result.rows);
+      res.render('admin', { list: result.rows, isListingList: true, heading: 'Listing' });
     });
 });
 
@@ -40,7 +40,8 @@ router.get('/user', (req, res, next) => {
   const query = "select * from Users"
   db.query(query)
     .then(result => {
-      res.json(result.rows);
+      console.log(result.rows[0]);
+      res.render('admin', { list: result.rows, isUserList: true, heading: 'Users' });
     });
 });
 

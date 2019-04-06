@@ -119,7 +119,7 @@ CREATE TABLE Loans (
     FOREIGN KEY (bid_biid) REFERENCES Bids
 );
 
-create view ListingViews (lid, min_bid, title, time_created, time_ending, iid, owner_uid, item_name, category, photo )as 
+create view ListingViews (lid, min_bid, title, time_created, time_ending, iid, owner_uid, item_name, category, photo ) as 
   select L.lid, L.min_bid, L.title, L.time_created, L.time_ending, I.iid, I.owner_uid, I.item_name, I.category, I.photo 
   from Items I inner join Listings L on (I.iid = L.item_iid); 
 
