@@ -14,7 +14,7 @@ router.get('/', async (req, res, next) => {
             const result = {};
 
             let query = 'SELECT uid, email, address, mobile FROM Users WHERE uid = $1';
-            let values = [req.user.username];
+            const values = [req.user.username];
             result.userDetails = await db.query(query, values);
 
             query = 'select iid, item_name, category, status, photo from Items where owner_uid = $1';
@@ -52,18 +52,43 @@ router.get('/', async (req, res, next) => {
 // @route   GET /user/:username
 // @desc    Get info on one user
 // @access  Public
-router.get('/:username', (req, res, next) => {
-    const query = 'SELECT * FROM Users WHERE uid = $1';
+router.get('/:username', async (req, res, next) => {
+    if (req.isAuthenticated() && req.user.username == req.params.username) {
+        res.redirect('/user');
+    }
+    const result = {};
+    let query = 'SELECT * FROM Users WHERE uid = $1';
     const values = [req.params.username];
-    db.query(query, values)
-        .then(result => {
-            if (result.rows.length === 0) {
-                res.send('user does not exist');
-            } else {
-                res.render('user', { user: result.rows[0] });
-            }
+    result.userDetails = await db.query(query, values);
 
-        });
+    if (result.userDetails.rows.length === 0) {
+        res.send('user does not exist');
+    }
+    else {
+        query = 'select lid, title, Listings.status, delivery_method, min_bid, time_ending, photo, owner_uid, description from Items inner join Listings on (item_iid = iid) where owner_uid = $1';
+        result.listings = await db.query(query, values);
+
+        query = 'select iid, item_name, category, status, photo from UserLikeItems inner join Items on (item_iid = iid) where user_uid = $1';
+        result.likes = await db.query(query, values);
+
+        query = 'select follower_uid from Follows where followee_uid = $1';
+        result.followers = await db.query(query, values);
+
+        query = 'select followee_uid from Follows where follower_uid = $1';
+        result.following = await db.query(query, values);
+
+        res.render('user',
+            {
+                user: result.userDetails.rows[0],
+                listings: result.listings.rows,
+                likes: result.likes.rows,
+                following: result.following.rows,
+                followers: result.followers.rows,
+                isMyProfile: false
+            });
+    }
+
+
 });
 
 // @route   POST /user/:username
@@ -73,7 +98,12 @@ router.post('/:username', (req, res, next) => {
     const query = "UPDATE Users " +
         "SET email = $1, address = $2, mobile = $3 " +
         "WHERE uid = $4";
-    res.send(`update ${req.params.username}`);
+    const values = [req.body.email, req.body.address, req.body.mobile, req.params.username];
+    db.query(query, values)
+        .then(() => {
+            res.redirect('/user');
+        })
+        .catch(err => res.render('error'));
 });
 
 // @route   POST /user/:username/delete

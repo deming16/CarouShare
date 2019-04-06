@@ -3,18 +3,66 @@
 
 
 <div class="container">
+
   <div class="row">
     <h1>{{user.uid}}'s Profile</h1>
-    <h2>personal details</h2>
+    <h2>Personal Details</h2>
+    <!-- Modal Trigger -->
+    <a class="waves-effect waves-light red darken-1 btn modal-trigger" href="#modal1">Edit <i
+        class="small material-icons text-darken-1">edit</i></a>
+
+
+    <!-- Modal Structure -->
+    <div id="modal1" class="modal modal-fixed-footer">
+      <form method="POST" action="/user/{{user.uid}}" class="col s12" id="detailsForm">
+        <div class="modal-content">
+          <h4>Edit Personal Details</h4>
+          <div class="row">
+
+            <div class="row">
+              <div class="col s12">
+                <div class="input-field">
+                  <input value={{user.email}} name="email" id="email" type="email" class="validate">
+                  <label for="email">Email</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col s12">
+                <div class="input-field">
+                  <input value={{user.mobile}} name="mobile" id="mobile" type="text" class="validate">
+                  <label class="active" for="mobile">Mobile</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col s12">
+                <div class="input-field">
+                  <input value={{user.address}} name="address" id="address" type="text" class="validate">
+                  <label for="address">Address</label>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <div class="modal-footer">
+          <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Cancel</a>
+          <button type="submit" form="detailsForm" class="modal-close waves-effect waves-green btn-flat">Save
+            Changes</button>
+        </div>
+      </form>
+    </div>
+
     <ul>
       <li>mobile - {{user.mobile}}</li>
       <li>email - {{user.email}}</li>
       <li>address - {{user.address}}</li>
     </ul>
+
   </div>
-
-
-
   <div class="row">
     <h2>Items</h2>
     {{#each items}}
