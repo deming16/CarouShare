@@ -1,12 +1,7 @@
 var express = require('express');
 var router = express.Router();
 
-// @route   GET listing/:listingId
-// @desc    Get a listing
-// @access  Public
-router.get('/:listingId', (req, res, next) => {
-  res.send(`Get listing ${req.params.listingId}`);
-});
+
 
 // @route   POST listing
 // @desc    Add new listing

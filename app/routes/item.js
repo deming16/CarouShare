@@ -3,6 +3,8 @@ var router = express.Router();
 
 const db = require('../db');
 
+// ROUTES FOR THE ITEM ITSELF
+
 // @route   GET item/:itemId
 // @desc    Get a item
 // @access  Public
@@ -16,7 +18,7 @@ router.get('/:itemId', (req, res, next) => {
         res.send('no such item');
       }
       else {
-        res.json(result.rows[0]);
+        res.render('item', { item: result.rows[0] });
       }
     })
     .catch(err => {
@@ -59,6 +61,28 @@ router.post('/:itemId/delete', (req, res, next) => {
     .then(() => res.send('item deleted'))
     .catch(err => res.render('error', { error: err, message: 'something went wrong' }));
 });
+
+
+
+
+
+// ROUTES FOR THE LISTING OF THE ITEM
+
+// @route   GET item/:itemId/listing
+// @desc    Get a listing
+// @access  Public
+router.get('/:itemId/listing', (req, res, next) => {
+  const query = "select item_iid, title, L.status as status, delivery_method, min_bid, time_ending, L.time_created as listingstart, biid, bidder_uid, amount, B.time_created as biddedOn from Listings L join Items I on (L.item_iid = $1) join Bids B on (B.listing_lid = L.lid) order by B.amount desc"
+  const values = [req.params.itemId];
+
+  db.query(query, values)
+    .then(result => {
+      res.render('listing', { listing: result.rows[0], bids: result.rows });
+    })
+    .catch(err => res.render('error', { error: err, message: 'something went wrong' }))
+});
+
+// ROUTES FOR THE LIKE OF THE ITEM
 
 // @route   POST item/:itemId/like
 // @desc    Add like for item
