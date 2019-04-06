@@ -15,6 +15,9 @@ router.get('/', async (req, res, next) => {
             const values = [req.user.username];
             result.userDetails = await db.query(query, values);
 
+            query = 'select lid, title, Listings.status as status, delivery_method, min_bid, time_ending, photo, owner_uid, description from Items inner join Listings on (item_iid = iid) where owner_uid = $1';
+            result.listings = await db.query(query, values);
+
             query = 'select iid, item_name, category, status, photo from Items where owner_uid = $1';
             result.items = await db.query(query, values);
 
@@ -30,6 +33,7 @@ router.get('/', async (req, res, next) => {
             res.render('user',
                 {
                     user: result.userDetails.rows[0],
+                    listings: result.listings.rows,
                     items: result.items.rows,
                     likes: result.likes.rows,
                     following: result.following.rows,
@@ -63,7 +67,7 @@ router.get('/:username', async (req, res, next) => {
         res.send('user does not exist');
     }
     else {
-        query = 'select lid, title, Listings.status, delivery_method, min_bid, time_ending, photo, owner_uid, description from Items inner join Listings on (item_iid = iid) where owner_uid = $1';
+        query = 'select lid, title, Listings.status as status, delivery_method, min_bid, time_ending, photo, owner_uid, description from Items inner join Listings on (item_iid = iid) where owner_uid = $1';
         result.listings = await db.query(query, values);
 
         query = 'select iid, item_name, category, status, photo from UserLikeItems inner join Items on (item_iid = iid) where user_uid = $1';

@@ -66,11 +66,12 @@
     </ul>
   </div>
 
+  {{#if isMyProfile}}
   {{!-- ITEMS --}}
   <div class="row">
     <h2>Items</h2>
 
-    {{#if isMyProfile}}
+
     <!-- Modal Trigger -->
     <a class="waves-effect waves-light red darken-1 btn modal-trigger" href="#modal2">Add <i
         class="small material-icons text-darken-1">add</i></a>
@@ -155,7 +156,7 @@
         <div class="card-content">
           <span class="card-title mb-0"><b>{{this.item_name}}</b></span>
           <div class="flex-display flex-align-center">
-            <div class="trans-2">{{this.categoy}}</div>
+            <div class="trans-2">{{this.category}}</div>
             <div class="flex-grow"></div>
             <div class="flex-show font-larger">{{this.status}}</div>
           </div>
@@ -164,6 +165,33 @@
     </div>
     {{/each}}
   </div>
+
+  {{!-- LISTING --}}
+  <div class="row">
+    <h2>Listing</h2>
+    {{#each listings}}
+    <div class="col s12 m6 xl4">
+      <div class="card waves-effect waves-block">
+        <div class="card-image">
+          <div class="img-fit listing-item-image"
+            style="background-image: url('https://media.karousell.com/media/photos/products/2018/10/07/buy_1538918236_d4243b29.jpg');">
+          </div>
+          <a class="btn-floating btn-large halfway-fab waves-effect waves-red white"><i
+              class="material-icons red-text text-darken-1">favorite</i></a>
+        </div>
+        <div class="card-content">
+          <span class="card-title mb-0"><b>{{this.title}}</b></span>
+          <div class="flex-display flex-align-center">
+            <div class="trans-2">{{this.category}}</div>
+            <div class="flex-grow"></div>
+            <div class="flex-show font-larger">{{this.status}}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {{/each}}
+  </div>
+
 
   {{!-- LIKES --}}
   <div class="row">
@@ -181,7 +209,7 @@
         <div class="card-content">
           <span class="card-title mb-0"><b>{{this.item_name}}</b></span>
           <div class="flex-display flex-align-center">
-            <div class="trans-2">{{this.categoy}}</div>
+            <div class="trans-2">{{this.category}}</div>
             <div class="flex-grow"></div>
             <div class="flex-show font-larger">{{this.status}}</div>
           </div>
