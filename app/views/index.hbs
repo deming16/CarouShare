@@ -14,10 +14,20 @@
                         <div class="img-fit listing-item-image"
                             style="background-image: url('https://media.karousell.com/media/photos/products/2018/10/07/buy_1538918236_d4243b29.jpg');">
                         </div>
-                        <a class="btn-floating btn-large halfway-fab waves-effect waves-red white"><i
-                                class="material-icons red-text text-darken-1">favorite</i></a>
+                        <form method="POST" action="/item/{{this.iid}}/like">
+                            {{#if this.liked}}
+                            <button type="submit"
+                                class="btn-floating btn-large halfway-fab waves-effect waves-red white"><i
+                                    class="material-icons red-text text-darken-1">favorite</i></button>
+                            {{else}}
+                            <button type="submit"
+                                class="btn-floating btn-large halfway-fab waves-effect waves-red white"><i
+                                    class="material-icons red-text text-darken-1">favorite_border</i></button>
+                            {{/if}}
+                        </form>
+
                     </div>
-                    <div class="card-content">
+                    <div class="card-content black-text">
                         <span class="card-title mb-0"><b>{{this.item_name}}</b></span>
                         <div class="flex-display flex-align-center">
                             <div class="trans-2">3 days left</div>

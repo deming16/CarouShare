@@ -7,18 +7,30 @@ const passport = require('passport');
 const { ERRORS } = require('../utils/errors');
 const db = require('../db/');
 
-router.get('/', (req, res, next) => {
+router.get('/', async (req, res, next) => {
     if (req.isAuthenticated()) {
-        const query = "select * from ListingViews where owner_uid != $1 order by time_created";
+        const query = "select * from UserLikeItems U right outer join ListingViews L on (U.item_iid = L.iid) where owner_uid != $1 order by L.time_created, L.iid";
         const values = [req.user.username];
-        db.query(query, values)
-            .then(result => {
-                if (result.rows.length === 0) {
-                    res.render('index', { noListing: true });
-                } else {
-                    res.render('index', { listing: result.rows, noListing: false });
-                }
-            });
+
+        const result = await db.query(query, values);
+        const parsedResult = [];
+        result.rows.forEach(row => {
+            if (parsedResult.length === 0 || parsedResult[parsedResult.length - 1].iid !== row.iid) {
+
+                parsedResult.push({ lid: row.lid, min_bid: row.min_bid, title: row.title, time_created: row.time_created, time_ending: row.time_ending, iid: row.iid, owner_uid: row.owner_uid, item_name: row.item_name, category: row.category, photo: row.photo, liked: false });
+            }
+
+            if (row.user_uid === req.user.username) {
+                parsedResult[parsedResult.length - 1].liked = true;
+            }
+        });
+
+        if (parsedResult.length === 0) {
+            res.render('index', { noListing: true });
+        } else {
+            res.render('index', { listing: parsedResult, noListing: false });
+        }
+
     }
     else {
         const query = "select * from ListingViews order by time_created";

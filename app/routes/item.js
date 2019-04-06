@@ -8,22 +8,34 @@ const db = require('../db');
 // @route   GET item/:itemId
 // @desc    Get a item
 // @access  Public
-router.get('/:itemId', (req, res, next) => {
-  const query = "select * from Items where iid = $1"
-  const values = [req.params.itemId];
+router.get('/:itemId', async (req, res, next) => {
+  try {
+    const query = "select * from UserLikeItems U right outer join Items I on (U.item_iid = I.iid) where iid = $1"
+    const values = [req.params.itemId];
 
-  db.query(query, values)
-    .then(result => {
-      if (result.rows.length == 0) {
-        res.send('no such item');
+    const result = await db.query(query, values);
+
+    if (result.rows.length == 0) {
+      res.send('no such item');
+    }
+    else {
+      let liked = false;
+
+      if (req.isAuthenticated()) {
+        result.rows.forEach(row => {
+          if (row.user_uid === req.user.username) {
+            liked = true;
+          }
+        });
       }
-      else {
-        res.render('item', { item: result.rows[0] });
-      }
-    })
-    .catch(err => {
-      res.render('error', { error: err, message: 'something went wrong' });
-    });
+
+      res.render('item', { item: result.rows[0], liked: liked });
+
+    }
+  } catch (e) {
+    res.render('error', { error: e, message: 'something went wrong' });
+  }
+
 });
 
 // @route   POST item/
@@ -127,7 +139,6 @@ router.get('/:itemId/review/', (req, res, next) => {
 
 
       })
-      console.log(parsedResult);
       res.render('review', { reviews: parsedResult, item: result.rows[0] });
     })
 })
@@ -139,17 +150,28 @@ router.get('/:itemId/review/', (req, res, next) => {
 // ROUTES FOR THE LIKE OF THE ITEM
 
 // @route   POST item/:itemId/like
-// @desc    Add like for item
+// @desc    Toggle Like for item
 // @access  Private
-router.post('/:itemId/like', (req, res, next) => {
-  res.send(`Item ${req.params.itemId} liked`);
-});
+router.post('/:itemId/like', async (req, res, next) => {
+  if (req.isAuthenticated()) {
+    let query = "select user_uid item_iid from UserLikeItems where user_uid = $1 and item_iid = $2"
+    const values = [req.user.username, req.params.itemId];
+    const result = await db.query(query, values);
+    if (result.rows.length === 0) {
+      query = "insert into UserLikeItems (user_uid, item_iid) values ($1, $2)"
+      await db.query(query, values);
+      res.redirect('back');
+    }
+    else {
+      query = "delete from UserLikeItems where user_uid = $1 and item_iid = $2";
+      await db.query(query, values);
+      res.redirect('back');
+    }
 
-// @route   POST item/:itemId/like/delete
-// @desc    Remove like for item
-// @access  Private
-router.post('/:itemId/like/delete', (req, res, next) => {
-  res.send(`Item ${req.params.itemId} Unliked`);
+  }
+  else {
+    res.redirect('/login')
+  }
 });
 
 // @route   POST item/:itemId/review
