@@ -4,13 +4,15 @@
 
 <div class="container">
 
+  {{!-- PERSONAL DETAILS --}}
   <div class="row">
     <h1>{{user.uid}}'s Profile</h1>
     <h2>Personal Details</h2>
+
+    {{#if isMyProfile}}
     <!-- Modal Trigger -->
     <a class="waves-effect waves-light red darken-1 btn modal-trigger" href="#modal1">Edit <i
         class="small material-icons text-darken-1">edit</i></a>
-
 
     <!-- Modal Structure -->
     <div id="modal1" class="modal modal-fixed-footer">
@@ -55,16 +57,91 @@
         </div>
       </form>
     </div>
+    {{/if}}
 
     <ul>
       <li>mobile - {{user.mobile}}</li>
       <li>email - {{user.email}}</li>
       <li>address - {{user.address}}</li>
     </ul>
-
   </div>
+
+  {{!-- ITEMS --}}
   <div class="row">
     <h2>Items</h2>
+
+    {{#if isMyProfile}}
+    <!-- Modal Trigger -->
+    <a class="waves-effect waves-light red darken-1 btn modal-trigger" href="#modal2">Add <i
+        class="small material-icons text-darken-1">add</i></a>
+
+    <!-- Modal Structure -->
+    <div id="modal2" class="modal modal-fixed-footer">
+      <form method="POST" action="/item" class="col s12" id="newItemForm">
+        <div class="modal-content">
+          <h4>Add New Item</h4>
+          <div class="row">
+
+            <div class="row">
+              <div class="col s12">
+                <div class="input-field">
+                  <input name="itemName" id="itemName" type="text" class="validate">
+                  <label for="itemName">Item Name</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col s12">
+                <div class="input-field">
+                  <input name="category" id="category" type="text" class="validate">
+                  <label for="category">Category</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col s12">
+                <div class="input-field">
+                  <input name="status" id="status" type="text" class="validate">
+                  <label for="status">Status</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col s12">
+                <div class="input-field">
+                  <input name="photo" id="photo" type="text" class="validate">
+                  <label for="photo">Photo</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <form class="col s12">
+                <div class="row">
+                  <div class="input-field col s12">
+                    <textarea name="desc" id="desc" class="materialize-textarea"></textarea>
+                    <label for="desc">Description</label>
+                  </div>
+                </div>
+              </form>
+            </div>
+
+          </div>
+        </div>
+        <div class="modal-footer">
+          <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Cancel</a>
+          <button type="submit" form="newItemForm" class="modal-close waves-effect waves-green btn-flat">Add
+            Item</button>
+        </div>
+      </form>
+    </div>
+    {{/if}}
+  </div>
+
+  <div class="row">
     {{#each items}}
     <div class="col s12 m6 xl4">
       <div class="card waves-effect waves-block">
@@ -88,6 +165,7 @@
     {{/each}}
   </div>
 
+  {{!-- LIKES --}}
   <div class="row">
     <h2>Likes</h2>
     {{#each likes}}
@@ -113,12 +191,15 @@
     {{/each}}
   </div>
 
+  {{!-- FOLLOWING --}}
   <h2>Following</h2>
   <ul>
     {{#each following}}
     <li>{{this.followee_uid}}</li>
     {{/each}}
   </ul>
+
+  {{!-- FOLLOWERS --}}
   <h2>Followers</h2>
   <ul>
     {{#each followers}}

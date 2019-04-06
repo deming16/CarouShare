@@ -28,12 +28,11 @@ router.get('/:itemId', (req, res, next) => {
 // @desc    Add new item
 // @access  Private
 router.post('/', (req, res, next) => {
-  const query = "insert into Items (owner_uid, item_name, category, status, photo, description) " +
-    "values ($1, $2, $3, $4, $5, $6)"
-  const values = ['user', 'test', 'test', 'status', 'photo', 'desc'];
+  const query = "insert into Items (owner_uid, item_name, category, status, photo, description) values ($1, $2, $3, $4, $5, $6)";
+  const values = [req.user.username, req.body.itemName, req.body.category, req.body.status, req.body.photo, req.body.desc];
 
   db.query(query, values)
-    .then(() => res.send('item added'))
+    .then(() => res.redirect('/user'))
     .catch(err => res.render('error', { error: err, message: 'something went wrong' }));
 });
 
