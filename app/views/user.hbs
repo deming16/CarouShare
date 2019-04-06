@@ -3,26 +3,68 @@
 
 
 <div class="container">
-  <h1>{{user.uid}}'s Profile</h1>
-  <h2>personal details</h2>
-  <ul>
-    <li>mobile - {{user.mobile}}</li>
-    <li>email - {{user.email}}</li>
-    <li>address - {{user.address}}</li>
-  </ul>
+  <div class="row">
+    <h1>{{user.uid}}'s Profile</h1>
+    <h2>personal details</h2>
+    <ul>
+      <li>mobile - {{user.mobile}}</li>
+      <li>email - {{user.email}}</li>
+      <li>address - {{user.address}}</li>
+    </ul>
+  </div>
 
-  <h2>Items</h2>
-  <ul>
+
+
+  <div class="row">
+    <h2>Items</h2>
     {{#each items}}
-    <li>{{this.item_name}}</li>
+    <div class="col s12 m6 xl4">
+      <div class="card waves-effect waves-block">
+        <div class="card-image">
+          <div class="img-fit listing-item-image"
+            style="background-image: url('https://media.karousell.com/media/photos/products/2018/10/07/buy_1538918236_d4243b29.jpg');">
+          </div>
+          <a class="btn-floating btn-large halfway-fab waves-effect waves-red white"><i
+              class="material-icons red-text text-darken-1">favorite</i></a>
+        </div>
+        <div class="card-content">
+          <span class="card-title mb-0"><b>{{this.item_name}}</b></span>
+          <div class="flex-display flex-align-center">
+            <div class="trans-2">{{this.categoy}}</div>
+            <div class="flex-grow"></div>
+            <div class="flex-show font-larger">{{this.status}}</div>
+          </div>
+        </div>
+      </div>
+    </div>
     {{/each}}
-  </ul>
-  <h2>Likes</h2>
-  <ul>
+  </div>
+
+  <div class="row">
+    <h2>Likes</h2>
     {{#each likes}}
-    <li>{{this.item_name}}</li>
+    <div class="col s12 m6 xl4">
+      <div class="card waves-effect waves-block">
+        <div class="card-image">
+          <div class="img-fit listing-item-image"
+            style="background-image: url('https://media.karousell.com/media/photos/products/2018/10/07/buy_1538918236_d4243b29.jpg');">
+          </div>
+          <a class="btn-floating btn-large halfway-fab waves-effect waves-red white"><i
+              class="material-icons red-text text-darken-1">favorite</i></a>
+        </div>
+        <div class="card-content">
+          <span class="card-title mb-0"><b>{{this.item_name}}</b></span>
+          <div class="flex-display flex-align-center">
+            <div class="trans-2">{{this.categoy}}</div>
+            <div class="flex-grow"></div>
+            <div class="flex-show font-larger">{{this.status}}</div>
+          </div>
+        </div>
+      </div>
+    </div>
     {{/each}}
-  </ul>
+  </div>
+
   <h2>Following</h2>
   <ul>
     {{#each following}}

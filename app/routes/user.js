@@ -20,8 +20,8 @@ router.get('/', async (req, res, next) => {
             query = 'select iid, item_name, category, status, photo from Items where owner_uid = $1';
             result.items = await db.query(query, values);
 
-            query = 'select item_name from UserLikeItems inner join Items on (item_iid = iid)';
-            result.likes = await db.query(query);
+            query = 'select iid, item_name, category, status, photo from UserLikeItems inner join Items on (item_iid = iid) where user_uid = $1';
+            result.likes = await db.query(query, values);
 
             query = 'select follower_uid from Follows where followee_uid = $1';
             result.followers = await db.query(query, values);
