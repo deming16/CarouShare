@@ -1,9 +1,6 @@
 {{#> _base }}
 {{#*inline "contents"}}
-<header id="main-header">
-  <div class="primary-overlay">
-  </div>
-</header>
+
 
 <div class="container">
   <h1>{{user.uid}}'s Profile</h1>
@@ -12,6 +9,31 @@
     <li>mobile - {{user.mobile}}</li>
     <li>email - {{user.email}}</li>
     <li>address - {{user.address}}</li>
+  </ul>
+
+  <h2>Items</h2>
+  <ul>
+    {{#each items}}
+    <li>{{this.item_name}}</li>
+    {{/each}}
+  </ul>
+  <h2>Likes</h2>
+  <ul>
+    {{#each likes}}
+    <li>{{this.item_name}}</li>
+    {{/each}}
+  </ul>
+  <h2>Following</h2>
+  <ul>
+    {{#each following}}
+    <li>{{this.followee_uid}}</li>
+    {{/each}}
+  </ul>
+  <h2>Followers</h2>
+  <ul>
+    {{#each followers}}
+    <li>{{this.follower_uid}}</li>
+    {{/each}}
   </ul>
 </div>
 {{/inline}}

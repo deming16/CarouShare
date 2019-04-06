@@ -8,16 +8,42 @@ const db = require('../db');
 // @route   GET /user
 // @desc    Get current user
 // @access  Private
-router.get('/', (req, res, next) => {
-    if (req.isAuthenticated()) {
-        const query = 'SELECT uid, email, address, mobile FROM Users WHERE uid = $1';
-        const values = [req.user.username];
-        db.query(query, values)
-            .then(result => {
-                res.json(result.rows[0]);
-            });
-    } else {
-        res.redirect('/login');
+router.get('/', async (req, res, next) => {
+    try {
+        if (req.isAuthenticated()) {
+            const result = {};
+
+            let query = 'SELECT uid, email, address, mobile FROM Users WHERE uid = $1';
+            let values = [req.user.username];
+            result.userDetails = await db.query(query, values);
+
+            query = 'select iid, item_name, category, status, photo from Items where owner_uid = $1';
+            result.items = await db.query(query, values);
+
+            query = 'select item_name from UserLikeItems inner join Items on (item_iid = iid)';
+            result.likes = await db.query(query);
+
+            query = 'select follower_uid from Follows where followee_uid = $1';
+            result.followers = await db.query(query, values);
+
+            query = 'select followee_uid from Follows where follower_uid = $1';
+            result.following = await db.query(query, values);
+
+            res.render('user',
+                {
+                    user: result.userDetails.rows[0],
+                    items: result.items.rows,
+                    likes: result.likes.rows,
+                    following: result.following.rows,
+                    followers: result.followers.rows,
+                    isMyProfile: true
+                });
+
+        } else {
+            res.redirect('/login');
+        }
+    } catch (e) {
+
     }
 
 });

@@ -1,18 +1,3 @@
-#main-header {
-    background: url('../img/headerBackground.png');
-    background-attachment: fixed;
-    background-position: center;
-    min-height: 500px;
-}
-
-#main-header .primary-overlay {
-    background: #cb4335;
-    min-height: 500px;
-    opacity: 0.9;
-}
-
-
-
 /* Core */
 * {
     font-family: Roboto, sans-serif;
