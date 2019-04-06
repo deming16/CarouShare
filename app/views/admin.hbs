@@ -4,9 +4,9 @@
 <div class="container">
   <div class="row">
     <h1>Admin Page - {{heading}}</h1>
-    <a class="waves-effect waves-light btn" href="/admin/item">Items</a>
-    <a class="waves-effect waves-light btn" href="/admin/listing">Listings</a>
-    <a class="waves-effect waves-light btn" href="/admin/user">Users</a>
+    <a class="btn waves-effect waves-light red darken-1" href="/admin/item">Items</a>
+    <a class="btn waves-effect waves-light red darken-1" href="/admin/listing">Listings</a>
+    <a class="btn waves-effect waves-light red darken-1" href="/admin/user">Users</a>
     {{#if isItemList}}
     <table>
       <thead>
@@ -15,6 +15,7 @@
           <th>Item Name</th>
           <th>Category</th>
           <th>Status</th>
+          <th></th>
         </tr>
       </thead>
 
@@ -25,6 +26,12 @@
           <td>{{this.item_name}}</td>
           <td>{{this.category}}</td>
           <td>{{this.status}}</td>
+          <td>
+            <form method="POST" action="/item/{{this.iid}}/delete">
+              <button class="btn-floating btn-small waves-effect waves-light red"><i
+                  class="material-icons">remove</i></button>
+            </form>
+          </td>
         </tr>
         {{/each}}
       </tbody>
@@ -40,6 +47,7 @@
           <th>Status</th>
           <th>Delivery Method</th>
           <th>Min Bid</th>
+          <th></th>
         </tr>
       </thead>
 
@@ -51,6 +59,12 @@
           <td>{{this.status}}</td>
           <td>{{this.delivery_method}}</td>
           <td>${{this.min_bid}}</td>
+          <td>
+            <form method="POST" action="/listing/{{this.lid}}/delete">
+              <button class="btn-floating btn-small waves-effect waves-light red"><i
+                  class="material-icons">remove</i></button>
+            </form>
+          </td>
         </tr>
         {{/each}}
       </tbody>
@@ -65,6 +79,7 @@
           <th>Email</th>
           <th>Address</th>
           <th>Mobile</th>
+          <th></th>
         </tr>
       </thead>
 
@@ -75,6 +90,12 @@
           <td>{{this.email}}</td>
           <td>{{this.address}}</td>
           <td>{{this.mobile}}</td>
+          <td>
+            <form method="POST" action="/user/{{this.uid}}/delete">
+              <button class="btn-floating btn-small waves-effect waves-light red"><i
+                  class="material-icons">remove</i></button>
+            </form>
+          </td>
         </tr>
         {{/each}}
       </tbody>
