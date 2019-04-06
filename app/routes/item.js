@@ -77,7 +77,6 @@ router.get('/:itemId/listing', (req, res, next) => {
 
   db.query(query, values)
     .then(result => {
-      console.log(result.rows);
       res.render('listing', { listing: result.rows[0], bids: result.rows });
     })
     .catch(err => res.render('error', { error: err, message: 'something went wrong' }))
@@ -114,13 +113,22 @@ router.post('/:itemId/listing', (req, res, next) => {
 // @desc    Get all reviews for the item
 // @access  Public
 router.get('/:itemId/review/', (req, res, next) => {
-  const query = "select distinct iid, rid, user_uid, R.time_created, sname, content from Items I inner join Reviews R on (R.item_iid = I.iid) inner join ReviewSections RS on (RS.review_rid = R.rid) where I.iid = $1 order by R.time_created"
+  const query = "select iid, rid, user_uid, R.time_created, sname, content from Items I inner join Reviews R on (R.item_iid = I.iid) inner join ReviewSections RS on (RS.review_rid = R.rid) where I.iid = $1 order by R.rid, R.time_created"
   const values = [req.params.itemId];
 
   db.query(query, values)
     .then(result => {
-      console.log(result.rows[0]);
-      res.render('review', { reviews: result.rows, item: result.rows[0] });
+      const parsedResult = [];
+      result.rows.forEach(row => {
+        if (parsedResult.length === 0 || parsedResult[parsedResult.length - 1].rid !== row.rid) {
+          parsedResult.push({ iid: row.iid, rid: row.rid, time_created: row.time_created, user_uid: row.user_uid, sections: [] });
+        }
+        parsedResult[parsedResult.length - 1].sections.push({ sname: row.sname, content: row.content });
+
+
+      })
+      console.log(parsedResult);
+      res.render('review', { reviews: parsedResult, item: result.rows[0] });
     })
 })
 

@@ -23,10 +23,15 @@
 
     {{#each reviews}}
     <div class="section">
-      <p><b>{{this.user_uid}}</b></p>
+      <p><b>{{this.user_uid}} on {{this.time_created}}</b></p>
+      {{#each this.sections}}
       <br>
+      <p><b>{{this.sname}}</b></p>
       <p>{{this.content}}</p>
+      {{/each}}
+
     </div>
+    <div class="divider"></div>
     {{/each}}
   </div>
 
