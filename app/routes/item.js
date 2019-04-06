@@ -82,6 +82,30 @@ router.get('/:itemId/listing', (req, res, next) => {
     .catch(err => res.render('error', { error: err, message: 'something went wrong' }))
 });
 
+// @route   POST item/:itemId/listing
+// @desc    Add new listing for item
+// @access  Private
+router.post('/:itemId/listing', (req, res, next) => {
+  res.send(`listing added`);
+});
+
+// @route   POST item/:itemId/listing
+// @desc    Update listing for item
+// @access  Private
+router.post('/:itemId/listing', (req, res, next) => {
+  res.send(`Listing for ${req.params.itemId} updated`);
+});
+
+// @route   POST item/:itemId/listing
+// @desc    Delete listing for item
+// @access  Private
+router.post('/:itemId/listing', (req, res, next) => {
+  res.send(`Listing for ${req.params.itemId} deleted`);
+});
+
+
+
+
 // ROUTES FOR THE LIKE OF THE ITEM
 
 // @route   POST item/:itemId/like
