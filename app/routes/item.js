@@ -72,11 +72,12 @@ router.post('/:itemId/delete', (req, res, next) => {
 // @desc    Get a listing
 // @access  Public
 router.get('/:itemId/listing', (req, res, next) => {
-  const query = "select item_iid, title, L.status as status, delivery_method, min_bid, time_ending, L.time_created as listingstart, biid, bidder_uid, amount, B.time_created as biddedOn from Listings L join Items I on (L.item_iid = $1) join Bids B on (B.listing_lid = L.lid) order by B.amount desc"
+  const query = "select item_iid, title, L.status as status, delivery_method, min_bid, time_ending, L.time_created as listingstart, biid, bidder_uid, amount, B.time_created as biddedOn from Listings L inner join Items I on (L.item_iid = I.iid) inner join Bids B on (B.listing_lid = L.lid) where I.iid = $1 order by B.amount desc"
   const values = [req.params.itemId];
 
   db.query(query, values)
     .then(result => {
+      console.log(result.rows);
       res.render('listing', { listing: result.rows[0], bids: result.rows });
     })
     .catch(err => res.render('error', { error: err, message: 'something went wrong' }))
@@ -102,6 +103,27 @@ router.post('/:itemId/listing', (req, res, next) => {
 router.post('/:itemId/listing', (req, res, next) => {
   res.send(`Listing for ${req.params.itemId} deleted`);
 });
+
+
+
+
+
+// ROUTES FOR THE REVIEWS OF THE ITEM
+
+// @route   GET item/:itemId/review
+// @desc    Get all reviews for the item
+// @access  Public
+router.get('/:itemId/review/', (req, res, next) => {
+  const query = "select distinct iid, rid, user_uid, R.time_created, sname, content from Items I inner join Reviews R on (R.item_iid = I.iid) inner join ReviewSections RS on (RS.review_rid = R.rid) where I.iid = $1 order by R.time_created"
+  const values = [req.params.itemId];
+
+  db.query(query, values)
+    .then(result => {
+      console.log(result.rows[0]);
+      res.render('review', { reviews: result.rows, item: result.rows[0] });
+    })
+})
+
 
 
 

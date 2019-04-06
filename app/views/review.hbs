@@ -1,0 +1,35 @@
+{{#> _base }}
+{{#*inline "contents"}}
+<div class="container">
+  <div class="row">
+    <div class="col 12">
+
+      <div class="section">
+        <h1>Item Information</h1>
+        <a class="btn waves-effect waves-light red darken-1" href="/item/{{item.iid}}">Info</a>
+        <a class="btn waves-effect waves-light red darken-1" href="/item/{{item.iid}}/listing">Listing</a>
+        <a class="btn waves-effect waves-light red darken-1" href="/item/{{item.iid}}/review">Reviews</a>
+      </div>
+      <div class="divider"></div>
+
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="section">
+      <h2>Reviews</h2>
+    </div>
+    <div class="divider"></div>
+
+    {{#each reviews}}
+    <div class="section">
+      <p><b>{{this.user_uid}}</b></p>
+      <br>
+      <p>{{this.content}}</p>
+    </div>
+    {{/each}}
+  </div>
+
+</div>
+{{/inline}}
+{{/_base}}

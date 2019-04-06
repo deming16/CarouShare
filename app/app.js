@@ -83,14 +83,12 @@ const userRouter = require('./routes/user');
 const adminRouter = require('./routes/admin');
 const itemRouter = require('./routes/item');
 const reviewRouter = require('./routes/review');
-const listingRouter = require('./routes/listing');
 const searchRouter = require('./routes/search');
 app.use('/', indexRouter);
 app.use('/user', userRouter);
 app.use('/admin', adminRouter);
 app.use('/item', itemRouter);
 app.use('/review', reviewRouter);
-app.use('/listing', listingRouter);
 app.use('/search', searchRouter);
 
 
