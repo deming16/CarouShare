@@ -316,6 +316,21 @@ router.get('/:itemId/review/', (req, res, next) => {
     })
 })
 
+// @route   POST item/:itemId/review
+// @desc    Add/Update Review
+// @access  Private
+router.post('/:itemId/review', (req, res, next) => {
+  res.send(`Review added for item ${req.params.itemId}`);
+});
+
+// @route   POST review/:reviewId/delete
+// @desc    Delete review
+// @access  Private
+router.post('/:reviewId/delete', (req, res, next) => {
+  const query = "delete from Reviews where rid = $1";
+  const values = [req.params.reviewId];
+  res.send(`Review ${req.params.reviewId} deleted`);
+});
 
 
 
@@ -347,11 +362,6 @@ router.post('/:itemId/like', async (req, res, next) => {
   }
 });
 
-// @route   POST item/:itemId/review
-// @desc    Add new review for item
-// @access  Private
-router.post('/:itemId/review', (req, res, next) => {
-  res.send(`Review added for item ${req.params.itemId}`);
-});
+
 
 module.exports = router;
