@@ -6,9 +6,9 @@
 
       <div class="section">
         <h1>Item Information</h1>
-        <a class="btn waves-effect waves-light red darken-1" href="/item/{{listing.item_iid}}">Info</a>
-        <a class="btn waves-effect waves-light red darken-1" href="/item/{{listing.item_iid}}/listing">Listing</a>
-        <a class="btn waves-effect waves-light red darken-1" href="/item/{{listing.item_iid}}/review">Reviews</a>
+        <a class="btn waves-effect waves-light red darken-1" href="/item/{{item}}">Info</a>
+        <a class="btn waves-effect waves-light red darken-1" href="/item/{{item}}/listing">Listing</a>
+        <a class="btn waves-effect waves-light red darken-1" href="/item/{{item}}/review">Reviews</a>
       </div>
       <div class="divider"></div>
 
@@ -18,11 +18,11 @@
   {{#if isOwner}}
   <div class="row">
     <!-- Modal Trigger -->
-    <a class="waves-effect waves-light red darken-1 btn modal-trigger" href="#modal1">Create/Update Listing</a>
+    <a class="waves-effect waves-light red darken-1 btn modal-trigger mb-1" href="#modal1">Create/Update Listing</a>
 
     <!-- Modal Structure -->
-    <div id="modal1" class="modal modal-fixed-footer">
-      <form method="POST" action="/item/{{listing.item_id}}/listing" class="col s12" id="listingForm">
+    <div id="modal1" class="modal">
+      <form method="POST" action="/item/{{item}}/listing" class="col s12" id="listingForm">
         <div class="modal-content">
           <h4>Create/Update Listing</h4>
           <div class="row">
@@ -39,8 +39,8 @@
             <div class="row">
               <div class="col s12">
                 <div class="input-field">
-                  <input name="status" id="status" type="text" class="validate">
-                  <label for="status">Status</label>
+                  <input name="min_bid" id="min_bid" type="text" class="validate">
+                  <label for="min_bid">Minimum Bid</label>
                 </div>
               </div>
             </div>
@@ -64,7 +64,7 @@
       </form>
     </div>
 
-    <form method="GET" action="/item/{{this.item_iid}}/listing">
+    <form method="POST" action="/item/{{item}}/listing/delete">
       <button class="btn btn-small waves-effect waves-light red">Delete Listing</button>
     </form>
   </div>
@@ -124,6 +124,7 @@
           <th>Bidder</th>
           <th>Amount</th>
           <th>Bidded On</th>
+          {{#if isOwner}}<th></th>{{/if}}
         </tr>
       </thead>
 
@@ -133,6 +134,13 @@
           <td>{{this.bidder_uid}}</td>
           <td>${{this.amount}}</td>
           <td>{{this.biddedon}}</td>
+          {{#if ../isOwner}}
+          <td>
+            <form method="POST" action="/item/{{this.item_iid}}/listing/{{this.lid}}/loan/{{this.bidder_uid}}">
+              <button class="btn btn-small waves-effect waves-light red">Accept Transaction</button>
+            </form>
+          </td>
+          {{/if}}
         </tr>
         {{/each}}
       </tbody>

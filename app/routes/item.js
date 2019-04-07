@@ -85,17 +85,21 @@ router.post('/:itemId/delete', (req, res, next) => {
 // @access  Public
 router.get('/:itemId/listing', async (req, res, next) => {
   try {
-    const query = "select L.lid, item_iid, owner_uid, title, L.status as status, delivery_method, min_bid, time_ending, L.time_created as listingstart, biid, bidder_uid, amount, B.time_created as biddedOn from Listings L inner join Items I on (L.item_iid = I.iid) left join Bids B on (B.listing_lid = L.lid) where I.iid = $1 and L.status = $2 order by B.amount desc"
-    const values = [req.params.itemId, 'open'];
+    let query = "select L.lid, item_iid, owner_uid, title, L.status as status, delivery_method, min_bid, time_ending, L.time_created as listingstart, biid, bidder_uid, amount, B.time_created as biddedOn from Listings L inner join Items I on (L.item_iid = I.iid) left join Bids B on (B.listing_lid = L.lid) where I.iid = $1 and L.status = $2 order by B.amount desc"
+    let values = [req.params.itemId, 'open'];
 
     const result = await db.query(query, values);
+
+    query = "select owner_uid from Items where iid = $1";
+    values = [req.params.itemId];
+    const user = await db.query(query, values);
 
     let listingAvailable = false;
     let isOwner = false;
     if (result.rows.length !== 0) listingAvailable = true;
-    if (req.isAuthenticated() && req.user.username === result.rows[0].owner_uid) isOwner = true;
+    if (req.isAuthenticated() && req.user.username === user.rows[0].owner_uid) isOwner = true;
 
-    res.render('listing', { listing: result.rows[0], bids: result.rows, listingAvailable: listingAvailable, isOwner: isOwner });
+    res.render('listing', { listing: result.rows[0], bids: result.rows, listingAvailable: listingAvailable, isOwner: isOwner, item: req.params.itemId });
 
   } catch (e) {
     res.render('error', { error: e, message: 'something went wrong' });
@@ -105,24 +109,66 @@ router.get('/:itemId/listing', async (req, res, next) => {
 });
 
 // @route   POST item/:itemId/listing
-// @desc    Add new listing for item
+// @desc    Add/Update listing for item
 // @access  Private
-router.post('/:itemId/listing', (req, res, next) => {
-  res.send(`listing added`);
+router.post('/:itemId/listing', async (req, res, next) => {
+  try {
+    let query = "select lid from Listings L where L.status = $1 and L.item_iid = $2";
+    let values = ['open', req.params.itemId];
+    const result = await db.query(query, values);
+    if (result.rows.length === 0) {
+      query = "insert into Listings (item_iid, title, delivery_method, min_bid) values ($1, $2, $3, $4)";
+      values = [req.params.itemId, req.body.title, req.body.delivery_method, req.body.min_bid];
+      await db.query(query, values);
+    }
+    else {
+      query = "update Listings set title = $1, delivery_method = $2, min_bid = $3 where lid = $4";
+      values = [req.body.title, req.body.delivery_method, req.body.min_bid, result.rows[0].lid];
+      await db.query(query, values);
+    }
+
+    res.redirect(`back`);
+  } catch (e) {
+    res.render('error', { error: e, message: 'something went wrong' });
+  }
+
 });
 
-// @route   POST item/:itemId/listing
-// @desc    Update listing for item
-// @access  Private
-router.post('/:itemId/listing', (req, res, next) => {
-  res.send(`Listing for ${req.params.itemId} updated`);
-});
-
-// @route   POST item/:itemId/listing
+// @route   POST item/:itemId/listing/delete
 // @desc    Delete listing for item
 // @access  Private
-router.post('/:itemId/listing', (req, res, next) => {
-  res.send(`Listing for ${req.params.itemId} deleted`);
+router.post('/:itemId/listing/delete', async (req, res, next) => {
+  const { client, done } = await db.client();
+  try {
+    await client.query('BEGIN');
+
+    // get the listing id
+    let query = "select lid from Listings where item_iid = $1";
+    let values = [req.params.itemId];
+    const result = await db.query(query, values);
+
+    if (result.rows.length !== 0) {
+      // delete all bids from the listing
+      query = "delete from Bids where listing_lid = $1";
+      values = [result.rows[0].lid];
+      await db.query(query, values);
+
+      // delete the listing itself
+      query = "delete from Listings where lid = $1";
+      values = [result.rows[0].lid];
+      await db.query(query, values);
+    }
+
+    await client.query('COMMIT');
+    done();
+
+    res.redirect('back');
+
+  } catch (e) {
+    await client.query('ROLLBACK');
+    done();
+    res.render('error', { error: e, message: 'something went wrong' });
+  }
 });
 
 
@@ -170,7 +216,6 @@ router.post('/:itemId/listing/:listingId/bid/delete', async (req, res, next) => 
   try {
     if (req.isAuthenticated()) {
 
-
       await client.query('BEGIN');
 
       let query = "select biid from Bids where listing_lid = $1 and bidder_uid = $2";
@@ -204,6 +249,45 @@ router.post('/:itemId/listing/:listingId/bid/delete', async (req, res, next) => 
 
 });
 
+// @route   POST item/:itemId/listing/:listingId/loan/:bidderId
+// @desc    Choose winner and loan (Accept transaction)
+// @access  Private
+router.post('/:itemId/listing/:listingId/loan/:bidderId', async (req, res, next) => {
+  const { client, done } = await db.client();
+  try {
+    await client.query('BEGIN');
+
+    // get biid for the user
+    let query = "select biid from Bids where bidder_uid = $1";
+    let values = [req.params.bidderId];
+    const result = await db.query(query, values);
+
+    query = "insert into Loans (bid_biid) values ($1)";
+    values = [result.rows[0].biid];
+    await db.query(query, values);
+
+    query = "delete from Bids where listing_lid = $1 and bidder_uid != $2";
+    values = [req.params.listingId, req.params.bidderId];
+    await db.query(query, values);
+
+    query = "update Listings set status = $1 where lid = $2";
+    values = ['close', req.params.listingId];
+    await db.query(query, values);
+    console.log('done');
+
+    await client.query('COMMIT');
+    done();
+    res.redirect('back');
+
+  } catch (e) {
+    await client.query('ROLLBACK');
+    done();
+    res.render('error', { error: e, message: 'something went wrong' });
+  }
+  //Add Bid to loan
+  // delete all other bids in this listing
+  // Change listing status to close
+});
 
 
 

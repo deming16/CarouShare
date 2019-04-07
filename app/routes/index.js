@@ -8,41 +8,47 @@ const { ERRORS } = require('../utils/errors');
 const db = require('../db/');
 
 router.get('/', async (req, res, next) => {
-    if (req.isAuthenticated()) {
-        const query = "select * from UserLikeItems U right outer join ListingViews L on (U.item_iid = L.iid) where owner_uid != $1 and L.status = $2 order by L.time_created, L.iid";
-        const values = [req.user.username, 'open'];
-        const result = await db.query(query, values);
-        const parsedResult = [];
-        result.rows.forEach(row => {
-            if (parsedResult.length === 0 || parsedResult[parsedResult.length - 1].iid !== row.iid) {
 
-                parsedResult.push({ lid: row.lid, min_bid: row.min_bid, title: row.title, time_created: row.time_created, time_ending: row.time_ending, iid: row.iid, owner_uid: row.owner_uid, item_name: row.item_name, category: row.category, photo: row.photo, liked: false });
-            }
+    try {
+        if (req.isAuthenticated()) {
+            const query = "select * from UserLikeItems U right outer join ListingViews L on (U.item_iid = L.iid) where owner_uid != $1 and L.status = $2 order by L.time_created, L.iid";
+            const values = [req.user.username, 'open'];
 
-            if (row.user_uid === req.user.username) {
-                parsedResult[parsedResult.length - 1].liked = true;
-            }
-        });
+            const result = await db.query(query, values);
+            const parsedResult = [];
+            result.rows.forEach(row => {
+                if (parsedResult.length === 0 || parsedResult[parsedResult.length - 1].iid !== row.iid) {
 
-        if (parsedResult.length === 0) {
-            res.render('index', { noListing: true });
-        } else {
-            res.render('index', { listing: parsedResult, noListing: false });
-        }
+                    parsedResult.push({ lid: row.lid, min_bid: row.min_bid, title: row.title, time_created: row.time_created, time_ending: row.time_ending, iid: row.iid, owner_uid: row.owner_uid, item_name: row.item_name, category: row.category, photo: row.photo, liked: false });
+                }
 
-    }
-    else {
-        const query = "select * from ListingViews L where L.status = $1 order by time_created";
-        const values = ['open'];
-        db.query(query, values)
-            .then(result => {
-                if (result.rows.length === 0) {
-                    res.send('There are no listings', { noListing: true });
-                } else {
-                    res.render('index', { listing: result.rows, noListing: false });
+                if (row.user_uid === req.user.username) {
+                    parsedResult[parsedResult.length - 1].liked = true;
                 }
             });
+
+            if (parsedResult.length === 0) {
+                res.render('index', { noListing: true });
+            } else {
+                res.render('index', { listing: parsedResult, noListing: false });
+            }
+
+        }
+        else {
+            const query = "select * from ListingViews L where L.status = $1 order by time_created";
+            const values = ['open'];
+
+            const result = await db.query(query, values);
+
+            let noListing = false
+            if (result.rows.length === 0) noListing = true;
+            res.render('index', { listing: result.rows, noListing: noListing });
+
+        }
+    } catch (e) {
+        res.render('error', { error: e, message: 'something went wrong' });
     }
+
 
 });
 
