@@ -1,0 +1,83 @@
+{{#> _base }}
+{{#*inline "contents"}}
+<div class="container">
+  <div class="row">
+    <h1>Dashboard</h1>
+    <a class="btn waves-effect waves-light red darken-1" href="/dashboard/borrow">My Borrows</a>
+    <a class="btn waves-effect waves-light red darken-1" href="/dashboard/loan">My Loans</a>
+    <a class="btn waves-effect waves-light red darken-1" href="/dashboard/bid">My Bids</a>
+    {{#if isBorrowList}}
+    <table>
+      <thead>
+        <tr>
+          <th>Listing Title</th>
+          <th>Borrowed From</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {{#each list}}
+        <tr>
+          <td>{{this.title}}</td>
+          <td>{{this.owner_uid}}</td>
+        </tr>
+        {{/each}}
+      </tbody>
+    </table>
+    {{/if}}
+
+    {{#if isLoanList}}
+    <table>
+      <thead>
+        <tr>
+          <th>Listing Name</th>
+          <th>Loaned To</th>
+          <th></th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {{#each list}}
+        <tr>
+          <td>{{this.title}}</td>
+          <td>{{this.bidder_uid}}</td>
+          <td>
+            <form method="GET" action="/dashboard/loadn">
+              <button class="btn btn-small waves-effect waves-light red">End Transaction</button>
+            </form>
+          </td>
+        </tr>
+        {{/each}}
+      </tbody>
+    </table>
+    {{/if}}
+
+    {{#if isBidList}}
+    <table>
+      <thead>
+        <tr>
+          <th>Listing Name</th>
+          <th>Status</th>
+          <th></th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {{#each list}}
+        <tr>
+          <td>{{this.title}}</td>
+          <td>{{this.status}}</td>
+          <td>
+            <form method="GET" action="/item/{{this.item_iid}}/listing">
+              <button class="btn btn-small waves-effect waves-light red">Go To Listing</button>
+            </form>
+          </td>
+        </tr>
+        {{/each}}
+      </tbody>
+    </table>
+    {{/if}}
+  </div>
+</div>
+{{/inline}}
+{{/_base}}
