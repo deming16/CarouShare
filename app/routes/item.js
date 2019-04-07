@@ -128,6 +128,40 @@ router.post('/:itemId/listing', (req, res, next) => {
 
 // ROUTES FOR BIDDING OF LISTING
 
+// @route   POST item/:itemId/listing/:listingId/bid
+// @desc    Add/Update Bid for open listing
+// @access  Private
+router.post('/:itemId/listing/:listingId/bid', async (req, res, next) => {
+  try {
+    if (req.isAuthenticated()) {
+      let query = "select biid, bidder_uid, listing_lid from Bids where bidder_uid = $1 and listing_lid = $2";
+      let values = [req.user.username, req.params.listingId];
+      const result = await db.query(query, values);
+      console.log(result.rows.length === 0);
+      if (result.rows.length === 0) {
+        // add new bid
+        query = "insert into Bids (bidder_uid, listing_lid, amount) values ($1, $2, $3)";
+        values = [req.user.username, req.params.listingId, req.body.amount];
+        await db.query(query, values);
+      }
+      else {
+        // update bid
+        query = "UPDATE Bids SET amount = $1 WHERE bidder_uid = $2 AND listing_lid = $3";
+        values = [req.body.amount, req.user.username, req.params.listingId];
+
+        await db.query(query, values);
+      }
+
+      res.redirect('back');
+    }
+    else {
+      res.redirect('/login');
+    }
+  } catch (e) {
+    res.render('error', { error: e, message: 'something went wrong' });
+  }
+});
+
 // @route   POST item/:itemId/listing/:listingId/bid/delete
 // @desc    Delete Bid for open listing
 // @access  Private
