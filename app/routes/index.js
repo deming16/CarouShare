@@ -11,7 +11,6 @@ router.get('/', async (req, res, next) => {
     if (req.isAuthenticated()) {
         const query = "select * from UserLikeItems U right outer join ListingViews L on (U.item_iid = L.iid) where owner_uid != $1 and L.status = $2 order by L.time_created, L.iid";
         const values = [req.user.username, 'open'];
-
         const result = await db.query(query, values);
         const parsedResult = [];
         result.rows.forEach(row => {
@@ -33,8 +32,9 @@ router.get('/', async (req, res, next) => {
 
     }
     else {
-        const query = "select * from ListingViews order by time_created";
-        db.query(query)
+        const query = "select * from ListingViews L where L.status = $1 order by time_created";
+        const values = ['open'];
+        db.query(query, values)
             .then(result => {
                 if (result.rows.length === 0) {
                     res.send('There are no listings', { noListing: true });

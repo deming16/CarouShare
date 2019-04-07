@@ -85,12 +85,10 @@ router.post('/:itemId/delete', (req, res, next) => {
 // @access  Public
 router.get('/:itemId/listing', async (req, res, next) => {
   try {
-    const query = "select item_iid, owner_uid, title, L.status as status, delivery_method, min_bid, time_ending, L.time_created as listingstart, biid, bidder_uid, amount, B.time_created as biddedOn from Listings L inner join Items I on (L.item_iid = I.iid) left join Bids B on (B.listing_lid = L.lid) where I.iid = $1 and L.status = $2 order by B.amount desc"
+    const query = "select L.lid, item_iid, owner_uid, title, L.status as status, delivery_method, min_bid, time_ending, L.time_created as listingstart, biid, bidder_uid, amount, B.time_created as biddedOn from Listings L inner join Items I on (L.item_iid = I.iid) left join Bids B on (B.listing_lid = L.lid) where I.iid = $1 and L.status = $2 order by B.amount desc"
     const values = [req.params.itemId, 'open'];
 
     const result = await db.query(query, values);
-
-    console.log(result.rows);
 
     let listingAvailable = false;
     let isOwner = false;
@@ -125,6 +123,51 @@ router.post('/:itemId/listing', (req, res, next) => {
 // @access  Private
 router.post('/:itemId/listing', (req, res, next) => {
   res.send(`Listing for ${req.params.itemId} deleted`);
+});
+
+
+// ROUTES FOR BIDDING OF LISTING
+
+// @route   POST item/:itemId/listing/:listingId/bid/delete
+// @desc    Delete Bid for open listing
+// @access  Private
+router.post('/:itemId/listing/:listingId/bid/delete', async (req, res, next) => {
+  const { client, done } = await db.client();
+  try {
+    if (req.isAuthenticated()) {
+
+
+      await client.query('BEGIN');
+
+      let query = "select biid from Bids where listing_lid = $1 and bidder_uid = $2";
+      let values = [req.params.listingId, req.user.username];
+      const result = await db.query(query, values);
+
+      // Delete lean first if there is bid
+      if (result.rows.length !== 0) {
+        query = "delete from Loans where bid_biid = $1"
+        values = [result.rows[0].biid];
+        await db.query(query, values);
+
+        query = "delete from Bids where listing_lid = $1 and bidder_uid = $2";
+        values = [req.params.listingId, req.user.username];
+        await db.query(query, values);
+      }
+
+      await client.query('COMMIT');
+      done();
+      res.redirect('back');
+    }
+    else {
+      done();
+      res.redirect('/login');
+    }
+  } catch (e) {
+    await client.query('ROLLBACK');
+    done();
+    res.render('error', { error: e, message: 'something went wrong' });
+  }
+
 });
 
 

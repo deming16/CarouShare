@@ -69,7 +69,39 @@
     </form>
   </div>
   {{else}}
+  <div class="row">
+    <!-- Modal Trigger -->
+    <a class="waves-effect waves-light red darken-1 btn modal-trigger" href="#modal1">Place Bid</a>
 
+    <!-- Modal Structure -->
+    <div id="modal1" class="modal modal-fixed-footer">
+      <form method="POST" action="/item/{{listing.item_id}}/listing" class="col s12" id="bidForm">
+        <div class="modal-content">
+          <h4>Enter Bid Amount</h4>
+          <div class="row">
+
+            <div class="row">
+              <div class="col s12">
+                <div class="input-field">
+                  <input name="title" id="title" type="text" class="validate">
+                  <label for="title">Title</label>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <div class="modal-footer">
+          <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Cancel</a>
+          <button type="submit" form="bidForm" class="modal-close waves-effect waves-green btn-flat">Place Bid</button>
+        </div>
+      </form>
+    </div>
+
+    <form method="POST" action="/item/{{listing.item_iid}}/listing/{{listing.lid}}/bid/delete">
+      <button class="btn btn-small waves-effect waves-light red">Remove Bid</button>
+    </form>
+  </div>
   {{/if}}
 
   {{#if listingAvailable}}
