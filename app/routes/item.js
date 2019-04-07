@@ -395,13 +395,36 @@ router.post('/:itemId/review/save', async (req, res, next) => {
 
 });
 
-// @route   POST review/:reviewId/delete
-// @desc    Delete review
+// @route   POST item/:itemId/review/delete
+// @desc    Delete section for review
 // @access  Private
-router.post('/:reviewId/delete', (req, res, next) => {
-  const query = "delete from Reviews where rid = $1";
-  const values = [req.params.reviewId];
-  res.send(`Review ${req.params.reviewId} deleted`);
+router.post('/:itemId/review/delete/:sname', async (req, res, next) => {
+  try {
+    // get rid
+    let query = "select rid from Reviews where user_uid = $1 and item_iid = $2";
+    let values = [req.user.username, req.params.itemId];
+    const result = await db.query(query, values);
+
+    // delete section
+    query = "delete from ReviewSections where sname = $1 and review_rid = $2";
+    values = [req.params.sname, result.rows[0].rid];
+    await db.query(query, values);
+
+    // if no more section, delete review
+    query = "select rid from Reviews inner join ReviewSections on (rid = review_rid)";
+    const section = await db.query(query);
+
+    if (section.rows.length === 0) {
+      query = "delete from Reviews where rid = $1";
+      values = [result.rows[0].rid];
+      await db.query(query, values);
+    }
+
+    res.redirect(`back`);
+  } catch (e) {
+    console.log(e);
+  }
+
 });
 
 
