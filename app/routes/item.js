@@ -87,7 +87,6 @@ router.get('/:itemId/listing', async (req, res, next) => {
   try {
     let query = "select L.lid, item_iid, owner_uid, title, L.status as status, delivery_method, min_bid, time_ending, L.time_created as listingstart, biid, bidder_uid, amount, B.time_created as biddedOn from Listings L inner join Items I on (L.item_iid = I.iid) left join Bids B on (B.listing_lid = L.lid) where I.iid = $1 and L.status = $2 order by B.amount desc"
     let values = [req.params.itemId, 'open'];
-
     const result = await db.query(query, values);
 
     query = "select owner_uid from Items where iid = $1";
@@ -297,30 +296,103 @@ router.post('/:itemId/listing/:listingId/loan/:bidderId', async (req, res, next)
 // @route   GET item/:itemId/review
 // @desc    Get all reviews for the item
 // @access  Public
-router.get('/:itemId/review/', (req, res, next) => {
-  const query = "select iid, rid, user_uid, R.time_created, sname, content from Items I inner join Reviews R on (R.item_iid = I.iid) inner join ReviewSections RS on (RS.review_rid = R.rid) where I.iid = $1 order by R.rid, R.time_created"
-  const values = [req.params.itemId];
+router.get('/:itemId/review/', async (req, res, next) => {
+  try {
+    let query = "select iid, rid, user_uid, R.time_created, sname, content from Items I inner join Reviews R on (R.item_iid = I.iid) inner join ReviewSections RS on (RS.review_rid = R.rid) where I.iid = $1 order by R.rid, R.time_created"
+    let values = [req.params.itemId];
+    const result = await db.query(query, values);
 
-  db.query(query, values)
-    .then(result => {
-      const parsedResult = [];
-      result.rows.forEach(row => {
-        if (parsedResult.length === 0 || parsedResult[parsedResult.length - 1].rid !== row.rid) {
-          parsedResult.push({ iid: row.iid, rid: row.rid, time_created: row.time_created, user_uid: row.user_uid, sections: [] });
-        }
-        parsedResult[parsedResult.length - 1].sections.push({ sname: row.sname, content: row.content });
+    const parsedResult = [];
+    result.rows.forEach(row => {
+      if (parsedResult.length === 0 || parsedResult[parsedResult.length - 1].rid !== row.rid) {
+        parsedResult.push({ iid: row.iid, rid: row.rid, time_created: row.time_created, user_uid: row.user_uid, sections: [] });
+      }
+      parsedResult[parsedResult.length - 1].sections.push({ sname: row.sname, content: row.content });
+    });
 
+    res.render('review', { reviews: parsedResult, item: result.rows[0] });
+  } catch (e) {
+    console.log(e);
+  }
 
-      })
-      res.render('review', { reviews: parsedResult, item: result.rows[0] });
-    })
 })
 
-// @route   POST item/:itemId/review
+// @route   GET item/:itemId/myreview
+// @desc    Get My Review for the item
+// @access  Private
+router.get('/:itemId/myreview', async (req, res, next) => {
+  if (req.isAuthenticated()) {
+    let query = "select rid, item_iid, user_uid, sname, content from Reviews inner join ReviewSections on (rid = review_rid) where user_uid = $1";
+    let values = [req.user.username];
+    const result = await db.query(query, values);
+
+    res.render('myReview', { sections: result.rows, item: req.params.itemId });
+  }
+  else {
+    res.redirect('/login');
+  }
+});
+
+// @route   POST item/:itemId/review/save
 // @desc    Add/Update Review
 // @access  Private
-router.post('/:itemId/review', (req, res, next) => {
-  res.send(`Review added for item ${req.params.itemId}`);
+router.post('/:itemId/review/save', async (req, res, next) => {
+  const { client, done } = await db.client();
+  try {
+    if (req.isAuthenticated()) {
+      console.log(req.body);
+
+      //Check if review already written before
+      let query = "select rid, item_iid, sname from Reviews R inner join ReviewSections RS on (rid = review_rid) where user_uid = $1 and item_iid = $2";
+      let values = [req.user.username, req.params.itemId];
+      const result = await db.query(query, values);
+
+      await client.query('BEGIN');
+
+      if (result.rows.length === 0) {
+        // if review dont exist yet, add new one
+        query = "insert into Reviews (item_iid, user_uid) values ($1, $2) returning rid";
+        values = [req.params.itemId, req.user.username];
+        const review = await db.query(query, values);
+
+        query = "insert into ReviewSections (sname, review_rid, content) values ($1, $2, $3)";
+        values = [req.body.sname, review.rows[0].rid, req.body.content];
+        await db.query(query, values);
+      }
+      else {
+        // if review already exist, check if section exist
+        let sectionExist = false;
+        result.rows.forEach(row => {
+          if (row.sname === req.body.psname) {
+            sectionExist = true;
+          }
+        });
+        if (sectionExist) {
+          query = "update ReviewSections set sname = $1, content = $2 where review_rid = $3 and sname = $4";
+          values = [req.body.sname, req.body.content, result.rows[0].rid, req.body.psname];
+          await db.query(query, values);
+        }
+        else {
+          query = "insert into ReviewSections (sname, review_rid, content) values ($1, $2, $3)";
+          values = [req.body.sname, result.rows[0].rid, req.body.content];
+          await db.query(query, values)
+        }
+      }
+
+      await client.query('COMMIT');
+      done();
+      res.redirect('back');
+    }
+    else {
+      res.redirect('/login');
+    }
+
+  } catch (e) {
+    await client.query('ROLLBACK');
+    done();
+    console.log(e);
+  }
+
 });
 
 // @route   POST review/:reviewId/delete

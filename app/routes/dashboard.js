@@ -65,8 +65,8 @@ router.get('/bid', async (req, res, next) => {
   try {
 
     if (req.isAuthenticated()) {
-      const query = "select biid, title, status, item_iid from Bids B inner join Listings L on (B.listing_lid = L.lid) where B.bidder_uid = $1"
-      const values = [req.user.username];
+      const query = "select biid, title, status, item_iid from Bids B inner join Listings L on (B.listing_lid = L.lid) where B.bidder_uid = $1 and L.status = $2"
+      const values = [req.user.username, 'open'];
 
       const result = await db.query(query, values);
       res.render('dashboard', { list: result.rows, isBidList: true });
@@ -92,9 +92,14 @@ router.post('/loan/end/:listingId', async (req, res, next) => {
       await client.query('BEGIN');
 
       // get loan bid id
-      let query = "select biid, listing_lid from Bids inner join Loans on (bid_biid = biid) where listing_lid = $1";
+      let query = "select biid, listing_lid, bidder_uid, item_iid, title from Bids inner join Loans on (bid_biid = biid) inner join Listings on (listing_lid = lid) where listing_lid = $1";
       let values = [req.params.listingId];
       const result = await db.query(query, values);
+
+      // Add to completed loans
+      query = "insert into CompletedLoans (user_uid, item_iid, title) values ($1, $2, $3)";
+      values = [result.rows[0].bidder_uid, result.rows[0].item_iid, result.rows[0].title];
+      await db.query(query, values);
 
       //delete loan
       query = "delete from Loans where bid_biid = $1";
@@ -126,6 +131,28 @@ router.post('/loan/end/:listingId', async (req, res, next) => {
   }
 
 })
+
+//@route    GET /dashboard/review
+//@desc     Get list of reviewable Items
+//@access   Private
+router.get('/review', async (req, res, next) => {
+  try {
+    if (req.isAuthenticated()) {
+      let query = "select cl_id, item_iid, user_uid, title, time_created from CompletedLoans where user_uid = $1";
+      let values = [req.user.username];
+      const result = await db.query(query, values);
+
+      res.render('dashboard', { list: result.rows, isReviewList: true });
+
+    }
+    else {
+      res.redirect('/login');
+    }
+  } catch (e) {
+    console.log(e);
+  }
+
+});
 
 
 module.exports = router;

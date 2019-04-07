@@ -9,6 +9,7 @@ DROP TABLE IF EXISTS UserLikeItems CASCADE;
 DROP TABLE IF EXISTS Listings CASCADE;
 DROP TABLE IF EXISTS Bids CASCADE;
 DROP TABLE IF EXISTS Loans CASCADE;
+DROP TABLE IF EXISTS CompletedLoans CASCADE;
 
 CREATE TABLE Accounts (
     uid                 VARCHAR(64),
@@ -119,6 +120,17 @@ CREATE TABLE Loans (
     FOREIGN KEY (bid_biid) REFERENCES Bids
 );
 
+CREATE TABLE CompletedLoans (
+    cl_id            SERIAL,
+    user_uid         VARCHAR(64) NOT NULL,
+    item_iid         INTEGER NOT NULL,
+    title            VARCHAR(64) NOT NULL,
+    time_created     TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (cl_id),
+    FOREIGN KEY (item_iid) REFERENCES Items,
+    FOREIGN KEY (user_uid) REFERENCES Users
+);
+
 create view ListingViews (lid, min_bid, title, time_created, time_ending, iid, owner_uid, item_name, category, photo, status ) as 
   select L.lid, L.min_bid, L.title, L.time_created, L.time_ending, I.iid, I.owner_uid, I.item_name, I.category, I.photo, L.status 
   from Items I inner join Listings L on (I.iid = L.item_iid); 
@@ -213,10 +225,10 @@ INSERT INTO Follows (follower_uid, followee_uid) VALUES ('user', 'bob');
 
 INSERT INTO Items (owner_uid, item_name, category) VALUES ('user', 'Laptop', 'PC');
 
-INSERT INTO Reviews (item_iid, user_uid) VALUES (1, 'alice');
+-- INSERT INTO Reviews (item_iid, user_uid) VALUES (1, 'alice');
 
-INSERT INTO ReviewSections (sname, review_rid, content) VALUES ('General', 1, 'Great!');
-INSERT INTO ReviewSections (sname, review_rid, content) VALUES ('Special', 1, 'Also Great!');
+-- INSERT INTO ReviewSections (sname, review_rid, content) VALUES ('General', 1, 'Great!');
+-- INSERT INTO ReviewSections (sname, review_rid, content) VALUES ('Special', 1, 'Also Great!');
 
 INSERT INTO UserLikeItems (user_uid, item_iid) VALUES ('alice', 1);
 

@@ -6,6 +6,7 @@
     <a class="btn waves-effect waves-light red darken-1" href="/dashboard/borrow">My Borrows</a>
     <a class="btn waves-effect waves-light red darken-1" href="/dashboard/loan">My Loans</a>
     <a class="btn waves-effect waves-light red darken-1" href="/dashboard/bid">My Bids</a>
+    <a class="btn waves-effect waves-light red darken-1" href="/dashboard/review">My Reviews</a>
     {{#if isBorrowList}}
     <table>
       <thead>
@@ -68,7 +69,7 @@
           <td>{{this.title}}</td>
           <td>{{this.status}}</td>
           <td>
-            <form method="POST" action="/item/{{this.item_iid}}/listing">
+            <form method="GET" action="/item/{{this.item_iid}}/listing">
               <button class="btn btn-small waves-effect waves-light red">Go To Listing</button>
             </form>
           </td>
@@ -77,6 +78,31 @@
       </tbody>
     </table>
     {{/if}}
+
+    {{#if isReviewList}}
+    <table>
+      <thead>
+        <tr>
+          <th>Listing Name</th>
+          <th></th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {{#each list}}
+        <tr>
+          <td>{{this.title}}</td>
+          <td>
+            <form method="GET" action="/item/{{this.item_iid}}/myreview">
+              <button class="btn btn-small waves-effect waves-light red">Add/Edit Review</button>
+            </form>
+          </td>
+        </tr>
+        {{/each}}
+      </tbody>
+    </table>
+    {{/if}}
+
   </div>
 </div>
 {{/inline}}
