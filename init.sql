@@ -87,7 +87,7 @@ CREATE TABLE Listings (
     lid                 SERIAL,
     item_iid            INTEGER NOT NULL,
     title               VARCHAR(64) NOT NULL,
-    status              VARCHAR(64),
+    status              VARCHAR(64) NOT NULL DEFAULT 'open',
     delivery_method     VARCHAR(64),
     min_bid             NUMERIC(16, 2) NOT NULL DEFAULT 0,
     time_ending         TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -119,9 +119,11 @@ CREATE TABLE Loans (
     FOREIGN KEY (bid_biid) REFERENCES Bids
 );
 
-create view ListingViews (lid, min_bid, title, time_created, time_ending, iid, owner_uid, item_name, category, photo ) as 
-  select L.lid, L.min_bid, L.title, L.time_created, L.time_ending, I.iid, I.owner_uid, I.item_name, I.category, I.photo 
+create view ListingViews (lid, min_bid, title, time_created, time_ending, iid, owner_uid, item_name, category, photo, status ) as 
+  select L.lid, L.min_bid, L.title, L.time_created, L.time_ending, I.iid, I.owner_uid, I.item_name, I.category, I.photo, L.status 
   from Items I inner join Listings L on (I.iid = L.item_iid); 
+
+
 
 --------------------------------------------
 -- TRIGGERS
@@ -219,6 +221,7 @@ INSERT INTO ReviewSections (sname, review_rid, content) VALUES ('Special', 1, 'A
 INSERT INTO UserLikeItems (user_uid, item_iid) VALUES ('alice', 1);
 
 INSERT INTO Listings (item_iid, title) VALUES (1, 'Apple Laptop');
+INSERT INTO Listings (item_iid, title, status) VALUES (1, 'Closed Apple Laptop', 'close');
 
 INSERT INTO Bids (bidder_uid, listing_lid, amount) VALUES ('alice', 1, 10);
 INSERT INTO Bids (bidder_uid, listing_lid, amount) VALUES ('bob', 1, 20);

@@ -81,17 +81,29 @@ router.post('/:itemId/delete', (req, res, next) => {
 // ROUTES FOR THE LISTING OF THE ITEM
 
 // @route   GET item/:itemId/listing
-// @desc    Get a listing
+// @desc    Get the open listing
 // @access  Public
-router.get('/:itemId/listing', (req, res, next) => {
-  const query = "select item_iid, title, L.status as status, delivery_method, min_bid, time_ending, L.time_created as listingstart, biid, bidder_uid, amount, B.time_created as biddedOn from Listings L inner join Items I on (L.item_iid = I.iid) inner join Bids B on (B.listing_lid = L.lid) where I.iid = $1 order by B.amount desc"
-  const values = [req.params.itemId];
+router.get('/:itemId/listing', async (req, res, next) => {
+  try {
+    const query = "select item_iid, owner_uid, title, L.status as status, delivery_method, min_bid, time_ending, L.time_created as listingstart, biid, bidder_uid, amount, B.time_created as biddedOn from Listings L inner join Items I on (L.item_iid = I.iid) left join Bids B on (B.listing_lid = L.lid) where I.iid = $1 and L.status = $2 order by B.amount desc"
+    const values = [req.params.itemId, 'open'];
 
-  db.query(query, values)
-    .then(result => {
-      res.render('listing', { listing: result.rows[0], bids: result.rows });
-    })
-    .catch(err => res.render('error', { error: err, message: 'something went wrong' }))
+    const result = await db.query(query, values);
+
+    console.log(result.rows);
+
+    let listingAvailable = false;
+    let isOwner = false;
+    if (result.rows.length !== 0) listingAvailable = true;
+    if (req.isAuthenticated() && req.user.username === result.rows[0].owner_uid) isOwner = true;
+
+    res.render('listing', { listing: result.rows[0], bids: result.rows, listingAvailable: listingAvailable, isOwner: isOwner });
+
+  } catch (e) {
+    res.render('error', { error: e, message: 'something went wrong' });
+  }
+
+
 });
 
 // @route   POST item/:itemId/listing

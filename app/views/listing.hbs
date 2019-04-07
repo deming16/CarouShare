@@ -15,6 +15,64 @@
     </div>
   </div>
 
+  {{#if isOwner}}
+  <div class="row">
+    <!-- Modal Trigger -->
+    <a class="waves-effect waves-light red darken-1 btn modal-trigger" href="#modal1">Create/Update Listing</a>
+
+    <!-- Modal Structure -->
+    <div id="modal1" class="modal modal-fixed-footer">
+      <form method="POST" action="/item/{{listing.item_id}}/listing" class="col s12" id="listingForm">
+        <div class="modal-content">
+          <h4>Create/Update Listing</h4>
+          <div class="row">
+
+            <div class="row">
+              <div class="col s12">
+                <div class="input-field">
+                  <input name="title" id="title" type="text" class="validate">
+                  <label for="title">Title</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col s12">
+                <div class="input-field">
+                  <input name="status" id="status" type="text" class="validate">
+                  <label for="status">Status</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col s12">
+                <div class="input-field">
+                  <input name="delivery_method" id="delivery_method" type="text" class="validate">
+                  <label for="delivery_method">Delivery Method</label>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <div class="modal-footer">
+          <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Cancel</a>
+          <button type="submit" form="listingForm" class="modal-close waves-effect waves-green btn-flat">Save
+            Changes</button>
+        </div>
+      </form>
+    </div>
+
+    <form method="GET" action="/item/{{this.item_iid}}/listing">
+      <button class="btn btn-small waves-effect waves-light red">Delete Listing</button>
+    </form>
+  </div>
+  {{else}}
+
+  {{/if}}
+
+  {{#if listingAvailable}}
   <div class="row">
     <div class="section">
       <h2>{{listing.title}}</h2>
@@ -48,6 +106,8 @@
       </tbody>
     </table>
   </div>
+  {{/if}}
+
 
 </div>
 {{/inline}}

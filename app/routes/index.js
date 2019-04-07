@@ -9,8 +9,8 @@ const db = require('../db/');
 
 router.get('/', async (req, res, next) => {
     if (req.isAuthenticated()) {
-        const query = "select * from UserLikeItems U right outer join ListingViews L on (U.item_iid = L.iid) where owner_uid != $1 order by L.time_created, L.iid";
-        const values = [req.user.username];
+        const query = "select * from UserLikeItems U right outer join ListingViews L on (U.item_iid = L.iid) where owner_uid != $1 and L.status = $2 order by L.time_created, L.iid";
+        const values = [req.user.username, 'open'];
 
         const result = await db.query(query, values);
         const parsedResult = [];

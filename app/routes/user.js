@@ -12,11 +12,8 @@ router.get('/', async (req, res, next) => {
             const result = {};
 
             let query = 'SELECT uid, email, address, mobile FROM Users WHERE uid = $1';
-            const values = [req.user.username];
+            let values = [req.user.username];
             result.userDetails = await db.query(query, values);
-
-            query = 'select lid, title, Listings.status as status, delivery_method, min_bid, time_ending, photo, owner_uid, description from Items inner join Listings on (item_iid = iid) where owner_uid = $1';
-            result.listings = await db.query(query, values);
 
             query = 'select iid, item_name, category, status, photo from Items where owner_uid = $1';
             result.items = await db.query(query, values);
@@ -29,6 +26,10 @@ router.get('/', async (req, res, next) => {
 
             query = 'select followee_uid from Follows where follower_uid = $1';
             result.following = await db.query(query, values);
+
+            query = 'select lid, item_iid, title, Listings.status as status, delivery_method, min_bid, time_ending, photo, owner_uid, description from Items inner join Listings on (item_iid = iid) where owner_uid = $1 and Listings.status = $2';
+            values = [req.user.username, 'open'];
+            result.listings = await db.query(query, values);
 
             res.render('user',
                 {
