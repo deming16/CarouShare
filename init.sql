@@ -224,7 +224,6 @@ INSERT INTO Listings (item_iid, title) VALUES (1, 'Apple Laptop');
 INSERT INTO Listings (item_iid, title, status) VALUES (1, 'Closed Apple Laptop', 'close');
 
 INSERT INTO Bids (bidder_uid, listing_lid, amount) VALUES ('alice', 2, 10);
-INSERT INTO Bids (bidder_uid, listing_lid, amount) VALUES ('bob', 2, 20);
 INSERT INTO Bids (bidder_uid, listing_lid, amount) VALUES ('alice', 1, 10);
 INSERT INTO Bids (bidder_uid, listing_lid, amount) VALUES ('bob', 1, 20);
 

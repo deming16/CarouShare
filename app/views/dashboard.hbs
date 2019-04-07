@@ -42,7 +42,7 @@
           <td>{{this.title}}</td>
           <td>{{this.bidder_uid}}</td>
           <td>
-            <form method="GET" action="/dashboard/loadn">
+            <form method="POST" action="/dashboard/loan/end/{{this.lid}}">
               <button class="btn btn-small waves-effect waves-light red">End Transaction</button>
             </form>
           </td>
@@ -68,7 +68,7 @@
           <td>{{this.title}}</td>
           <td>{{this.status}}</td>
           <td>
-            <form method="GET" action="/item/{{this.item_iid}}/listing">
+            <form method="POST" action="/item/{{this.item_iid}}/listing">
               <button class="btn btn-small waves-effect waves-light red">Go To Listing</button>
             </form>
           </td>
