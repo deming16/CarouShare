@@ -261,8 +261,8 @@ router.post('/:itemId/listing/:listingId/loan/:bidderId', async (req, res, next)
     await client.query('BEGIN');
 
     // get biid for the user
-    let query = "select biid from Bids where bidder_uid = $1";
-    let values = [req.params.bidderId];
+    let query = "select biid from Bids where bidder_uid = $1 and listing_lid = $2";
+    let values = [req.params.bidderId, req.params.listingId];
     const result = await db.query(query, values);
 
     query = "insert into Loans (bid_biid) values ($1)";
@@ -276,7 +276,6 @@ router.post('/:itemId/listing/:listingId/loan/:bidderId', async (req, res, next)
     query = "update Listings set status = $1 where lid = $2";
     values = ['close', req.params.listingId];
     await db.query(query, values);
-    console.log('done');
 
     await client.query('COMMIT');
     done();
@@ -287,9 +286,7 @@ router.post('/:itemId/listing/:listingId/loan/:bidderId', async (req, res, next)
     done();
     res.render('error', { error: e, message: 'something went wrong' });
   }
-  //Add Bid to loan
-  // delete all other bids in this listing
-  // Change listing status to close
+
 });
 
 

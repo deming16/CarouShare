@@ -109,15 +109,16 @@ CREATE TABLE Bids (
     PRIMARY KEY (biid),
     FOREIGN KEY (bidder_uid) REFERENCES Users on delete cascade,
     FOREIGN KEY (listing_lid) REFERENCES Listings on delete cascade,
+
     CHECK (amount >= 0),
     CHECK (time_start <= time_end)
 );
 
 CREATE TABLE Loans (
     bid_biid            INTEGER NOT NULL,
-    status              VARCHAR(64),
+    status              VARCHAR(64) DEFAULT 'start',
     PRIMARY KEY (bid_biid),
-    FOREIGN KEY (bid_biid) REFERENCES Bids on delete cascade
+    FOREIGN KEY (bid_biid) REFERENCES Bids(biid) on delete cascade
 );
 
 CREATE TABLE CompletedLoans (
