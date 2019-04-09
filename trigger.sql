@@ -84,3 +84,17 @@ CREATE TRIGGER trig4
 BEFORE INSERT ON Listings
 FOR EACH ROW
 EXECUTE PROCEDURE trig_func4();
+
+--Update timestamp to make sure the bid time created is always the latest
+CREATE OR REPLACE FUNCTION update_timestamp() 
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW.time_created = now();
+    RETURN NEW; 
+END;
+$$ language 'plpgsql';
+
+CREATE TRIGGER update_time_created
+BEFORE UPDATE ON Bids
+FOR EACH ROW
+EXECUTE PROCEDURE  update_timestamp();
