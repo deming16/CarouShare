@@ -85,16 +85,29 @@ BEFORE INSERT ON Listings
 FOR EACH ROW
 EXECUTE PROCEDURE trig_func4();
 
---Update timestamp to make sure the bid time created is always the latest
+--Cannot bid after bidding ends
 CREATE OR REPLACE FUNCTION update_timestamp() 
 RETURNS TRIGGER AS $$
+DECLARE
+    row_exists NUMERIC;
 BEGIN
     NEW.time_created = now();
-    RETURN NEW; 
+
+    SELECT 1
+    INTO row_exists
+    FROM   Listings
+    WHERE  lid = NEW.listing_lid and NEW.time_created > Listings.time_ending;
+
+    IF (row_exists > 0) THEN
+        RAISE NOTICE 'Cannot bid after bidding ends';
+        RETURN NULL;
+    ELSE
+        RETURN NEW;
+    END IF;
 END;
 $$ language 'plpgsql';
 
 CREATE TRIGGER update_time_created
-BEFORE UPDATE ON Bids
+BEFORE INSERT OR UPDATE ON Bids
 FOR EACH ROW
-EXECUTE PROCEDURE  update_timestamp();
+EXECUTE PROCEDURE  update_timestamp(listing_lid);
