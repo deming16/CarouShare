@@ -39,8 +39,8 @@ CREATE TABLE Follows (
     followee_uid        VARCHAR(64) NOT NULL,
     time_created        TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (follower_uid, followee_uid),
-    FOREIGN KEY (follower_uid) REFERENCES Users,
-    FOREIGN KEY (followee_uid) REFERENCES Users
+    FOREIGN KEY (follower_uid) REFERENCES Users on delete cascade,
+    FOREIGN KEY (followee_uid) REFERENCES Users on delete cascade
 );
 
 CREATE TABLE Items (
@@ -53,7 +53,7 @@ CREATE TABLE Items (
     description         TEXT,
     time_created        TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (iid),
-    FOREIGN KEY (owner_uid) references Users
+    FOREIGN KEY (owner_uid) references Users on delete cascade
 );
 
 CREATE TABLE Reviews (
@@ -62,8 +62,8 @@ CREATE TABLE Reviews (
     user_uid            VARCHAR(64) NOT NULL,
     time_created        TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (rid),
-    FOREIGN KEY (item_iid) REFERENCES Items,
-    FOREIGN KEY (user_uid) REFERENCES Users
+    FOREIGN KEY (item_iid) REFERENCES Items on delete cascade,
+    FOREIGN KEY (user_uid) REFERENCES Users on delete cascade
 );
 
 CREATE TABLE ReviewSections (
@@ -72,7 +72,7 @@ CREATE TABLE ReviewSections (
     content             TEXT NOT NULL,
     time_created        TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (sname, review_rid),
-    FOREIGN KEY (review_rid) REFERENCES Reviews
+    FOREIGN KEY (review_rid) REFERENCES Reviews on delete cascade
 );
 
 CREATE TABLE UserLikeItems (
@@ -80,8 +80,8 @@ CREATE TABLE UserLikeItems (
     item_iid            INTEGER NOT NULL,
     time_created        TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (user_uid, item_iid),
-    FOREIGN KEY (user_uid) REFERENCES Users,
-    FOREIGN KEY (item_iid) REFERENCES Items
+    FOREIGN KEY (user_uid) REFERENCES Users on delete cascade,
+    FOREIGN KEY (item_iid) REFERENCES Items on delete cascade
 );
 
 CREATE TABLE Listings (
@@ -94,7 +94,7 @@ CREATE TABLE Listings (
     time_ending         TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     time_created        TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (lid),
-    FOREIGN KEY (item_iid) REFERENCES Items,
+    FOREIGN KEY (item_iid) REFERENCES Items on delete cascade,
     CHECK (min_bid >= 0)
 );
 
@@ -107,8 +107,8 @@ CREATE TABLE Bids (
     time_end            TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     time_created        TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (biid),
-    FOREIGN KEY (bidder_uid) REFERENCES Users,
-    FOREIGN KEY (listing_lid) REFERENCES Listings,
+    FOREIGN KEY (bidder_uid) REFERENCES Users on delete cascade,
+    FOREIGN KEY (listing_lid) REFERENCES Listings on delete cascade,
     CHECK (amount >= 0),
     CHECK (time_start <= time_end)
 );
@@ -117,7 +117,7 @@ CREATE TABLE Loans (
     bid_biid            INTEGER NOT NULL,
     status              VARCHAR(64),
     PRIMARY KEY (bid_biid),
-    FOREIGN KEY (bid_biid) REFERENCES Bids
+    FOREIGN KEY (bid_biid) REFERENCES Bids on delete cascade
 );
 
 CREATE TABLE CompletedLoans (
