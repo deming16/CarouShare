@@ -55,10 +55,10 @@ router.post('/', (req, res, next) => {
 // @access  Private
 router.post('/:itemId', (req, res, next) => {
   const query = "update Items set item_name = $1, category = $2, status = $3, photo = $4, description = $5 where iid = $6"
-  const values = ['updatedName', 'category', 'status1', 'photo1', 'newDesc', req.params.itemId];
+  const values = [req.body.itemName, req.body.category, req.body.status, req.body.photo, req.body.desc, req.params.itemId];
 
   db.query(query, values)
-    .then(() => res.send('item updated'))
+    .then(() => res.redirect('back'))
     .catch(err => res.render('error', { error: err, message: 'something went wrong' }));
 });
 

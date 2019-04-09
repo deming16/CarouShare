@@ -16,6 +16,74 @@
   </div>
 
   <div class="row">
+
+    <!-- Modal Trigger -->
+    <a class="waves-effect waves-light red darken-1 btn modal-trigger" href="#modal2">Edit Info</a>
+
+    <!-- Modal Structure -->
+    <div id="modal2" class="modal">
+      <form method="POST" action="/item/{{item.iid}}" class="col s12" id="newItemForm">
+        <div class="modal-content">
+          <h4>Edit Item Information</h4>
+          <div class="row">
+
+            <div class="row">
+              <div class="col s12">
+                <div class="input-field">
+                  <input value="{{item.item_name}}" name="itemName" id="itemName" type="text" class="validate">
+                  <label for="itemName">Item Name</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col s12">
+                <div class="input-field">
+                  <input value="{{item.category}}" name="category" id="category" type="text" class="validate">
+                  <label for="category">Category</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col s12">
+                <div class="input-field">
+                  <input value="{{item.status}}" name="status" id="status" type="text" class="validate">
+                  <label for="status">Status</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col s12">
+                <div class="input-field">
+                  <input value="{{item.photo}}" name="photo" id="photo" type="text" class="validate">
+                  <label for="photo">Photo</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <form class="col s12">
+                <div class="row">
+                  <div class="input-field col s12">
+                    <textarea name="desc" id="desc" class="materialize-textarea">{{item.description}}</textarea>
+                    <label for="desc">Description</label>
+                  </div>
+                </div>
+              </form>
+            </div>
+
+          </div>
+        </div>
+        <div class="modal-footer">
+          <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Cancel</a>
+          <button type="submit" form="newItemForm" class="modal-close waves-effect waves-green btn-flat">Add
+            Item</button>
+        </div>
+      </form>
+    </div>
+
     <div class="section">
       <div class="col s12">
         <div class="card waves-effect waves-block">

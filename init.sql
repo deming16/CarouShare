@@ -28,7 +28,7 @@ CREATE TABLE Users (
     uid                 VARCHAR(64),
     email               VARCHAR(255),
     address             VARCHAR(255),
-    mobile              VARCHAR(20),
+    mobile              VARCHAR(20) check (mobile ~ '^\+[0-9]*$'),
     time_lastread       TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (uid),
     FOREIGN KEY (uid) references Accounts
