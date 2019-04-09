@@ -17,10 +17,10 @@ INSERT INTO Follows (follower_uid, followee_uid) VALUES ('user', 'bob');
 
 INSERT INTO Items (owner_uid, item_name, category) VALUES ('user', 'Laptop', 'PC');
 
-INSERT INTO Reviews (item_iid, user_uid) VALUES (1, 'alice');
+-- INSERT INTO Reviews (item_iid, user_uid, item_title) VALUES (1, 'alice', 'Apple Laptop');
 
-INSERT INTO ReviewSections (sname, review_rid, content) VALUES ('General', 1, 'Great!');
-INSERT INTO ReviewSections (sname, review_rid, content) VALUES ('Special', 1, 'Also Great!');
+-- INSERT INTO ReviewSections (sname, review_rid, content) VALUES ('General', 1, 'Great!');
+-- INSERT INTO ReviewSections (sname, review_rid, content) VALUES ('Special', 1, 'Also Great!');
 
 INSERT INTO UserLikeItems (user_uid, item_iid) VALUES ('alice', 1);
 

@@ -54,3 +54,30 @@ BEGIN
 END; 
 $$
 LANGUAGE plpgsql;
+
+-- Open Review for item if not already
+CREATE OR REPLACE FUNCTION open_review(
+    username VARCHAR, 
+    item     INTEGER,
+    title    VARCHAR 
+) 
+RETURNS NUMERIC AS $$
+DECLARE
+    row_exists NUMERIC;
+BEGIN
+
+    SELECT 1 
+    INTO row_exists 
+    FROM Reviews
+    WHERE user_uid = username and item_iid = item;
+
+    IF (row_exists > 0) THEN
+        RETURN 0;
+    ELSE
+        INSERT INTO Reviews(user_uid, item_iid, item_title) VALUES(username, item, title);
+        RETURN 1;
+    END IF;
+
+END; 
+$$
+LANGUAGE plpgsql;

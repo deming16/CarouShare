@@ -96,8 +96,8 @@ router.post('/loan/end/:listingId', async (req, res, next) => {
       let values = [req.params.listingId];
       const result = await db.query(query, values);
 
-      // Add to completed loans
-      query = "insert into CompletedLoans (user_uid, item_iid, title) values ($1, $2, $3)";
+      // Add Create Review for item
+      query = "SELECT open_review($1, $2, $3)";
       values = [result.rows[0].bidder_uid, result.rows[0].item_iid, result.rows[0].title];
       await db.query(query, values);
 
@@ -138,7 +138,7 @@ router.post('/loan/end/:listingId', async (req, res, next) => {
 router.get('/review', async (req, res, next) => {
   try {
     if (req.isAuthenticated()) {
-      let query = "select cl_id, item_iid, user_uid, title, time_created from CompletedLoans where user_uid = $1";
+      let query = "select rid, item_iid, user_uid, item_title, time_created from Reviews where user_uid = $1";
       let values = [req.user.username];
       const result = await db.query(query, values);
 

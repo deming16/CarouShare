@@ -46,7 +46,7 @@ CREATE TABLE Follows (
 CREATE TABLE Items (
     iid                 SERIAL,
     owner_uid           VARCHAR(64) NOT NULL,
-    item_name           VARCHAR(64) NOT NULL,
+    item_name          VARCHAR(64) NOT NULL,
     category            VARCHAR(64) NOT NULL,
     status              VARCHAR(64),
     photo               VARCHAR(255),
@@ -59,6 +59,7 @@ CREATE TABLE Items (
 CREATE TABLE Reviews (
     rid                 SERIAL,
     item_iid            INTEGER NOT NULL,
+    item_title          VARCHAR(64) NOT NULL,
     user_uid            VARCHAR(64) NOT NULL,
     time_created        TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (rid),
@@ -121,16 +122,6 @@ CREATE TABLE Loans (
     FOREIGN KEY (bid_biid) REFERENCES Bids(biid) on delete cascade
 );
 
-CREATE TABLE CompletedLoans (
-    cl_id            SERIAL,
-    user_uid         VARCHAR(64) NOT NULL,
-    item_iid         INTEGER NOT NULL,
-    title            VARCHAR(64) NOT NULL,
-    time_created     TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (cl_id),
-    FOREIGN KEY (item_iid) REFERENCES Items,
-    FOREIGN KEY (user_uid) REFERENCES Users
-);
 
 create view ListingViews (lid, min_bid, title, time_created, time_ending, iid, owner_uid, item_name, category, photo, status ) as 
   select L.lid, L.min_bid, L.title, L.time_created, L.time_ending, I.iid, I.owner_uid, I.item_name, I.category, I.photo, L.status 

@@ -260,14 +260,9 @@ router.post('/:itemId/listing/:listingId/loan/:bidderId', async (req, res, next)
   try {
     await client.query('BEGIN');
 
-    // get biid for the user
-    let query = "select biid from Bids where bidder_uid = $1 and listing_lid = $2";
+    let query = "INSERT INTO Loans (bid_biid) SELECT biid FROM Bids WHERE bidder_uid = $1 AND listing_lid = $2";
     let values = [req.params.bidderId, req.params.listingId];
     const result = await db.query(query, values);
-
-    query = "insert into Loans (bid_biid) values ($1)";
-    values = [result.rows[0].biid];
-    await db.query(query, values);
 
     query = "delete from Bids where listing_lid = $1 and bidder_uid != $2";
     values = [req.params.listingId, req.params.bidderId];
