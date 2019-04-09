@@ -203,7 +203,26 @@ BEFORE INSERT ON Bids
 FOR EACH ROW
 EXECUTE PROCEDURE trig_func3();
 
+--1 item can only have 1 listing opening at a time
+CREATE OR REPLACE FUNCTION trig_func4()
+RETURNS TRIGGER AS 
+$$ 
+BEGIN
+    IF EXISTS (SELECT * FROM Listings WHERE NEW.item_iid = Listings.item_iid 
+            and NEW.status = 'open' and Listings.status = 'open') THEN
+        RAISE NOTICE '1 item can only have 1 listing opening at a time';
+        RETURN NULL;
+    ELSE
+        RETURN NEW;
+    END IF;
+END; 
+$$
+LANGUAGE plpgsql;
 
+CREATE TRIGGER trig4
+BEFORE INSERT ON Listings
+FOR EACH ROW
+EXECUTE PROCEDURE trig_func4();
 
 
 --------------------------------------------
