@@ -440,25 +440,20 @@ router.post('/:itemId/review/delete/:sname', async (req, res, next) => {
 // @desc    Toggle Like for item
 // @access  Private
 router.post('/:itemId/like', async (req, res, next) => {
-  if (req.isAuthenticated()) {
-    let query = "select user_uid item_iid from UserLikeItems where user_uid = $1 and item_iid = $2"
-    const values = [req.user.username, req.params.itemId];
-    const result = await db.query(query, values);
-    if (result.rows.length === 0) {
-      query = "insert into UserLikeItems (user_uid, item_iid) values ($1, $2)"
+  try {
+    if (req.isAuthenticated()) {
+      const query = "SELECT toggle_likes($1, $2::int)";
+      const values = [req.user.username, req.params.itemId];
       await db.query(query, values);
       res.redirect('back');
     }
     else {
-      query = "delete from UserLikeItems where user_uid = $1 and item_iid = $2";
-      await db.query(query, values);
-      res.redirect('back');
+      res.redirect('/login')
     }
+  } catch (e) {
+    console.log(e);
+  }
 
-  }
-  else {
-    res.redirect('/login')
-  }
 });
 
 
