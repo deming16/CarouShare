@@ -336,44 +336,32 @@ router.post('/:itemId/review/save', async (req, res, next) => {
   const { client, done } = await db.client();
   try {
     if (req.isAuthenticated()) {
-      console.log(req.body);
-
-      //Check if review already written before
-      let query = "select rid, item_iid, sname from Reviews R inner join ReviewSections RS on (rid = review_rid) where user_uid = $1 and item_iid = $2";
-      let values = [req.user.username, req.params.itemId];
-      const result = await db.query(query, values);
 
       await client.query('BEGIN');
 
-      if (result.rows.length === 0) {
-        // if review dont exist yet, add new one
-        query = "insert into Reviews (item_iid, user_uid) values ($1, $2) returning rid";
-        values = [req.params.itemId, req.user.username];
-        const review = await db.query(query, values);
+      //Get rid
+      let query = "select rid, item_iid, sname from Reviews R left outer join ReviewSections RS on (rid = review_rid) where user_uid = $1 and item_iid = $2";
+      let values = [req.user.username, req.params.itemId];
+      const result = await db.query(query, values);
 
-        query = "insert into ReviewSections (sname, review_rid, content) values ($1, $2, $3)";
-        values = [req.body.sname, review.rows[0].rid, req.body.content];
+      //Check if section exist
+      let sectionExist = false;
+      result.rows.forEach(row => {
+        if (row.sname === req.body.psname) {
+          sectionExist = true;
+        }
+      });
+      if (sectionExist) {
+        query = "update ReviewSections set sname = $1, content = $2 where review_rid = $3 and sname = $4";
+        values = [req.body.sname, req.body.content, result.rows[0].rid, req.body.psname];
         await db.query(query, values);
       }
       else {
-        // if review already exist, check if section exist
-        let sectionExist = false;
-        result.rows.forEach(row => {
-          if (row.sname === req.body.psname) {
-            sectionExist = true;
-          }
-        });
-        if (sectionExist) {
-          query = "update ReviewSections set sname = $1, content = $2 where review_rid = $3 and sname = $4";
-          values = [req.body.sname, req.body.content, result.rows[0].rid, req.body.psname];
-          await db.query(query, values);
-        }
-        else {
-          query = "insert into ReviewSections (sname, review_rid, content) values ($1, $2, $3)";
-          values = [req.body.sname, result.rows[0].rid, req.body.content];
-          await db.query(query, values)
-        }
+        query = "insert into ReviewSections (sname, review_rid, content) values ($1, $2, $3)";
+        values = [req.body.sname, result.rows[0].rid, req.body.content];
+        await db.query(query, values)
       }
+
 
       await client.query('COMMIT');
       done();
