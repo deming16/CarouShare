@@ -74,7 +74,7 @@ router.post('/:itemId/delete', (req, res, next) => {
   const values = [req.params.itemId];
 
   db.query(query, values)
-    .then(() => res.send('item deleted'))
+    .then(() => res.redirect('back'))
     .catch(err => res.render('error', { error: err, message: 'something went wrong' }));
 });
 
