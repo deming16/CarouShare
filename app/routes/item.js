@@ -318,7 +318,7 @@ router.get('/:itemId/review/', async (req, res, next) => {
 // @access  Private
 router.get('/:itemId/myreview', async (req, res, next) => {
   if (req.isAuthenticated()) {
-    let query = "select rid, item_iid, user_uid, sname, content from Reviews inner join ReviewSections on (rid = review_rid) where user_uid = $1";
+    let query = "select rid, item_iid, user_uid, sname, content from Reviews R inner join ReviewSections RS on (rid = review_rid) where user_uid = $1 order by RS.time_created";
     let values = [req.user.username];
     const result = await db.query(query, values);
 
@@ -352,6 +352,7 @@ router.post('/:itemId/review/save', async (req, res, next) => {
         }
       });
       if (sectionExist) {
+
         query = "update ReviewSections set sname = $1, content = $2 where review_rid = $3 and sname = $4";
         values = [req.body.sname, req.body.content, result.rows[0].rid, req.body.psname];
         await db.query(query, values);
