@@ -20,16 +20,20 @@ router.get('/:itemId', async (req, res, next) => {
     }
     else {
       let liked = false;
+      let editable = false;
 
       if (req.isAuthenticated()) {
         result.rows.forEach(row => {
           if (row.user_uid === req.user.username) {
             liked = true;
           }
+          if (row.owner_uid === req.user.username) {
+            editable = true;
+          }
         });
       }
 
-      res.render('item', { item: result.rows[0], liked: liked });
+      res.render('item', { item: result.rows[0], liked: liked, editable: editable });
 
     }
   } catch (e) {
