@@ -7,6 +7,11 @@
   {{!-- PERSONAL DETAILS --}}
   <div class="row">
     <h1>{{user.uid}}'s Profile</h1>
+    {{#unless isMyProfile}}
+    <form method="POST" action="/user/{{user.uid}}/follow">
+      <button class="btn btn-small waves-effect waves-light red">Follow!</button>
+    </form>
+    {{/unless}}
     <h2>Personal Details</h2>
 
     {{#if isMyProfile}}
@@ -234,7 +239,7 @@
   <h2>Following</h2>
   <ul>
     {{#each following}}
-    <li>{{this.followee_uid}}</li>
+    <li><a href="/user/{{this.followee_uid}}">{{this.followee_uid}}</a></li>
     {{/each}}
   </ul>
 
@@ -242,7 +247,7 @@
   <h2>Followers</h2>
   <ul>
     {{#each followers}}
-    <li>{{this.follower_uid}}</li>
+    <li><a href="/user/{{this.follower_uid}}">{{this.follower_uid}}</a></li>
     {{/each}}
   </ul>
 </div>

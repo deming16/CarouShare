@@ -112,27 +112,34 @@ router.post('/:username', (req, res, next) => {
 
 // @route   POST /user/:username/delete
 // @desc    Delete user
-// @access  Private
+// @access  Private (Only Admin)
 router.post('/:username/delete', (req, res, next) => {
     const query = "DELETE FROM Users WHERE uid = $1";
     res.send(`delete ${req.params.username}`);
 });
 
-// @route   POST /user/:username/like
-// @desc    Add likes for user
+// @route   POST /user/:username/follow
+// @desc    Follow this user
 // @access  Private
-router.post('/:username/like', (req, res, next) => {
-    const query = "insert into UserLikeItems (user_uid, item_iid) values ($1, $2)";
-    res.send(`Add like for ${req.params.username}`);
+router.post('/:username/follow', async (req, res, next) => {
+
+    try {
+        if (req.isAuthenticated()) {
+            const query = "SELECT toggle_follows($1, $2)";
+            const values = [req.user.username, req.params.username];
+            await db.query(query, values);
+
+            res.redirect('back');
+        }
+        else {
+            res.redirect('/login');
+        }
+
+    } catch (e) {
+        console.log(e);
+    }
+
 });
 
-// @route   POST /user/:username/like/delete
-// @desc    Delete likes for user
-// @access  Private
-router.post('/:username/like/delete', (req, res, next) => {
-    const query = "delete from UserLikeItems where user_uid = $1"
-    const values = [req.params.username];
-    res.send(`Delete like for ${req.params.username}`);
-});
 
 module.exports = router;
