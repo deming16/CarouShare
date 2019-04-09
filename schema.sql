@@ -92,7 +92,7 @@ CREATE TABLE Listings (
     status              VARCHAR(64) NOT NULL DEFAULT 'open',
     delivery_method     VARCHAR(64),
     min_bid             NUMERIC(16, 2) NOT NULL DEFAULT 0,
-    time_ending         TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    time_ending         TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP + interval '1' day,
     time_created        TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (lid),
     FOREIGN KEY (item_iid) REFERENCES Items on delete cascade,
