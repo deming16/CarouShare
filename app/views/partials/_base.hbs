@@ -32,11 +32,21 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
+<<<<<<< Updated upstream
             var elSidenav = document.querySelectorAll('.sidenav');
             var elSelect = document.querySelectorAll('select');
             M.Sidenav.init(elSidenav);
             M.FormSelect.init(elSelect);
+=======
+            var elems = document.querySelectorAll('select');
+            var instances = M.FormSelect.init(elems, options);
         });
+        document.addEventListener('DOMContentLoaded', function () {
+            var elems = document.querySelectorAll('.sidenav');
+            var instances = M.Sidenav.init(elems);
+>>>>>>> Stashed changes
+        });
+
     </script>
     {{> _message}}
 </body>

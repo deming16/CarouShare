@@ -126,3 +126,8 @@ CREATE TABLE Loans (
 create view ListingViews (lid, min_bid, title, time_created, time_ending, iid, owner_uid, item_name, category, photo, status ) as 
   select L.lid, L.min_bid, L.title, L.time_created, L.time_ending, I.iid, I.owner_uid, I.item_name, I.category, I.photo, L.status 
   from Items I inner join Listings L on (I.iid = L.item_iid); 
+
+CREATE VIEW ItemLikes (iid, numLikes) as
+  SELECT I.iid, count(U.user_uid)
+  FROM UserLikeItems U right outer join Items I on (U.item_iid = I.iid)
+  group by I.iid

@@ -186,7 +186,7 @@ router.post('/:itemId/listing/:listingId/bid', async (req, res, next) => {
       let query = "select biid, bidder_uid, listing_lid from Bids where bidder_uid = $1 and listing_lid = $2";
       let values = [req.user.username, req.params.listingId];
       const result = await db.query(query, values);
-      console.log(result.rows.length === 0);
+
       if (result.rows.length === 0) {
         // add new bid
         query = "insert into Bids (bidder_uid, listing_lid, amount) values ($1, $2, $3)";
