@@ -31,6 +31,11 @@ router.get('/', async (req, res, next) => {
             values = [req.user.username, 'open'];
             result.listings = await db.query(query, values);
 
+            // Find users of the people you followed followed but you have not
+            query = 'SELECT * FROM get_uncommon_followers($1::text)'
+            values = [req.user.username];
+            result.uncommonFollows = await db.query(query, values);
+
             res.render('user',
                 {
                     user: result.userDetails.rows[0],
@@ -39,6 +44,7 @@ router.get('/', async (req, res, next) => {
                     likes: result.likes.rows,
                     following: result.following.rows,
                     followers: result.followers.rows,
+                    suggestFollows: result.uncommonFollows.rows,
                     isMyProfile: true
                 });
 
@@ -46,7 +52,7 @@ router.get('/', async (req, res, next) => {
             res.redirect('/login');
         }
     } catch (e) {
-
+        console.log(e);
     }
 
 });

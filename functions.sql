@@ -81,3 +81,22 @@ BEGIN
 END; 
 $$
 LANGUAGE plpgsql;
+
+-- Get Uncommon Followers
+CREATE OR REPLACE FUNCTION get_uncommon_followers(username VARCHAR)
+RETURNS TABLE (
+    followee VARCHAR
+)
+AS $$
+BEGIN
+    RETURN QUERY 
+    SELECT FF.followee_uid
+    FROM Follows F INNER JOIN Follows FF ON (F.followee_uid = FF.follower_uid)
+    WHERE F.follower_uid = username
+    AND FF.followee_uid != username
+    AND FF.followee_uid NOT IN (SELECT followee_uid 
+                                FROM   Follows 
+                                WHERE  follower_uid = username);
+END; 
+$$
+LANGUAGE plpgsql;

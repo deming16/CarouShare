@@ -255,6 +255,16 @@
     <li><a href="/user/{{this.follower_uid}}">{{this.follower_uid}}</a></li>
     {{/each}}
   </ul>
+
+  {{#if isMyProfile}}
+  {{!-- SUGGEST TO FOLLOW --}}
+  <h2>Suggested Users To Follow</h2>
+  <ul>
+    {{#each suggestFollows}}
+    <li><a href="/user/{{this.followee}}">{{this.followee}}</a></li>
+    {{/each}}
+  </ul>
+  {{/if}}
 </div>
 {{/inline}}
 {{/_base}}
