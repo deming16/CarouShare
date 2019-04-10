@@ -32,8 +32,10 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            var elems = document.querySelectorAll('.sidenav');
-            var instances = M.Sidenav.init(elems);
+            var elSidenav = document.querySelectorAll('.sidenav');
+            var elSelect = document.querySelectorAll('select');
+            M.Sidenav.init(elSidenav);
+            M.FormSelect.init(elSelect);
         });
     </script>
     {{> _message}}
