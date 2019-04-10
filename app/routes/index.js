@@ -65,11 +65,12 @@ router.get('/search', async (req, res, next) => {
                 res.render('index', { listing: false, user: true, message: 'Displaying search user results for: ' + req.query.query, list: result.rows, search: req.query.query });
             } else {
                 // Code for search by category and sort by bid, time_created, number of likes, number of loans
-                query = "select * from UserLikeItems U right outer join ListingViews L on (U.item_iid = L.iid) right outer join ItemLikes I on (I.iid = L.iid) where " + category[req.query.category] + " owner_uid != $1 and L.status = $2 and L.item_name like '%" + req.query.query + "%' order by" + sort[req.query.sortBy] + "L.iid";
+
+                query = "SELECT * FROM UserLikeItems U RIGHT OUTER JOIN ListingViews L on (U.item_iid = L.iid) right outer join ItemLikes I on (I.iid = L.iid) where " + category[req.query.category] + " owner_uid != $1 and L.status = $2 and L.item_name like '%" + req.query.query + "%' order by" + sort[req.query.sortBy] + "L.iid";
                 values = [req.user.username, 'open'];
-                // query = "select * from UserLikeItems U right outer join ListingViews L on (U.item_iid = L.iid) where owner_uid != $1 and L.status = $2 and L.item_name like '%" + req.query.query + "%' order by L.time_created, L.iid";
-                // values = [req.user.username, 'open'];
+
                 const result = await db.query(query, values);
+
 
                 const parsedResult = [];
                 result.rows.forEach(row => {

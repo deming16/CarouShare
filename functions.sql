@@ -83,7 +83,9 @@ $$
 LANGUAGE plpgsql;
 
 -- Get Uncommon Followers
-CREATE OR REPLACE FUNCTION get_uncommon_followers(username VARCHAR)
+CREATE OR REPLACE FUNCTION get_uncommon_followers(
+    username VARCHAR
+)
 RETURNS TABLE (
     followee VARCHAR
 )
