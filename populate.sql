@@ -16,6 +16,9 @@ INSERT INTO Follows (follower_uid, followee_uid) VALUES ('user', 'alice');
 INSERT INTO Follows (follower_uid, followee_uid) VALUES ('user', 'bob');
 
 INSERT INTO Items (owner_uid, item_name, category) VALUES ('user', 'Laptop', 'PC');
+INSERT INTO Items (owner_uid, item_name, category) VALUES ('user', 'Laptop 1', 'PC1');
+INSERT INTO Items (owner_uid, item_name, category) VALUES ('user', 'Laptop 2', 'PC2');
+INSERT INTO Items (owner_uid, item_name, category) VALUES ('user', 'Laptop 3', 'PC');
 
 INSERT INTO Reviews (item_iid, user_uid, item_title) VALUES (1, 'alice', 'Apple Laptop');
 
@@ -25,6 +28,9 @@ INSERT INTO ReviewSections (sname, review_rid, content) VALUES ('Special', 1, 'A
 INSERT INTO UserLikeItems (user_uid, item_iid) VALUES ('alice', 1);
 
 INSERT INTO Listings (item_iid, title) VALUES (1, 'Apple Laptop');
+INSERT INTO Listings (item_iid, title, min_bid) VALUES (2, 'Apple Laptop', 20);
+INSERT INTO Listings (item_iid, title, min_bid) VALUES (3, 'Apple Laptop', 500);
+INSERT INTO Listings (item_iid, title, min_bid) VALUES (4, 'Apple Laptop', 100);
 INSERT INTO Listings (item_iid, title, status) VALUES (1, 'Closed Apple Laptop', 'close');
 
 INSERT INTO Bids (bidder_uid, listing_lid, amount) VALUES ('alice', 2, 10);

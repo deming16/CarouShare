@@ -54,20 +54,21 @@ router.get('/search', async (req, res, next) => {
 
     try {
         if (req.isAuthenticated()) {
-
+            const sort = [' ', ' min_bid asc,', ' L.time_created asc,', ' L.time_created desc,', ' numLikes desc,', ', numLoans desc'];
+            const category = [' ', " category = 'PC' and ", " category = 'PC1' and ", " category = 'PC2' and "];
             let query;
             let values;
             if (req.query.searchFor === 'user') {
                 query = "select uid from Users where uid like '%" + req.query.query + "%'";
                 const result = await db.query(query);
 
-                res.render('index', { listing: false, user: true, message: 'Displaying search user results for: ' + req.query.query, list: result.rows });
+                res.render('index', { listing: false, user: true, message: 'Displaying search user results for: ' + req.query.query, list: result.rows, search: req.query.query });
             } else {
                 // Code for search by category and sort by bid, time_created, number of likes, number of loans
-                // select  from UserLikeItems U right outer join ListingViews L on (U.item_iid = L.iid) where owner_uid != $1 and L.status = $2 and L.item_name like '%" + req.query.query + "%' order by $3, L.iid
-
-                query = "select lid, min_bid, title, time_created, time_ending, iid, owner_uid, item_name, category, photo, count() from UserLikeItems U right outer join ListingViews L on (U.item_iid = L.iid) where owner_uid != $1 and L.status = $2 and L.item_name like '%" + req.query.query + "%' order by L.time_created, L.iid";
+                query = "select * from UserLikeItems U right outer join ListingViews L on (U.item_iid = L.iid) right outer join ItemLikes I on (I.iid = L.iid) where " + category[req.query.category] + " owner_uid != $1 and L.status = $2 and L.item_name like '%" + req.query.query + "%' order by" + sort[req.query.sortBy] + "L.iid";
                 values = [req.user.username, 'open'];
+                // query = "select * from UserLikeItems U right outer join ListingViews L on (U.item_iid = L.iid) where owner_uid != $1 and L.status = $2 and L.item_name like '%" + req.query.query + "%' order by L.time_created, L.iid";
+                // values = [req.user.username, 'open'];
                 const result = await db.query(query, values);
 
                 const parsedResult = [];
@@ -83,7 +84,7 @@ router.get('/search', async (req, res, next) => {
                 });
 
 
-                res.render('index', { list: parsedResult, user: false, listing: true, message: 'Displaying search listing results for: ' + req.query.query });
+                res.render('index', { list: parsedResult, user: false, listing: true, message: 'Displaying search listing results for: ' + req.query.query, category: req.query.category, sort: req.query.sortBy, search: req.query.query });
 
             }
 
@@ -95,17 +96,20 @@ router.get('/search', async (req, res, next) => {
                 const result = await db.query(query);
                 console.log(result.rows);
 
-                res.render('index', { listing: false, user: true, message: 'Displaying search user results for: ' + req.query.query, list: result.rows });
+                res.render('index', { listing: false, user: true, message: 'Displaying search user results for: ' + req.query.query, list: result.rows, search: req.query.query });
             }
             else {
-                const query = "select * from ListingViews L where L.status = $1 and L.item_name like '%" + req.query.query + "%' order by time_created";
+                const sort = [' ', ' min_bid asc,', ' L.time_created asc,', ' L.time_created desc,', ' numLikes desc,', ', numLoans desc'];
+                const category = [' ', " category = 'PC' and ", " category = 'PC1' and ", " category = 'PC2' and "];
+
+                const query = "select * from ListingViews L right outer join ItemLikes I on (I.iid = L.iid) where " + category[req.query.category] + " L.status = $1 and L.item_name like '%" + req.query.query + "%' order by" + sort[req.query.sortBy] + "L.iid";
                 const values = ['open'];
 
                 const result = await db.query(query, values);
 
                 let noListing = false
                 if (result.rows.length === 0) noListing = true;
-                res.render('index', { list: result.rows, user: false, listing: true, message: 'Displaying search listing results for: ' + req.query.query });
+                res.render('index', { list: result.rows, user: false, listing: true, message: 'Displaying search listing results for: ' + req.query.query, search: req.query.query });
             }
 
 

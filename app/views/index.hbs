@@ -2,12 +2,13 @@
 {{#*inline "contents"}}
 <div class="container">
     <div class="row">
-        <form method="GET" action="/search">
+        <form method="GET" action="/search" id="searchForm">
             <div class="input-field">
                 <i class="material-icons prefix">search</i>
-                <input placeholder="Search" name="query" id="search" type="search" required>
+                <input placeholder="Search" value="{{search}}" name="query" id="search" type="search" required>
                 <label class="label-icon" for="search"></label>
                 <i class="material-icons">close</i>
+                <button type="submit" form="searchForm" class="hide"></button>
             </div>
 
             <p>
@@ -22,14 +23,24 @@
                 </label>
 
                 <div class="input-field col s12">
-                    <select>
-                        <option value="" disabled selected>Choose your option</option>
-                        <option value="1">Option 1</option>
-                        <option value="2">Option 2</option>
-                        <option value="3">Option 3</option>
+                    <select name="category" form="searchForm">
+                        <option value="0" selected>Category</option>
+                        <option value="1">PC</option>
+                        <option value="2">PC1</option>
+                        <option value="3">PC2</option>
                     </select>
-                    <label>Materialize Select</label>
                 </div>
+
+                <div class="input-field col s12">
+                    <select name="sortBy" form="searchForm">
+                        <option value="0" selected>Sort By...</option>
+                        <option value="1">Min Bid Required (Lowest to Highest)</option>
+                        <option value="2">Newest First</option>
+                        <option value="3">Oldest First</option>
+                        <option value="4">Most Likes</option>
+                    </select>
+                </div>
+
             </p>
         </form>
     </div>
