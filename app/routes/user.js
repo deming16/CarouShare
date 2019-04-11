@@ -108,7 +108,7 @@ router.post('/:username', (req, res, next) => {
         "SET email = $1, address = $2, mobile = $3 " +
         "WHERE uid = $4";
     const values = [req.body.email, req.body.address, req.body.mobile, req.params.username];
-    console.log(values);
+
     db.query(query, values)
         .then(() => {
             res.redirect('/user');

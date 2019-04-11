@@ -103,6 +103,7 @@ END;
 $$
 LANGUAGE plpgsql;
 
+-- Get Search Results
 CREATE OR REPLACE FUNCTION get_search_results(
     searchCategory VARCHAR,
     searchQuery VARCHAR,
