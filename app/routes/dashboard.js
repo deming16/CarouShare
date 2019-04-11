@@ -43,8 +43,8 @@ router.get('/loan', async (req, res, next) => {
   try {
 
     if (req.isAuthenticated()) {
-      const query = "select bid_biid, title, bidder_uid, lid from Loans L inner join Bids B on (L.bid_biid = B.biid) inner join Listings LI on (B.listing_lid = LI.lid) inner join Items I on (I.iid = LI.item_iid) where I.owner_uid = $1"
-      const values = [req.user.username];
+      const query = "select bid_biid, title, bidder_uid, lid from Loans L inner join Bids B on (L.bid_biid = B.biid) inner join Listings LI on (B.listing_lid = LI.lid) inner join Items I on (I.iid = LI.item_iid) where I.owner_uid = $1 AND L.status = $2"
+      const values = [req.user.username, 'start'];
 
       const result = await db.query(query, values);
       res.render('dashboard', { list: result.rows, isLoanList: true });
@@ -83,7 +83,7 @@ router.get('/bid', async (req, res, next) => {
 
 
 //@route    POST /dashboard/loan/end/listingId
-//@desc     Item returned, delete loan and respective listing and bid 
+//@desc     Item returned
 //@access   Private
 router.post('/loan/end/:listingId', async (req, res, next) => {
   const { client, done } = await db.client();
@@ -102,17 +102,8 @@ router.post('/loan/end/:listingId', async (req, res, next) => {
       await db.query(query, values);
 
       //delete loan
-      query = "delete from Loans where bid_biid = $1";
-      values = [result.rows[0].biid];
-      await db.query(query, values);
-
-      //delete bid
-      query = "delete from Bids where biid = $1";
-      await db.query(query, values);
-
-      //delete listing
-      query = "delete from Listings where lid = $1";
-      values = [result.rows[0].listing_lid];
+      query = "UPDATE Loans SET status = $1 WHERE bid_biid = $2";
+      values = ['close', result.rows[0].biid];
       await db.query(query, values);
 
       await client.query('COMMIT');

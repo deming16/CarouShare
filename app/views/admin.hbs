@@ -7,6 +7,7 @@
     <a class="btn waves-effect waves-light red darken-1" href="/admin/item">Items</a>
     <a class="btn waves-effect waves-light red darken-1" href="/admin/listing">Listings</a>
     <a class="btn waves-effect waves-light red darken-1" href="/admin/user">Users</a>
+    <a class="btn waves-effect waves-light red darken-1" href="/admin/stats">Statistics</a>
     {{#if isItemList}}
     <table>
       <thead>
@@ -100,6 +101,32 @@
         {{/each}}
       </tbody>
     </table>
+    {{/if}}
+
+    {{#if statistics}}
+    <div class="row">
+      <div class="col s12">
+        <canvas id="bar-chart" width="400" height="400"></canvas>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col s6">
+        <canvas id="categoryChart" width="400" height="400"></canvas>
+      </div>
+      <div class="col s6">
+        <canvas id="line-chart" width="400" height="400"></canvas>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col s6">
+        <canvas id="line-chart2" width="400" height="400"></canvas>
+      </div>
+      <div class="col s6">
+        <canvas id="line-chart3" width="400" height="400"></canvas>
+      </div>
+    </div>
     {{/if}}
 
   </div>
