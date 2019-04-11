@@ -135,6 +135,9 @@
 
 
 /* General */
+html {
+    scroll-behavior: smooth;
+  }
 
 body {
     display: flex;

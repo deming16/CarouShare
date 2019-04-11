@@ -1,6 +1,22 @@
-{{#> _base }}
+{{#> _base hideNav=hideNav}}
 {{#*inline "contents"}}
-<div class="container">
+{{#if hideNav}}
+<div class="full-bg red darken-3 white-text">
+    <div class="page-login-bg pos-absolute absolute-fit"></div>
+    <h1 class="no-margin mb-2 pos-relative">Start Sharing Today!</h1>
+    <div class="row mt-5">
+        <a href="/login" class="mr-5 z-depth-5 btn waves-effect waves-light black darken-1">Login</a>
+        <a href="/signup" class="btn z-depth-5 waves-effect waves-light black darken-1">Sign
+            Up</a>
+    </div>
+    <div class="row mt-5">
+        <a href="#indexBody" class="btn offset-m3 z-depth-5 waves-effect waves-light black darken-1">Browse</a>
+    </div>
+
+
+</div>
+{{/if}}
+<div id="indexBody" class="container">
     <div class="row">
         <form method="GET" action="/search" id="searchForm">
             <div class="input-field">

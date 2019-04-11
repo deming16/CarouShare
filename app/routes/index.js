@@ -40,7 +40,7 @@ router.get('/', async (req, res, next) => {
 
             let noListing = false
             if (result.rows.length === 0) noListing = true;
-            res.render('index', { list: result.rows, listing: true, message: 'Latest Listings - Bid and Borrow Today!' });
+            res.render('index', { list: result.rows, listing: true, message: 'Latest Listings - Bid and Borrow Today!', hideNav: true });
 
         }
     } catch (e) {
