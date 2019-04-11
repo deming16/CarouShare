@@ -102,3 +102,60 @@ BEGIN
 END; 
 $$
 LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION get_search_results(
+    searchCategory VARCHAR,
+    searchQuery VARCHAR,
+    sortBy VARCHAR,
+    userName VARCHAR,
+    listingStatus VARCHAR,
+    sortD   VARCHAR
+)
+RETURNS TABLE (
+    lid INTEGER,
+    min_bid NUMERIC,
+    title VARCHAR,
+    time_created TIMESTAMP,
+    time_ending TIMESTAMP,
+    iid INTEGER,
+    owner_uid VARCHAR,
+    user_uid VARCHAR,
+    item_name VARCHAR,
+    category VARCHAR,
+    photo VARCHAR
+)
+AS $$
+BEGIN
+    RETURN QUERY 
+
+    SELECT L.lid, L.min_bid, L.title, L.time_created, L.time_ending, L.iid, L.owner_uid, U.user_uid, L.item_name, L.category, L.photo
+    FROM UserLikeItems U
+    RIGHT OUTER JOIN ListingViews L on (U.item_iid = L.iid) right outer join ItemLikes I on (I.iid = L.iid)
+    WHERE  L.category LIKE searchCategory
+    AND L.owner_uid NOT LIKE userName 
+    and L.status = listingStatus
+    and L.item_name LIKE '%' || searchQuery || '%'
+    order by 
+        CASE 
+        WHEN (sortBy = 'min_bid') then L.min_bid
+        end ASC,
+
+        CASE
+        WHEN (sortD = 'A') then cast(null as date)
+        WHEN (sortBy = 'time_created') then L.time_created
+        end ASC,
+
+        CASE
+        WHEN (sortD = 'D') then cast(null as date)
+        WHEN (sortBy = 'time_created') then L.time_created
+        end DESC,
+
+        CASE
+        WHEN (sortBy = 'numLikes') then numLikes
+        end DESC
+
+    , L.iid;
+
+END; 
+$$
+LANGUAGE plpgsql;

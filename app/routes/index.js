@@ -54,8 +54,11 @@ router.get('/search', async (req, res, next) => {
 
     try {
         if (req.isAuthenticated()) {
-            const sort = [' ', ' min_bid asc,', ' L.time_created asc,', ' L.time_created desc,', ' numLikes desc,', ', numLoans desc'];
-            const category = [' ', " category = 'PC' and ", " category = 'PC1' and ", " category = 'PC2' and "];
+            const sort = [' ', "min_bid", 'time_created', 'L.time_created', 'numLikes'];
+            const sortD = ['A', 'A', 'A', 'D', 'D', 'D'];
+            const category = ['%', "PC", "PC1", "PC2"];
+            // const sort = [' ', ' min_bid asc,', ' L.time_created asc,', ' L.time_created desc,', ' numLikes desc,', ', numLoans desc'];
+            // const category = [' ', " category = 'PC' and ", " category = 'PC1' and ", " category = 'PC2' and "];
             let query;
             let values;
             if (req.query.searchFor === 'user') {
@@ -66,8 +69,8 @@ router.get('/search', async (req, res, next) => {
             } else {
                 // Code for search by category and sort by bid, time_created, number of likes, number of loans
 
-                query = "SELECT * FROM UserLikeItems U RIGHT OUTER JOIN ListingViews L on (U.item_iid = L.iid) right outer join ItemLikes I on (I.iid = L.iid) where " + category[req.query.category] + " owner_uid != $1 and L.status = $2 and L.item_name like '%" + req.query.query + "%' order by" + sort[req.query.sortBy] + "L.iid";
-                values = [req.user.username, 'open'];
+                query = "SELECT * FROM get_search_results($1, $2, $3, $4, $5, $6)"
+                values = [category[req.query.category], req.query.query, sort[req.query.sortBy], req.user.username, 'open', sortD[req.query.sortBy]];
 
                 const result = await db.query(query, values);
 
@@ -100,11 +103,12 @@ router.get('/search', async (req, res, next) => {
                 res.render('index', { listing: false, user: true, message: 'Displaying search user results for: ' + req.query.query, list: result.rows, search: req.query.query });
             }
             else {
-                const sort = [' ', ' min_bid asc,', ' L.time_created asc,', ' L.time_created desc,', ' numLikes desc,', ', numLoans desc'];
-                const category = [' ', " category = 'PC' and ", " category = 'PC1' and ", " category = 'PC2' and "];
+                const sort = [' ', "min_bid", 'time_created', 'L.time_created', 'numLikes'];
+                const sortD = ['A', 'A', 'A', 'D', 'D', 'D'];
+                const category = ['%', "PC", "PC1", "PC2"];
 
-                const query = "select * from ListingViews L right outer join ItemLikes I on (I.iid = L.iid) where " + category[req.query.category] + " L.status = $1 and L.item_name like '%" + req.query.query + "%' order by" + sort[req.query.sortBy] + "L.iid";
-                const values = ['open'];
+                query = "SELECT * FROM get_search_results($1, $2, $3, $4, $5, $6)"
+                values = [category[req.query.category], req.query.query, sort[req.query.sortBy], '%', 'open', sortD[req.query.sortBy]];
 
                 const result = await db.query(query, values);
 
