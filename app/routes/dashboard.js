@@ -145,5 +145,34 @@ router.get('/review', async (req, res, next) => {
 
 });
 
+//@route    GET /dashboard/updates
+//@desc     Get list of reviewable Items
+//@access   Private
+router.get('/updates', async (req, res, next) => {
+  try {
+    if (req.isAuthenticated()) {
+
+      let query = "SELECT F.followee_uid, I.item_name, L.time_created FROM Users U INNER JOIN Follows F ON (U.uid = F.follower_uid) INNER JOIN Items I ON (F.followee_uid = I.owner_uid) INNER JOIN Listings L ON (I.iid = L.item_iid) WHERE U.uid = $1 AND L.time_created > U.time_lastread";
+      let values = [req.user.username];
+
+      const result = await db.query(query, values);
+
+
+
+      query = "UPDATE Users SET time_lastread = CURRENT_TIMESTAMP WHERE uid = $1";
+      await db.query(query, values)
+
+      res.render('dashboard', { list: result.rows, isUpdateList: true });
+
+    }
+    else {
+      res.redirect('/login');
+    }
+  } catch (e) {
+    console.log(e);
+  }
+
+});
+
 
 module.exports = router;
