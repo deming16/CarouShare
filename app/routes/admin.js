@@ -6,7 +6,7 @@ const db = require('../db');
 // @desc    Get admin home page
 // @access  Private
 router.get('/', (req, res, next) => {
-    res.render('admin', { heading: 'Home' });
+    res.redirect('/admin/item');
 });
 
 // @route   GET /admin/item

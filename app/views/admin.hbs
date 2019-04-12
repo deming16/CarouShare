@@ -1,307 +1,334 @@
 {{#> _base }}
 {{#*inline "contents"}}
-
 <div class="container">
-  <div class="row">
-    <h1>Admin Page - {{heading}}</h1>
-    <a class="btn waves-effect waves-light red darken-1" href="/admin/item">Items</a>
-    <a class="btn waves-effect waves-light red darken-1" href="/admin/listing">Listings</a>
-    <a class="btn waves-effect waves-light red darken-1" href="/admin/user">Users</a>
-    <a class="btn waves-effect waves-light red darken-1" href="/admin/stats">Statistics</a>
-    {{#if isItemList}}
-    <table>
-      <thead>
-        <tr>
-          <th>Owner Name</th>
-          <th>Item Name</th>
-          <th>Category</th>
-          <th>Status</th>
-          <th></th>
-          <th></th>
-        </tr>
-      </thead>
+    <div class="row mb-0 pb-5">
+        <h3>Admin Page - {{heading}}</h3>
+        <div class="col s12 mb-3">
+            <ul class="tabs">
+                <li class="tab"><a target="_self" {{#if isItemList}}class="active" {{/if}} href="/admin/item">Items</a>
+                </li>
+                <li class="tab"><a target="_self" {{#if isListingList}}class="active" {{/if}}
+                        href="/admin/listing">Listings</a></li>
+                <li class="tab"><a target="_self" {{#if isUserList}}class="active" {{/if}} href="/admin/user">Users</a>
+                </li>
+                <li class="tab"><a target="_self" {{#if statistics}}class="active" {{/if}}
+                        href="/admin/stats">Statistics</a></li>
+            </ul>
+        </div>
+        <div class="table-wrapper">
+            {{#if isItemList}}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Owner Name</th>
+                        <th>Item Name</th>
+                        <th>Category</th>
+                        <th>Status</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
 
-      <tbody>
-        {{#each list}}
-        <tr>
-          <td><a href="/user/{{this.owner_uid}}">{{this.owner_uid}}</a></td>
-          <td><a href="/item/{{this.iid}}">{{this.item_name}}</a></td>
-          <td>{{this.category}}</td>
-          <td>{{this.status}}</td>
-          <td>
-            <a class="waves-effect waves-light red darken-1 btn modal-trigger" href="#modal{{this.iid}}">Edit Info</a>
+                <tbody>
+                    {{#each list}}
+                    <tr>
+                        <td><a href="/user/{{this.owner_uid}}">{{this.owner_uid}}</a></td>
+                        <td><a href="/item/{{this.iid}}">{{this.item_name}}</a></td>
+                        <td>{{this.category}}</td>
+                        <td>{{this.status}}</td>
+                        <td>
+                            <a class="waves-effect waves-light red darken-1 btn modal-trigger"
+                                href="#modal{{this.iid}}">Edit Info</a>
 
-            <!-- Modal Structure -->
-            <div id="modal{{this.iid}}" class="modal">
-              <form method="POST" action="/item/{{this.iid}}" class="col s12" id="editItemForm">
-                <div class="modal-content">
-                  <h4>Edit Item Information</h4>
-                  <div class="row">
+                            <!-- Modal Structure -->
+                            <div id="modal{{this.iid}}" class="modal">
+                                <form method="POST" action="/item/{{this.iid}}" class="col s12" id="editItemForm">
+                                    <div class="modal-content">
+                                        <h4>Edit Item Information</h4>
+                                        <div class="row">
 
-                    <div class="row">
-                      <div class="col s12">
-                        <div class="input-field">
-                          <input value="{{this.item_name}}" name="itemName" id="itemName" type="text" class="validate">
-                          <label for="itemName">Item Name</label>
-                        </div>
-                      </div>
-                    </div>
+                                            <div class="row">
+                                                <div class="col s12">
+                                                    <div class="input-field">
+                                                        <input value="{{this.item_name}}" name="itemName" id="itemName"
+                                                            type="text" class="validate">
+                                                        <label for="itemName">Item Name</label>
+                                                    </div>
+                                                </div>
+                                            </div>
 
-                    <div class="row">
-                      <div class="col s12">
-                        <div class="input-field">
-                          <input value="{{this.category}}" name="category" id="category" type="text" class="validate">
-                          <label for="category">Category</label>
-                        </div>
-                      </div>
-                    </div>
+                                            <div class="row">
+                                                <div class="col s12">
+                                                    <div class="input-field">
+                                                        <input value="{{this.category}}" name="category" id="category"
+                                                            type="text" class="validate">
+                                                        <label for="category">Category</label>
+                                                    </div>
+                                                </div>
+                                            </div>
 
-                    <div class="row">
-                      <div class="col s12">
-                        <div class="input-field">
-                          <input value="{{this.status}}" name="status" id="status" type="text" class="validate">
-                          <label for="status">Status</label>
-                        </div>
-                      </div>
-                    </div>
+                                            <div class="row">
+                                                <div class="col s12">
+                                                    <div class="input-field">
+                                                        <input value="{{this.status}}" name="status" id="status"
+                                                            type="text" class="validate">
+                                                        <label for="status">Status</label>
+                                                    </div>
+                                                </div>
+                                            </div>
 
-                    <div class="row">
-                      <div class="col s12">
-                        <div class="input-field">
-                          <input value="{{this.photo}}" name="photo" id="photo" type="text" class="validate">
-                          <label for="photo">Photo</label>
-                        </div>
-                      </div>
-                    </div>
+                                            <div class="row">
+                                                <div class="col s12">
+                                                    <div class="input-field">
+                                                        <input value="{{this.photo}}" name="photo" id="photo"
+                                                            type="text" class="validate">
+                                                        <label for="photo">Photo</label>
+                                                    </div>
+                                                </div>
+                                            </div>
 
-                    <div class="row">
-                      <form class="col s12">
-                        <div class="row">
-                          <div class="input-field col s12">
-                            <textarea name="desc" id="desc" class="materialize-textarea">{{this.description}}</textarea>
-                            <label for="desc">Description</label>
-                          </div>
-                        </div>
-                      </form>
-                    </div>
+                                            <div class="row">
+                                                <form class="col s12">
+                                                    <div class="row">
+                                                        <div class="input-field col s12">
+                                                            <textarea name="desc" id="desc"
+                                                                class="materialize-textarea">{{this.description}}</textarea>
+                                                            <label for="desc">Description</label>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
 
-                  </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <a href="#!"
+                                            class="modal-action modal-close waves-effect waves-green btn-flat">Cancel</a>
+                                        <button type="submit" form="editItemForm"
+                                            class="modal-close waves-effect waves-green btn-flat">Save
+                                            Changes</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </td>
+                        <td>
+                            <form method="POST" action="/item/{{this.iid}}/delete">
+                                <button class="btn-floating btn-small waves-effect waves-light red"><i
+                                        class="material-icons">remove</i></button>
+                            </form>
+                        </td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+            {{/if}}
+
+            {{#if isListingList}}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Status</th>
+                        <th>Delivery Method</th>
+                        <th>Min Bid</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {{#each list}}
+                    <tr>
+                        <td><a href="/item/{{this.item_iid}}">{{this.title}}</a></td>
+                        <td>{{this.status}}</td>
+                        <td>{{this.delivery_method}}</td>
+                        <td>${{this.min_bid}}</td>
+                        <td>
+                            <!-- Modal Trigger -->
+                            <a class="waves-effect waves-light red darken-1 btn modal-trigger mb-1"
+                                href="#modal{{this.lid}}">Update
+                                Listing</a>
+
+                            <!-- Modal Structure -->
+                            <div id="modal{{this.lid}}" class="modal">
+                                <form method="POST" action="/item/{{this.item_iid}}/listing" class="col s12"
+                                    id="listingForm">
+                                    <div class="modal-content">
+                                        <h4>Create/Update Listing</h4>
+                                        <div class="row">
+
+                                            <div class="row">
+                                                <div class="col s12">
+                                                    <div class="input-field">
+                                                        <input value="{{this.title}}" name="title" id="title"
+                                                            type="text" class="validate">
+                                                        <label for="title">Title</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col s12">
+                                                    <div class="input-field">
+                                                        <input value="{{this.min_bid}}" name="min_bid" id="min_bid"
+                                                            type="text" class="validate">
+                                                        <label for="min_bid">Minimum Bid</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col s12">
+                                                    <div class="input-field">
+                                                        <input name="bid_end" id="bid_end" type="text" class="validate">
+                                                        <label for="bid_end">Bid End</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                            <div class="row">
+                                                <div class="col s12">
+                                                    <div class="input-field">
+                                                        <input value="{{this.delivery_method}}" name="delivery_method"
+                                                            id="delivery_method" type="text" class="validate">
+                                                        <label for="delivery_method">Delivery Method</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <a href="#!"
+                                            class="modal-action modal-close waves-effect waves-green btn-flat">Cancel</a>
+                                        <button type="submit" form="listingForm"
+                                            class="modal-close waves-effect waves-green btn-flat">Save
+                                            Changes</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </td>
+                        <td>
+                            <form method="POST" action="/item/{{this.item_iid}}/listing/{{this.lid}}/delete">
+                                <button class="btn-floating btn-small waves-effect waves-light red"><i
+                                        class="material-icons">remove</i></button>
+                            </form>
+                        </td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+            {{/if}}
+
+            {{#if isUserList}}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Address</th>
+                        <th>Mobile</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {{#each list}}
+                    <tr>
+                        <td><a href="/user/{{this.uid}}">{{this.uid}}</a></td>
+                        <td>{{this.email}}</td>
+                        <td>{{this.address}}</td>
+                        <td>{{this.mobile}}</td>
+                        <td>
+                            <!-- Modal Trigger -->
+                            <a class="waves-effect waves-light red darken-1 btn modal-trigger"
+                                href="#modal{{this.uid}}">Edit<i class="material-icons text-darken-1 right">edit</i></a>
+                            <!-- Modal Structure -->
+                            <div id="modal{{this.uid}}" class="modal">
+                                <form method="POST" action="/user/{{this.uid}}" class="col s12" id="detailsForm">
+                                    <div class="modal-content">
+                                        <h4>Edit Personal Details</h4>
+                                        <div class="row">
+                                            <div class="row">
+                                                <div class="col s12">
+                                                    <div class="input-field">
+                                                        <input value="{{this.email}}" name="email" id="email"
+                                                            type="email" class="validate">
+                                                        <label for="email">Email</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col s12">
+                                                    <div class="input-field">
+                                                        <input value="{{this.mobile}}" name="mobile" id="mobile"
+                                                            type="text" class="validate">
+                                                        <label class="active" for="mobile">Mobile</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col s12">
+                                                    <div class="input-field">
+                                                        <input value="{{this.address}}" name="address" id="address"
+                                                            type="text" class="validate">
+                                                        <label for="address">Address</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <a href="#!"
+                                            class="modal-action modal-close waves-effect waves-green btn-flat">Cancel</a>
+                                        <button type="submit" form="detailsForm"
+                                            class="modal-close waves-effect waves-green btn-flat">Save
+                                            Changes</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </td>
+                        <td>
+                            <form method="POST" action="/user/{{this.uid}}/delete">
+                                <button class="btn-floating btn-small waves-effect waves-light red"><i
+                                        class="material-icons">remove</i></button>
+                            </form>
+                        </td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+            {{/if}}
+
+            {{#if statistics}}
+            <div class="row">
+                <div class="col s12">
+                    <canvas id="bar-chart" width="400" height="400"></canvas>
                 </div>
-                <div class="modal-footer">
-                  <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Cancel</a>
-                  <button type="submit" form="editItemForm" class="modal-close waves-effect waves-green btn-flat">Save
-                    Changes</button>
-                </div>
-              </form>
             </div>
-          </td>
-          <td>
-            <form method="POST" action="/item/{{this.iid}}/delete">
-              <button class="btn-floating btn-small waves-effect waves-light red"><i
-                  class="material-icons">remove</i></button>
-            </form>
-          </td>
-        </tr>
-        {{/each}}
-      </tbody>
-    </table>
-    {{/if}}
 
-    {{#if isListingList}}
-    <table>
-      <thead>
-        <tr>
-          <th>Title</th>
-          <th>Status</th>
-          <th>Delivery Method</th>
-          <th>Min Bid</th>
-          <th></th>
-          <th></th>
-        </tr>
-      </thead>
-
-      <tbody>
-        {{#each list}}
-        <tr>
-          <td><a href="/item/{{this.item_iid}}">{{this.title}}</a></td>
-          <td>{{this.status}}</td>
-          <td>{{this.delivery_method}}</td>
-          <td>${{this.min_bid}}</td>
-          <td>
-            <!-- Modal Trigger -->
-            <a class="waves-effect waves-light red darken-1 btn modal-trigger mb-1" href="#modal{{this.lid}}">Update
-              Listing</a>
-
-            <!-- Modal Structure -->
-            <div id="modal{{this.lid}}" class="modal">
-              <form method="POST" action="/item/{{this.item_iid}}/listing" class="col s12" id="listingForm">
-                <div class="modal-content">
-                  <h4>Create/Update Listing</h4>
-                  <div class="row">
-
-                    <div class="row">
-                      <div class="col s12">
-                        <div class="input-field">
-                          <input value="{{this.title}}" name="title" id="title" type="text" class="validate">
-                          <label for="title">Title</label>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div class="row">
-                      <div class="col s12">
-                        <div class="input-field">
-                          <input value="{{this.min_bid}}" name="min_bid" id="min_bid" type="text" class="validate">
-                          <label for="min_bid">Minimum Bid</label>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div class="row">
-                      <div class="col s12">
-                        <div class="input-field">
-                          <input name="bid_end" id="bid_end" type="text" class="validate">
-                          <label for="bid_end">Bid End</label>
-                        </div>
-                      </div>
-                    </div>
-
-
-                    <div class="row">
-                      <div class="col s12">
-                        <div class="input-field">
-                          <input value="{{this.delivery_method}}" name="delivery_method" id="delivery_method"
-                            type="text" class="validate">
-                          <label for="delivery_method">Delivery Method</label>
-                        </div>
-                      </div>
-                    </div>
-
-                  </div>
+            <div class="row">
+                <div class="col s6">
+                    <canvas id="categoryChart" width="400" height="400"></canvas>
                 </div>
-                <div class="modal-footer">
-                  <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Cancel</a>
-                  <button type="submit" form="listingForm" class="modal-close waves-effect waves-green btn-flat">Save
-                    Changes</button>
+                <div class="col s6">
+                    <canvas id="line-chart" width="400" height="400"></canvas>
                 </div>
-              </form>
             </div>
-          </td>
-          <td>
-            <form method="POST" action="/item/{{this.item_iid}}/listing/{{this.lid}}/delete">
-              <button class="btn-floating btn-small waves-effect waves-light red"><i
-                  class="material-icons">remove</i></button>
-            </form>
-          </td>
-        </tr>
-        {{/each}}
-      </tbody>
-    </table>
-    {{/if}}
 
-    {{#if isUserList}}
-    <table>
-      <thead>
-        <tr>
-          <th>Username</th>
-          <th>Email</th>
-          <th>Address</th>
-          <th>Mobile</th>
-          <th></th>
-          <th></th>
-        </tr>
-      </thead>
-
-      <tbody>
-        {{#each list}}
-        <tr>
-          <td><a href="/user/{{this.uid}}">{{this.uid}}</a></td>
-          <td>{{this.email}}</td>
-          <td>{{this.address}}</td>
-          <td>{{this.mobile}}</td>
-          <td>
-            <!-- Modal Trigger -->
-            <a class="waves-effect waves-light red darken-1 btn modal-trigger" href="#modal{{this.uid}}">Edit<i
-                class="material-icons text-darken-1 right">edit</i></a>
-            <!-- Modal Structure -->
-            <div id="modal{{this.uid}}" class="modal">
-              <form method="POST" action="/user/{{this.uid}}" class="col s12" id="detailsForm">
-                <div class="modal-content">
-                  <h4>Edit Personal Details</h4>
-                  <div class="row">
-                    <div class="row">
-                      <div class="col s12">
-                        <div class="input-field">
-                          <input value="{{this.email}}" name="email" id="email" type="email" class="validate">
-                          <label for="email">Email</label>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col s12">
-                        <div class="input-field">
-                          <input value="{{this.mobile}}" name="mobile" id="mobile" type="text" class="validate">
-                          <label class="active" for="mobile">Mobile</label>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col s12">
-                        <div class="input-field">
-                          <input value="{{this.address}}" name="address" id="address" type="text" class="validate">
-                          <label for="address">Address</label>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+            <div class="row">
+                <div class="col s6">
+                    <canvas id="line-chart2" width="400" height="400"></canvas>
                 </div>
-                <div class="modal-footer">
-                  <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Cancel</a>
-                  <button type="submit" form="detailsForm" class="modal-close waves-effect waves-green btn-flat">Save
-                    Changes</button>
+                <div class="col s6">
+                    <canvas id="line-chart3" width="400" height="400"></canvas>
                 </div>
-              </form>
             </div>
-          </td>
-          <td>
-            <form method="POST" action="/user/{{this.uid}}/delete">
-              <button class="btn-floating btn-small waves-effect waves-light red"><i
-                  class="material-icons">remove</i></button>
-            </form>
-          </td>
-        </tr>
-        {{/each}}
-      </tbody>
-    </table>
-    {{/if}}
-
-    {{#if statistics}}
-    <div class="row">
-      <div class="col s12">
-        <canvas id="bar-chart" width="400" height="400"></canvas>
-      </div>
+            {{/if}}
+        </div>
     </div>
-
-    <div class="row">
-      <div class="col s6">
-        <canvas id="categoryChart" width="400" height="400"></canvas>
-      </div>
-      <div class="col s6">
-        <canvas id="line-chart" width="400" height="400"></canvas>
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col s6">
-        <canvas id="line-chart2" width="400" height="400"></canvas>
-      </div>
-      <div class="col s6">
-        <canvas id="line-chart3" width="400" height="400"></canvas>
-      </div>
-    </div>
-    {{/if}}
-
-  </div>
 </div>
 
 {{/inline}}
