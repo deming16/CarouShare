@@ -37,10 +37,10 @@ INSERT INTO Follows (follower_uid, followee_uid) VALUES ('zac', 'donkey');
 INSERT INTO Follows (follower_uid, followee_uid) VALUES ('donkey', 'francis');
 
 
-INSERT INTO Items (owner_uid, item_name, category) VALUES ('user', 'Mac Pro', 'Laptop');
-INSERT INTO Items (owner_uid, item_name, category) VALUES ('user', 'Lenovo', 'Laptop');
-INSERT INTO Items (owner_uid, item_name, category) VALUES ('carlo', 'HP', 'Laptop');
-INSERT INTO Items (owner_uid, item_name, category) VALUES ('bob', 'Asus', 'Laptop');
+INSERT INTO Items (owner_uid, item_name, category) VALUES ('user', 'Mac Pro', 'Electronics');
+INSERT INTO Items (owner_uid, item_name, category) VALUES ('user', 'Lenovo', 'Electronics');
+INSERT INTO Items (owner_uid, item_name, category) VALUES ('carlo', 'HP', 'Electronics');
+INSERT INTO Items (owner_uid, item_name, category) VALUES ('bob', 'Asus', 'Electronics');
 INSERT INTO Items (owner_uid, item_name, category) VALUES ('emma', 'Scissor', 'Household');
 INSERT INTO Items (owner_uid, item_name, category) VALUES ('francis', 'TV', 'Household');
 INSERT INTO Items (owner_uid, item_name, category) VALUES ('zac', 'Dictonary', 'Book');

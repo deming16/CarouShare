@@ -33,9 +33,9 @@
                 <div class="input-field col s12 m6 no-margin">
                     <select name="category" form="search-form">
                         <option value="0" selected>Category</option>
-                        <option value="1">PC</option>
-                        <option value="2">PC1</option>
-                        <option value="3">PC2</option>
+                        <option value="1">Electronics</option>
+                        <option value="2">Household</option>
+                        <option value="3">Books</option>
                     </select>
                 </div>
 
@@ -75,8 +75,8 @@
             <div class="col s12 m6 xl4">
                 <div class="card waves-effect waves-block">
                     <div class="card-image">
-                        <div class="img-fit listing-item-image"
-                            {{#if this.photo}} style="background-image: url('/uploads/{{this.photo}}');" {{/if}}>
+                        <div class="img-fit listing-item-image" {{#if this.photo}}
+                            style="background-image: url('/uploads/{{this.photo}}');" {{/if}}>
                         </div>
                         <form method="POST" action="/item/{{this.iid}}/like">
                             {{#if this.liked}}

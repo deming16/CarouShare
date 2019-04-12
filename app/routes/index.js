@@ -73,7 +73,7 @@ router.get('/search', async (req, res, next) => {
         if (req.isAuthenticated()) {
             const sort = [' ', 'min_bid', 'time_created', 'L.time_created', 'numLikes'];
             const sortD = ['A', 'A', 'A', 'D', 'D', 'D'];
-            const category = ['%', 'PC', 'PC1', 'PC2'];
+            const category = ['%', 'Electronics', 'Household', 'Book'];
             // const sort = [' ', ' min_bid asc,', ' L.time_created asc,', ' L.time_created desc,', ' numLikes desc,', ', numLoans desc'];
             // const category = [' ', " category = 'PC' and ", " category = 'PC1' and ", " category = 'PC2' and "];
             let query;
@@ -153,7 +153,7 @@ router.get('/search', async (req, res, next) => {
             } else {
                 const sort = [' ', 'min_bid', 'time_created', 'L.time_created', 'numLikes'];
                 const sortD = ['A', 'A', 'A', 'D', 'D', 'D'];
-                const category = ['%', 'PC', 'PC1', 'PC2'];
+                const category = ['%', 'Electronics', 'Household', 'Book'];
 
                 query = 'SELECT * FROM get_search_results($1, $2, $3, $4, $5, $6)';
                 values = [
