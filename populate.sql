@@ -70,10 +70,10 @@ INSERT INTO Listings (item_iid, title, min_bid) VALUES (7, 'Dictionary', 10);
 INSERT INTO Listings (item_iid, title, min_bid) VALUES (8, 'Harry Potter', 15);
 
 
-INSERT INTO Bids (bidder_uid, listing_lid, amount) VALUES ('alice', 2, 10);
-INSERT INTO Bids (bidder_uid, listing_lid, amount) VALUES ('zac', 4, 20);
-INSERT INTO Bids (bidder_uid, listing_lid, amount) VALUES ('groot', 3, 30);
+INSERT INTO Bids (bidder_uid, listing_lid, amount) VALUES ('alice', 2, 40);
+INSERT INTO Bids (bidder_uid, listing_lid, amount) VALUES ('zac', 4, 500);
+INSERT INTO Bids (bidder_uid, listing_lid, amount) VALUES ('groot', 3, 600);
 INSERT INTO Bids (bidder_uid, listing_lid, amount) VALUES ('carlo', 7, 20);
-INSERT INTO Bids (bidder_uid, listing_lid, amount) VALUES ('emma', 3, 40);
+INSERT INTO Bids (bidder_uid, listing_lid, amount) VALUES ('emma', 3, 800);
 
 INSERT INTO Loans (bid_biid) VALUES (1);

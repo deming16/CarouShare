@@ -85,7 +85,7 @@ BEFORE INSERT ON Listings
 FOR EACH ROW
 EXECUTE PROCEDURE trig_func4();
 
---Cannot bid after bidding ends
+--Cannot bid after bidding ends or if under min bid
 CREATE OR REPLACE FUNCTION update_timestamp() 
 RETURNS TRIGGER AS $$
 DECLARE
@@ -96,10 +96,11 @@ BEGIN
     SELECT 1
     INTO row_exists
     FROM   Listings
-    WHERE  lid = NEW.listing_lid and NEW.time_created > Listings.time_ending;
+    WHERE  lid = NEW.listing_lid 
+    AND (NEW.time_created > Listings.time_ending OR NEW.amount < Listings.min_bid) ;
 
     IF (row_exists > 0) THEN
-        RAISE NOTICE 'Cannot bid after bidding ends';
+        RAISE NOTICE 'Cannot bid after bidding ends or if bid is under min';
         RETURN NULL;
     ELSE
         RETURN NEW;
