@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 
+const { ERRORS } = require('../utils/errors');
 const db = require('../db');
 
 //@route    GET /dashboard
@@ -30,7 +31,7 @@ router.get('/borrow', async (req, res, next) => {
             res.redirect('/login');
         }
     } catch (e) {
-        res.render('error', { error: e, message: 'something went wrong' });
+        next(ERRORS.somethingWentWrong(e.message));
     }
 });
 
@@ -50,7 +51,7 @@ router.get('/loan', async (req, res, next) => {
             res.redirect('/login');
         }
     } catch (e) {
-        res.render('error', { error: e, message: 'something went wrong' });
+        next(ERRORS.somethingWentWrong(e.message));
     }
 });
 

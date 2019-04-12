@@ -1,3 +1,13 @@
-<h1>{{message}}</h1>
-<h2>{{error.status}}</h2>
-<pre>{{error.stack}}</pre>
+{{#> _base title="Uh-Oh" hideNav=true hideFooter=true }}
+{{#*inline "contents"}}
+<div class="full-bg red darken-3">
+    <div class="page-login-bg pos-absolute absolute-fit"></div>
+    <div class="white-text mb-5 pos-relative">
+        <h3 class="text-center no-margin mb-1">Error {{error.status}}</h3>
+        <h5 class="text-center no-margin">{{message}}</h5>
+    </div>
+    <a href="/" class="btn-large waves-effect waves-red white red-text text-darken-1"><b>Back to
+            {{@config.siteTitle}}</b></a>
+</div>
+{{/inline}}
+{{/_base}}

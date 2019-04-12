@@ -55,7 +55,7 @@ router.get('/:itemId', async (req, res, next) => {
             });
         }
     } catch (e) {
-        res.render('error', { error: e, message: 'something went wrong' });
+        next(ERRORS.somethingWentWrong(e.message));
     }
 });
 
@@ -150,7 +150,7 @@ router.get('/:itemId/listing', async (req, res, next) => {
             itemId: req.params.itemId
         });
     } catch (e) {
-        res.render('error', { error: e, message: 'something went wrong' });
+        next(ERRORS.somethingWentWrong(e.message));
     }
 });
 
