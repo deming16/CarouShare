@@ -6,7 +6,7 @@
     <div class="row">
         <h3>{{user.uid}}</h3>
         {{#unless isMyProfile}}
-        <form method="POST" action="/user/{{user.uid}}/follow">
+        <form method="POST" action="/user/{{user.uid}}/follow" class="mb-2">
             <button class="btn btn-small waves-effect waves-light red">Follow!</button>
         </form>
         {{/unless}}

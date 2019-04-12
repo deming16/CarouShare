@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const db = require('../db');
+const moment = require('moment');
 
 // @route   GET /admin
 // @desc    Get admin home page
@@ -15,6 +16,10 @@ router.get('/', (req, res, next) => {
 router.get('/item', (req, res, next) => {
     const query = 'select * from Items order by iid';
     db.query(query).then((result) => {
+        result.rows.forEach((row) => {
+            const cat = row.category;
+            row.category_arr = [cat === 'Electronics', cat === 'Household', cat === 'Book'];
+        });
         res.render('admin', { list: result.rows, isItemList: true, heading: 'Items' });
     });
 });
@@ -25,6 +30,9 @@ router.get('/item', (req, res, next) => {
 router.get('/listing', (req, res, next) => {
     const query = 'select * from Listings order by lid';
     db.query(query).then((result) => {
+        result.rows.forEach((row) => {
+            row.time_ending_text = moment(row.time_ending).format('MMM DD, YYYY');
+        });
         res.render('admin', { list: result.rows, isListingList: true, heading: 'Listing' });
     });
 });

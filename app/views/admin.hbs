@@ -46,59 +46,53 @@
                                     <div class="modal-content">
                                         <h4>Edit Item Information</h4>
                                         <div class="row">
-
-                                            <div class="row">
-                                                <div class="col s12">
-                                                    <div class="input-field">
-                                                        <input value="{{this.item_name}}" name="itemName" id="itemName"
-                                                            type="text" class="validate">
-                                                        <label for="itemName">Item Name</label>
-                                                    </div>
+                                            <div class="input-field col s12">
+                                                <input value="{{this.item_name}}" name="itemName" id="itemName"
+                                                    type="text" class="validate">
+                                                <label for="itemName">Item Name</label>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="input-field col s12">
+                                                <select name="category" id="category">
+                                                    <option value="" disabled selected>Category</option>
+                                                    <option value="Electronics"
+                                                        {{#if this.category_arr.[0]}}selected="selected" {{/if}}>
+                                                        Electronics</option>
+                                                    <option value="Household"
+                                                        {{#if this.category_arr.[1]}}selected="selected" {{/if}}>
+                                                        Household</option>
+                                                    <option value="Book"
+                                                        {{#if this.category_arr.[2]}}selected="selected" {{/if}}>Book
+                                                    </option>
+                                                </select>
+                                                <label for="category">Category</label>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="input-field col s12">
+                                                <input value="{{this.status}}" name="status" id="status" type="text"
+                                                    class="validate">
+                                                <label for="status">Status</label>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="file-field input-field col s12">
+                                                <div class="btn">
+                                                    <span>Photo</span>
+                                                    <input type="file" name="photo" id="photo">
+                                                </div>
+                                                <div class="file-path-wrapper">
+                                                    <input class="file-path validate" type="text">
                                                 </div>
                                             </div>
-
-                                            <div class="row">
-                                                <div class="col s12">
-                                                    <div class="input-field">
-                                                        <input value="{{this.category}}" name="category" id="category"
-                                                            type="text" class="validate">
-                                                        <label for="category">Category</label>
-                                                    </div>
-                                                </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="input-field col s12">
+                                                <textarea name="desc" id="desc"
+                                                    class="materialize-textarea">{{this.description}}</textarea>
+                                                <label for="desc">Description</label>
                                             </div>
-
-                                            <div class="row">
-                                                <div class="col s12">
-                                                    <div class="input-field">
-                                                        <input value="{{this.status}}" name="status" id="status"
-                                                            type="text" class="validate">
-                                                        <label for="status">Status</label>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="row">
-                                                <div class="col s12">
-                                                    <div class="input-field">
-                                                        <input value="{{this.photo}}" name="photo" id="photo"
-                                                            type="text" class="validate">
-                                                        <label for="photo">Photo</label>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="row">
-                                                <form class="col s12">
-                                                    <div class="row">
-                                                        <div class="input-field col s12">
-                                                            <textarea name="desc" id="desc"
-                                                                class="materialize-textarea">{{this.description}}</textarea>
-                                                            <label for="desc">Description</label>
-                                                        </div>
-                                                    </div>
-                                                </form>
-                                            </div>
-
                                         </div>
                                     </div>
                                     <div class="modal-footer">
@@ -154,49 +148,34 @@
                                 <form method="POST" action="/item/{{this.item_iid}}/listing" class="col s12"
                                     id="listingForm">
                                     <div class="modal-content">
-                                        <h4>Create/Update Listing</h4>
+                                        <h4>Update Listing</h4>
                                         <div class="row">
-
-                                            <div class="row">
-                                                <div class="col s12">
-                                                    <div class="input-field">
-                                                        <input value="{{this.title}}" name="title" id="title"
-                                                            type="text" class="validate">
-                                                        <label for="title">Title</label>
-                                                    </div>
-                                                </div>
+                                            <div class="col s12 input-field">
+                                                <input value="{{this.title}}" name="title" id="title" type="text"
+                                                    class="validate">
+                                                <label for="title">Title</label>
                                             </div>
-
-                                            <div class="row">
-                                                <div class="col s12">
-                                                    <div class="input-field">
-                                                        <input value="{{this.min_bid}}" name="min_bid" id="min_bid"
-                                                            type="text" class="validate">
-                                                        <label for="min_bid">Minimum Bid</label>
-                                                    </div>
-                                                </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col s12 input-field">
+                                                <input value="{{this.min_bid}}" name="min_bid" id="min_bid" type="text"
+                                                    class="validate">
+                                                <label for="min_bid">Minimum Bid</label>
                                             </div>
-
-                                            <div class="row">
-                                                <div class="col s12">
-                                                    <div class="input-field">
-                                                        <input name="bid_end" id="bid_end" type="text" class="validate">
-                                                        <label for="bid_end">Bid End</label>
-                                                    </div>
-                                                </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col s12 input-field">
+                                                <input value="{{this.time_ending_text}}" name="bid_end" id="bid_end" type="text"
+                                                    class="datepicker validate">
+                                                <label for="bid_end">Bid End</label>
                                             </div>
-
-
-                                            <div class="row">
-                                                <div class="col s12">
-                                                    <div class="input-field">
-                                                        <input value="{{this.delivery_method}}" name="delivery_method"
-                                                            id="delivery_method" type="text" class="validate">
-                                                        <label for="delivery_method">Delivery Method</label>
-                                                    </div>
-                                                </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col s12 input-field">
+                                                <input value="{{this.delivery_method}}" name="delivery_method"
+                                                    id="delivery_method" type="text" class="validate">
+                                                <label for="delivery_method">Delivery Method</label>
                                             </div>
-
                                         </div>
                                     </div>
                                     <div class="modal-footer">

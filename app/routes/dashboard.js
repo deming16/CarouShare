@@ -135,7 +135,7 @@ router.get('/review', async (req, res, next) => {
             res.redirect('/login');
         }
     } catch (e) {
-        console.log(e);
+        ERRORS.somethingWentWrong(e.message, next);
     }
 });
 
@@ -159,7 +159,7 @@ router.get('/updates', async (req, res, next) => {
             res.redirect('/login');
         }
     } catch (e) {
-        console.log(e);
+        ERRORS.somethingWentWrong(e.message, next);
     }
 });
 

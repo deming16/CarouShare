@@ -52,7 +52,7 @@ router.get('/', async (req, res, next) => {
             res.redirect('/login');
         }
     } catch (e) {
-        console.log(e);
+        ERRORS.somethingWentWrong(e.message, next);
     }
 });
 
@@ -139,8 +139,11 @@ router.post('/:username/follow', async (req, res, next) => {
         } else {
             res.redirect('/login');
         }
-    } catch (e) {
-        console.log(e);
+    } catch (err) {
+        req.flash('messages', err.message);
+        req.session.save(() => {
+            res.redirect('back');
+        });
     }
 });
 

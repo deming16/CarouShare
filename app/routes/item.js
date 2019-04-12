@@ -144,8 +144,12 @@ router.get('/:itemId/listing', async (req, res, next) => {
         if (req.isAuthenticated() && req.user.username === user.rows[0].owner_uid) isOwner = true;
 
         if (result.rows.length > 0) {
-            result.rows[0].listingstart_text = moment(result.rows[0].listingstart).format('dddd, MMMM Do YYYY, h:mm:ss a');
-            result.rows[0].time_ending_text = moment(result.rows[0].time_ending).format('dddd, MMMM Do YYYY, h:mm:ss a');
+            result.rows[0].listingstart_text = moment(result.rows[0].listingstart).format(
+                'dddd, MMMM Do YYYY, h:mm:ss a'
+            );
+            result.rows[0].time_ending_text = moment(result.rows[0].time_ending).format(
+                'dddd, MMMM Do YYYY, h:mm:ss a'
+            );
         }
 
         res.render('listing', {
@@ -175,8 +179,10 @@ router.post('/:itemId/listing', async (req, res, next) => {
             values = [req.params.itemId, req.body.title, req.body.delivery_method, req.body.min_bid, bidEnd];
             await db.query(query, values);
         } else {
-            query = 'update Listings set title = $1, delivery_method = $2, min_bid = $3 where lid = $4';
-            values = [req.body.title, req.body.delivery_method, req.body.min_bid, result.rows[0].lid];
+            const bidEnd = moment(req.body.bid_end, 'MMM DD, YYYY').format('DD/MM/YYYY');
+            query =
+                "update Listings set title = $1, delivery_method = $2, min_bid = $3, time_ending = to_timestamp($4, 'DD/MM/YYYY') where lid = $5";
+            values = [req.body.title, req.body.delivery_method, req.body.min_bid, bidEnd, result.rows[0].lid];
             await db.query(query, values);
         }
 
@@ -348,7 +354,7 @@ router.get('/:itemId/review/', async (req, res, next) => {
 
         res.render('review', { reviews: parsedResult, item: result.rows[0], itemId: req.params.itemId });
     } catch (e) {
-        console.log(e);
+        ERRORS.somethingWentWrong(e.message, next);
     }
 });
 
@@ -406,10 +412,13 @@ router.post('/:itemId/review/save', async (req, res, next) => {
         } else {
             res.redirect('/login');
         }
-    } catch (e) {
+    } catch (err) {
         await client.query('ROLLBACK');
         done();
-        console.log(e);
+        req.flash('messages', err.message);
+        req.session.save(() => {
+            res.redirect('back');
+        });
     }
 });
 
@@ -433,8 +442,11 @@ router.post('/:itemId/review/delete/:sname', async (req, res, next) => {
         const section = await db.query(query);
 
         res.redirect(`back`);
-    } catch (e) {
-        console.log(e);
+    } catch (err) {
+        req.flash('messages', err.message);
+        req.session.save(() => {
+            res.redirect('back');
+        });
     }
 });
 
