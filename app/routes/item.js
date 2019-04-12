@@ -12,6 +12,7 @@ const storage = multer.diskStorage({
     }
 });
 const upload = multer({ storage: storage });
+const moment = require('moment');
 const db = require('../db');
 
 // ROUTES FOR THE ITEM ITSELF
@@ -156,8 +157,9 @@ router.post('/:itemId/listing', async (req, res, next) => {
         let values = ['open', req.params.itemId];
         const result = await db.query(query, values);
         if (result.rows.length === 0) {
-            query = "insert into Listings (item_iid, title, delivery_method, min_bid, bid_end) values ($1, $2, $3, $4, to_timestamp($5, 'DD/MM/YYYY'))";
-            values = [req.params.itemId, req.body.title, req.body.delivery_method, req.body.min_bid, req.params.bid_end];
+            const bidEnd = moment(req.body.bid_end, 'MMM DD, YYYY').format('DD/MM/YYYY');
+            query = "insert into Listings (item_iid, title, delivery_method, min_bid, time_ending) values ($1, $2, $3, $4, to_timestamp($5, 'DD/MM/YYYY'))";
+            values = [req.params.itemId, req.body.title, req.body.delivery_method, req.body.min_bid, bidEnd];
             await db.query(query, values);
         } else {
             query = 'update Listings set title = $1, delivery_method = $2, min_bid = $3 where lid = $4';
@@ -183,8 +185,8 @@ router.post('/:itemId/listing/:listingId/delete', async (req, res, next) => {
         await client.query('BEGIN');
 
         // delete all bids from the listing
-        query = 'delete from Bids where listing_lid = $1';
-        values = [req.params.listingId];
+        var query = 'delete from Bids where listing_lid = $1';
+        var values = [req.params.listingId];
         await db.query(query, values);
 
         // delete the listing itself

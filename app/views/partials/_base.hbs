@@ -53,9 +53,14 @@
             var elSidenav = document.querySelectorAll('.sidenav');
             var elSelect = document.querySelectorAll('select');
             var elTab = document.querySelectorAll('.tabs');
+            var elDate = document.querySelectorAll('.datepicker');
+            var elTime = document.querySelectorAll('.timepicker');
+    
             M.Sidenav.init(elSidenav);
             M.FormSelect.init(elSelect);
             M.Tabs.init(elTab);
+            M.Datepicker.init(elDate, { container: 'body' });
+            M.Timepicker.init(elTime);
         });
     </script>
 
