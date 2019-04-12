@@ -8,7 +8,7 @@ RETURNS TRIGGER AS
 $$ 
 BEGIN
     IF EXISTS (SELECT * FROM Admins WHERE NEW.uid = Admins.uid) THEN
-        RAISE NOTICE '1 account cannot be both admin and user';
+        RAISE EXCEPTION '1 account cannot be both admin and user';
         RETURN NULL;
     ELSE
         RETURN NEW;
@@ -29,7 +29,7 @@ RETURNS TRIGGER AS
 $$ 
 BEGIN
     IF EXISTS (SELECT * FROM Users WHERE NEW.uid = Users.uid) THEN
-        RAISE NOTICE '1 account cannot be both admin and user';
+        RAISE EXCEPTION '1 account cannot be both admin and user';
         RETURN NULL;
     ELSE
         RETURN NEW;
@@ -50,7 +50,7 @@ $$
 BEGIN
     IF EXISTS (SELECT * FROM Bids WHERE NEW.bidder_uid = Bids.bidder_uid 
             and NEW.listing_lid = Bids.listing_lid) THEN
-        RAISE NOTICE '1 bidder (user) can only have 1 bid for 1 listing';
+        RAISE EXCEPTION '1 bidder (user) can only have 1 bid for 1 listing';
         RETURN NULL;
     ELSE
         RETURN NEW;
@@ -71,7 +71,7 @@ $$
 BEGIN
     IF EXISTS (SELECT * FROM Listings WHERE NEW.item_iid = Listings.item_iid 
             and NEW.status = 'open' and Listings.status = 'open') THEN
-        RAISE NOTICE '1 item can only have 1 listing opening at a time';
+        RAISE EXCEPTION '1 item can only have 1 listing opening at a time';
         RETURN NULL;
     ELSE
         RETURN NEW;
@@ -100,7 +100,7 @@ BEGIN
     AND (NEW.time_created > Listings.time_ending OR NEW.amount < Listings.min_bid) ;
 
     IF (row_exists > 0) THEN
-        RAISE NOTICE 'Cannot bid after bidding ends or if bid is under min';
+        RAISE EXCEPTION 'Cannot bid after bidding ends or if bid is under min';
         RETURN NULL;
     ELSE
         RETURN NEW;
