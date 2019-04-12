@@ -41,7 +41,7 @@ router.get('/loan', async (req, res, next) => {
     try {
         if (req.isAuthenticated()) {
             const query =
-                'select bid_biid, title, bidder_uid, lid from Loans L inner join Bids B on (L.bid_biid = B.biid) inner join Listings LI on (B.listing_lid = LI.lid) inner join Items I on (I.iid = LI.item_iid) where I.owner_uid = $1 AND L.status = $2';
+                'select bid_biid, title, bidder_uid, lid, I.iid from Loans L inner join Bids B on (L.bid_biid = B.biid) inner join Listings LI on (B.listing_lid = LI.lid) inner join Items I on (I.iid = LI.item_iid) where I.owner_uid = $1 AND L.status = $2';
             const values = [req.user.username, 'start'];
 
             const result = await db.query(query, values);
@@ -145,7 +145,7 @@ router.get('/updates', async (req, res, next) => {
     try {
         if (req.isAuthenticated()) {
             let query =
-                'SELECT F.followee_uid, I.item_name, L.time_created FROM Users U INNER JOIN Follows F ON (U.uid = F.follower_uid) INNER JOIN Items I ON (F.followee_uid = I.owner_uid) INNER JOIN Listings L ON (I.iid = L.item_iid) WHERE U.uid = $1 AND L.time_created > U.time_lastread';
+                'SELECT F.followee_uid, I.iid, I.item_name, L.time_created FROM Users U INNER JOIN Follows F ON (U.uid = F.follower_uid) INNER JOIN Items I ON (F.followee_uid = I.owner_uid) INNER JOIN Listings L ON (I.iid = L.item_iid) WHERE U.uid = $1 AND L.time_created > U.time_lastread';
             let values = [req.user.username];
 
             const result = await db.query(query, values);

@@ -50,7 +50,7 @@
                 <tbody>
                     {{#each list}}
                     <tr>
-                        <td>{{this.title}}</td>
+                        <td><a href="/item/{{this.iid}}">{{this.title}}</a></td>
                         <td>{{this.bidder_uid}}</td>
                         <td>
                             <form method="POST" action="/dashboard/loan/end/{{this.lid}}">
@@ -69,20 +69,14 @@
                     <tr>
                         <th>Listing Name</th>
                         <th>Status</th>
-                        <th></th>
                     </tr>
                 </thead>
 
                 <tbody>
                     {{#each list}}
                     <tr>
-                        <td>{{this.title}}</td>
+                        <td><a href="/item/{{this.item_iid}}">{{this.title}}</a></td>
                         <td>{{this.status}}</td>
-                        <td>
-                            <form method="GET" action="/item/{{this.item_iid}}/listing">
-                                <button class="btn btn-small waves-effect waves-light red">Go To Listing</button>
-                            </form>
-                        </td>
                     </tr>
                     {{/each}}
                 </tbody>
@@ -101,7 +95,7 @@
                 <tbody>
                     {{#each list}}
                     <tr>
-                        <td>{{this.item_title}}</td>
+                        <td><a href="/item/{{this.item_iid}}">{{this.item_title}}</a></td>
                         <td>
                             <form method="GET" action="/item/{{this.item_iid}}/myreview">
                                 <button class="btn btn-small waves-effect waves-light red">Add/Edit Review</button>
@@ -125,7 +119,8 @@
                 <tbody>
                     {{#each list}}
                     <tr>
-                        <td>{{this.followee_uid}} created a new listing for {{this.item_name}}</td>
+                        <td>{{this.followee_uid}} created a new listing for <a
+                                href="/item/{{this.iid}}">{{this.item_name}}</a></td>
                         <td>
                             {{this.time_created}}
                         </td>
