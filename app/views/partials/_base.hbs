@@ -131,9 +131,9 @@
         new Chart(document.getElementById("line-chart"), {
             type: 'line',
             data: {
-                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
                 datasets: [{
-                    data: [{{ userChange.[0] }}, {{ userChange.[1] }}, {{ userChange.[2] }}, {{ userChange.[3] }}, {{ userChange.[4] }}, {{ userChange.[5] }}, {{ userChange.[6] }}, {{ userChange.[7] }}, {{ userChange.[8] }}, {{ userChange.[9] }}, {{ userChange.[10] }}, {{ userChange.[11] }}],
+                    data: [{{ userChange.[0] }}, {{ userChange.[1] }}, {{ userChange.[2] }}, {{ userChange.[3] }}, {{ userChange.[4] }}, {{ userChange.[5] }}, {{ userChange.[6] }}],
             borderColor: "rgba(54, 162, 235, 1)",
             backgroundColor: "rgba(54, 162, 235, 0.2)",
             fill: true
@@ -146,7 +146,7 @@
                 },
                 title: {
                     display: true,
-                    text: 'User Signups This Year'
+                    text: 'User Signups This Week'
                 }
             }
         });
@@ -154,9 +154,9 @@
         new Chart(document.getElementById("line-chart2"), {
             type: 'line',
             data: {
-                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
                 datasets: [{
-                    data: [{{ listingChange.[0] }}, {{ listingChange.[1] }}, {{ listingChange.[2] }}, {{ listingChange.[3] }}, {{ listingChange.[4] }}, {{ listingChange.[5] }}, {{ listingChange.[6] }}, {{ listingChange.[7] }}, {{ listingChange.[8] }}, {{ listingChange.[9] }}, {{ listingChange.[10] }}, {{ listingChange.[11] }}],
+                    data: [{{ listingChange.[0] }}, {{ listingChange.[1] }}, {{ listingChange.[2] }}, {{ listingChange.[3] }}, {{ listingChange.[4] }}, {{ listingChange.[5] }}, {{ listingChange.[6] }}],
             borderColor: "rgba(255, 99, 132, 1)",
             backgroundColor: "rgba(255, 99, 132, 0.2)",
             fill: true
@@ -169,7 +169,7 @@
                 },
                 title: {
                     display: true,
-                    text: 'Listings Created This Year'
+                    text: 'Listings Created This Week'
                 }
             }
         });
@@ -177,9 +177,9 @@
         new Chart(document.getElementById("line-chart3"), {
             type: 'line',
             data: {
-                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
                 datasets: [{
-                    data: [{{ transactChange.[0] }}, {{ transactChange.[1] }}, {{ transactChange.[2] }}, {{ transactChange.[3] }}, {{ transactChange.[4] }}, {{ transactChange.[5] }}, {{ transactChange.[6] }}, {{ listingChange.[7] }}, {{ listingChange.[8] }}, {{ transactChange.[9] }}, {{ transactChange.[10] }}, {{ transactChange.[11] }}],
+                    data: [{{ transactChange.[0] }}, {{ transactChange.[1] }}, {{ transactChange.[2] }}, {{ transactChange.[3] }}, {{ transactChange.[4] }}, {{ transactChange.[5] }}, {{ transactChange.[6] }}],
             borderColor: "rgba(255, 206, 86, 1)",
             backgroundColor: "rgba(255, 206, 86, 0.2)",
             fill: true
@@ -192,7 +192,7 @@
                 },
                 title: {
                     display: true,
-                    text: 'Transactions Made This Year'
+                    text: 'Transactions Made This Week'
                 }
             }
         });
