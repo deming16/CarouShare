@@ -72,7 +72,7 @@ router.get('/:username', async (req, res, next) => {
         res.send('user does not exist');
     } else {
         query =
-            'select lid, title, Listings.status as status, delivery_method, min_bid, time_ending, photo, owner_uid, description from Items inner join Listings on (item_iid = iid) where owner_uid = $1';
+            'select lid, item_iid, title, Listings.status as status, delivery_method, min_bid, time_ending, photo, owner_uid, description from Items inner join Listings on (item_iid = iid) where owner_uid = $1';
         result.listings = await db.query(query, values);
 
         query =
