@@ -1,45 +1,37 @@
 {{#> _base hideNav=hideNav}}
 {{#*inline "contents"}}
+
 {{#if hideNav}}
-<div class="full-bg red darken-3 white-text">
+<div class="full-bg-90 red darken-3 white-text">
     <div class="page-login-bg pos-absolute absolute-fit"></div>
-    <h1 class="no-margin mb-2 pos-relative">Start Sharing Today!</h1>
-    <div class="row mt-5">
-        <a href="/login" class="mr-5 z-depth-5 btn waves-effect waves-light black darken-1">Login</a>
-        <a href="/signup" class="btn z-depth-5 waves-effect waves-light black darken-1">Sign
-            Up</a>
+    <h4 class="no-margin mb-1 pos-relative text-center">{{@config.siteTitle}}</h4>
+    <h2 class="no-margin mb-5 pos-relative trans-1 text-center">Start Sharing Today!</h2>
+    <div class="text-center">
+        <a href="/login"
+            class="btn-large ml-1 mr-1 mt-1 mb-1 waves-effect waves-red white red-text text-darken-1"><b>Login</b></a>
+        <a href="/signup"
+            class="btn-large ml-1 mr-1 mt-1 mb-1 waves-effect waves-red white red-text text-darken-1"><b>Sign
+                Up</b></a>
+        <a href="#listings"
+            class="btn-large ml-1 mr-1 mt-1 mb-1 waves-effect waves-red white red-text text-darken-1"><b>Browse</b></a>
     </div>
-    <div class="row mt-5">
-        <a href="#indexBody" class="btn offset-m3 z-depth-5 waves-effect waves-light black darken-1">Browse</a>
-    </div>
-
-
 </div>
 {{/if}}
-<div id="indexBody" class="container">
-    <div class="row">
-        <form method="GET" action="/search" id="searchForm">
+
+<div id="listings" class="container">
+    <div class="row z-depth-1 listing-search-box mt-4 mb-5">
+        <form method="GET" action="/search" id="search-form">
             <div class="input-field">
                 <i class="material-icons prefix">search</i>
-                <input placeholder="Search" value="{{search}}" name="query" id="search" type="search" required>
+                <input placeholder="Search" value="{{search}}" name="query" id="search" type="search"
+                    required="required" />
                 <label class="label-icon" for="search"></label>
-                <i class="material-icons">close</i>
-                <button type="submit" form="searchForm" class="hide"></button>
+                <button type="submit" form="search-form" class="hide"></button>
             </div>
 
-            <p>
-                <label>
-                    <input value="listing" class="with-gap" name="searchFor" type="radio" checked />
-                    <span>Listing</span>
-                </label>
-
-                <label>
-                    <input value="user" class="with-gap" name="searchFor" type="radio" />
-                    <span>User</span>
-                </label>
-
-                <div class="input-field col s12">
-                    <select name="category" form="searchForm">
+            <div class="row">
+                <div class="input-field col s12 m6 no-margin">
+                    <select name="category" form="search-form">
                         <option value="0" selected>Category</option>
                         <option value="1">PC</option>
                         <option value="2">PC1</option>
@@ -47,8 +39,8 @@
                     </select>
                 </div>
 
-                <div class="input-field col s12">
-                    <select name="sortBy" form="searchForm">
+                <div class="input-field col s12 m6 no-margin">
+                    <select name="sortBy" form="search-form">
                         <option value="0" selected>Sort By...</option>
                         <option value="1">Min Bid Required (Lowest to Highest)</option>
                         <option value="2">Newest First</option>
@@ -56,14 +48,28 @@
                         <option value="4">Most Likes</option>
                     </select>
                 </div>
+            </div>
 
-            </p>
+            <div class="flex-display flex-justify-center">
+                <div class="mr-4">
+                    <label>
+                        <input value="listing" class="with-gap" name="searchFor" type="radio" checked="checked" />
+                        <span>Listing</span>
+                    </label>
+                </div>
+                <div>
+                    <label>
+                        <input value="user" class="with-gap" name="searchFor" type="radio" />
+                        <span>User</span>
+                    </label>
+                </div>
+            </div>
         </form>
     </div>
-    <div class="row">
-        <h4>{{message}}</h4>
-        {{#if listing}}
+    <div class="row pt-3 pb-3">
+        <h5>{{message}}</h5>
 
+        {{#if listing}}
         {{#each list}}
         <a href="/item/{{this.iid}}">
             <div class="col s12 m6 xl4">
@@ -96,14 +102,10 @@
                 </div>
             </div>
         </a>
-
         {{/each}}
-
         {{/if}}
 
-
         {{#if user}}
-
         <ul>
             {{#each list}}
             <li><a href="/user/{{this.uid}}">{{this.uid}}</a></li>

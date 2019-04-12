@@ -41,7 +41,7 @@ router.get('/', async (req, res, next) => {
             res.render('index', {
                 list: parsedResult,
                 listing: true,
-                message: 'Latest Listings - Bid and Borrow Today!'
+                message: 'Latest Listings'
             });
         } else {
             const query = 'select * from ListingViews L where L.status = $1 order by time_created';
@@ -54,7 +54,7 @@ router.get('/', async (req, res, next) => {
             res.render('index', {
                 list: result.rows,
                 listing: true,
-                message: 'Latest Listings - Bid and Borrow Today!',
+                message: 'Latest Listings',
                 hideNav: true
             });
         }
