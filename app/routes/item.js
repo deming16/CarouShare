@@ -13,6 +13,7 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage });
 const moment = require('moment');
+const { ERRORS } = require('../utils/errors');
 const db = require('../db');
 
 // ROUTES FOR THE ITEM ITSELF
@@ -55,7 +56,7 @@ router.get('/:itemId', async (req, res, next) => {
             });
         }
     } catch (e) {
-        next(ERRORS.somethingWentWrong(e.message));
+        ERRORS.somethingWentWrong(e.message, next);
     }
 });
 
@@ -142,6 +143,11 @@ router.get('/:itemId/listing', async (req, res, next) => {
         if (result.rows.length !== 0) listingAvailable = true;
         if (req.isAuthenticated() && req.user.username === user.rows[0].owner_uid) isOwner = true;
 
+        if (result.rows.length > 0) {
+            result.rows[0].listingstart_text = moment(result.rows[0].listingstart).format('dddd, MMMM Do YYYY, h:mm:ss a');
+            result.rows[0].time_ending_text = moment(result.rows[0].time_ending).format('dddd, MMMM Do YYYY, h:mm:ss a');
+        }
+
         res.render('listing', {
             listing: result.rows[0],
             bids: result.rows,
@@ -150,7 +156,7 @@ router.get('/:itemId/listing', async (req, res, next) => {
             itemId: req.params.itemId
         });
     } catch (e) {
-        next(ERRORS.somethingWentWrong(e.message));
+        ERRORS.somethingWentWrong(e.message, next);
     }
 });
 

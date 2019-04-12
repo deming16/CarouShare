@@ -64,7 +64,7 @@ router.get('/', async (req, res, next) => {
             });
         }
     } catch (e) {
-        next(ERRORS.somethingWentWrong(e.message));
+        ERRORS.somethingWentWrong(e.message, next);
     }
 });
 
@@ -179,7 +179,7 @@ router.get('/search', async (req, res, next) => {
             }
         }
     } catch (e) {
-        next(ERRORS.somethingWentWrong(e.message));
+        ERRORS.somethingWentWrong(e.message, next);
     }
 });
 

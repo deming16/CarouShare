@@ -32,10 +32,16 @@ const ERRORS = {
     userNotFound: () => {
         throw new AppError('User not found', 404);
     },
-    somethingWentWrong: (extra) => {
+    somethingWentWrong: (extra, next) => {
         let msg = 'Something went wrong';
         if (extra) msg += ': ' + extra;
-        throw new AppError(msg, 500);
+
+        const error = new AppError(msg, 500);
+        if (!next) {
+            throw error;
+        } else {
+            next(error);
+        }
     },
     invalidUsernameOrPassword: () => {
         throw new AppError('Invalid username or password', 403);

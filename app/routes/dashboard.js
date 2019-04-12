@@ -31,7 +31,7 @@ router.get('/borrow', async (req, res, next) => {
             res.redirect('/login');
         }
     } catch (e) {
-        next(ERRORS.somethingWentWrong(e.message));
+        ERRORS.somethingWentWrong(e.message, next);
     }
 });
 
@@ -51,7 +51,7 @@ router.get('/loan', async (req, res, next) => {
             res.redirect('/login');
         }
     } catch (e) {
-        next(ERRORS.somethingWentWrong(e.message));
+        ERRORS.somethingWentWrong(e.message, next);
     }
 });
 
