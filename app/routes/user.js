@@ -63,37 +63,40 @@ router.get('/:username', async (req, res, next) => {
     if (req.isAuthenticated() && req.user.username == req.params.username) {
         res.redirect('/user');
     }
-    const result = {};
-    let query = 'SELECT * FROM Users WHERE uid = $1';
-    const values = [req.params.username];
-    result.userDetails = await db.query(query, values);
+    else {
+        const result = {};
+        let query = 'SELECT * FROM Users WHERE uid = $1';
+        const values = [req.params.username];
+        result.userDetails = await db.query(query, values);
 
-    if (result.userDetails.rows.length === 0) {
-        res.send('user does not exist');
-    } else {
-        query =
-            'select lid, item_iid, title, Listings.status as status, delivery_method, min_bid, time_ending, photo, owner_uid, description from Items inner join Listings on (item_iid = iid) where owner_uid = $1';
-        result.listings = await db.query(query, values);
+        if (result.userDetails.rows.length === 0) {
+            res.send('user does not exist');
+        } else {
+            query =
+                'select lid, item_iid, title, Listings.status as status, delivery_method, min_bid, time_ending, photo, owner_uid, description from Items inner join Listings on (item_iid = iid) where owner_uid = $1';
+            result.listings = await db.query(query, values);
 
-        query =
-            'select iid, item_name, category, status, photo from UserLikeItems inner join Items on (item_iid = iid) where user_uid = $1';
-        result.likes = await db.query(query, values);
+            query =
+                'select iid, item_name, category, status, photo from UserLikeItems inner join Items on (item_iid = iid) where user_uid = $1';
+            result.likes = await db.query(query, values);
 
-        query = 'select follower_uid from Follows where followee_uid = $1';
-        result.followers = await db.query(query, values);
+            query = 'select follower_uid from Follows where followee_uid = $1';
+            result.followers = await db.query(query, values);
 
-        query = 'select followee_uid from Follows where follower_uid = $1';
-        result.following = await db.query(query, values);
+            query = 'select followee_uid from Follows where follower_uid = $1';
+            result.following = await db.query(query, values);
 
-        res.render('user', {
-            user: result.userDetails.rows[0],
-            listings: result.listings.rows,
-            likes: result.likes.rows,
-            following: result.following.rows,
-            followers: result.followers.rows,
-            isMyProfile: false
-        });
+            res.render('user', {
+                user: result.userDetails.rows[0],
+                listings: result.listings.rows,
+                likes: result.likes.rows,
+                following: result.following.rows,
+                followers: result.followers.rows,
+                isMyProfile: false
+            });
+        }
     }
+
 });
 
 // @route   POST /user/:username
