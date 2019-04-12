@@ -62,8 +62,7 @@ router.get('/', async (req, res, next) => {
 router.get('/:username', async (req, res, next) => {
     if (req.isAuthenticated() && req.user.username == req.params.username) {
         res.redirect('/user');
-    }
-    else {
+    } else {
         const result = {};
         let query = 'SELECT * FROM Users WHERE uid = $1';
         const values = [req.params.username];
@@ -96,7 +95,6 @@ router.get('/:username', async (req, res, next) => {
             });
         }
     }
-
 });
 
 // @route   POST /user/:username
@@ -120,9 +118,19 @@ router.post('/:username', async (req, res, next) => {
 // @route   POST /user/:username/delete
 // @desc    Delete user
 // @access  Private (Only Admin)
-router.post('/:username/delete', (req, res, next) => {
+router.post('/:username/delete', async (req, res, next) => {
     const query = 'DELETE FROM Users WHERE uid = $1';
-    res.send(`delete ${req.params.username}`);
+    const values = [req.params.username];
+
+    try {
+        await db.query(query, values);
+        res.redirect('back');
+    } catch (err) {
+        req.flash('messages', err.message);
+        req.session.save(() => {
+            res.redirect('back');
+        });
+    }
 });
 
 // @route   POST /user/:username/follow
