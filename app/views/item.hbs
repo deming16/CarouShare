@@ -82,7 +82,7 @@
             <div class="card no-box-shadow">
                 <div class="card-image">
                     <div class="img-fit listing-item-image"
-                        style="background-image: url('https://media.karousell.com/media/photos/products/2018/10/07/buy_1538918236_d4243b29.jpg');">
+                        {{#if item.photo}} style="background-image: url('/uploads/{{item.photo}}');" {{/if}}>
                     </div>
                     <form method="POST" action="/item/{{item.iid}}/like">
                         {{#if liked}}

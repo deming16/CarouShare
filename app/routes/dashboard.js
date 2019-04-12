@@ -8,7 +8,7 @@ const db = require('../db');
 //@access   Private
 router.get('/', (req, res, next) => {
     if (req.isAuthenticated()) {
-        res.render('dashboard');
+        res.redirect('/dashboard/borrow');
     } else {
         res.redirect('/login');
     }
@@ -21,7 +21,7 @@ router.get('/borrow', async (req, res, next) => {
     try {
         if (req.isAuthenticated()) {
             const query =
-                'select bid_biid, title, owner_uid from Loans L inner join Bids B on (L.bid_biid = B.biid) inner join Listings LI on (B.listing_lid = LI.lid) inner join Items I on (I.iid = LI.item_iid) where B.bidder_uid = $1';
+                'select bid_biid, title, owner_uid, item_iid from Loans L inner join Bids B on (L.bid_biid = B.biid) inner join Listings LI on (B.listing_lid = LI.lid) inner join Items I on (I.iid = LI.item_iid) where B.bidder_uid = $1';
             const values = [req.user.username];
 
             const result = await db.query(query, values);

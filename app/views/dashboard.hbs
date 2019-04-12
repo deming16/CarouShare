@@ -1,132 +1,141 @@
 {{#> _base }}
 {{#*inline "contents"}}
 <div class="container">
-  <div class="row">
-    <h1>Dashboard</h1>
-    <a class="btn waves-effect waves-light red darken-1" href="/dashboard/borrow">My Borrows</a>
-    <a class="btn waves-effect waves-light red darken-1" href="/dashboard/loan">My Loans</a>
-    <a class="btn waves-effect waves-light red darken-1" href="/dashboard/bid">My Bids</a>
-    <a class="btn waves-effect waves-light red darken-1" href="/dashboard/review">My Reviews</a>
-    <a class="btn waves-effect waves-light red darken-1" href="/dashboard/updates">What's New</a>
-    {{#if isBorrowList}}
-    <table>
-      <thead>
-        <tr>
-          <th>Listing Title</th>
-          <th>Borrowed From</th>
-        </tr>
-      </thead>
+    <div class="row mb-0 pb-5">
+        <div class="col s12 mb-3">
+            <ul class="tabs">
+                <li class="tab"><a target="_self" {{#if isBorrowList}}class="active" {{/if}} href="/dashboard/borrow">My
+                        Borrows</a></li>
+                <li class="tab"><a target="_self" {{#if isLoanList}}class="active" {{/if}} href="/dashboard/loan">My
+                        Loans</a></li>
+                <li class="tab"><a target="_self" {{#if isBidList}}class="active" {{/if}} href="/dashboard/bid">My
+                        Bids</a></li>
+                <li class="tab"><a target="_self" {{#if isReviewList}}class="active" {{/if}} href="/dashboard/review">My
+                        Reviews</a></li>
+                <li class="tab"><a target="_self" {{#if isUpdateList}}class="active" {{/if}}
+                        href="/dashboard/updates">What's New</a></li>
+            </ul>
+        </div>
+        <div class="table-wrapper">
+            {{#if isBorrowList}}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Listing Title</th>
+                        <th>Borrowed From</th>
+                    </tr>
+                </thead>
 
-      <tbody>
-        {{#each list}}
-        <tr>
-          <td>{{this.title}}</td>
-          <td>{{this.owner_uid}}</td>
-        </tr>
-        {{/each}}
-      </tbody>
-    </table>
-    {{/if}}
+                <tbody>
+                    {{#each list}}
+                    <tr>
+                        <td><a href="/item/{{this.item_iid}}">{{this.title}}</a></td>
+                        <td>{{this.owner_uid}}</td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+            {{/if}}
 
-    {{#if isLoanList}}
-    <table>
-      <thead>
-        <tr>
-          <th>Listing Name</th>
-          <th>Loaned To</th>
-          <th></th>
-        </tr>
-      </thead>
+            {{#if isLoanList}}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Listing Name</th>
+                        <th>Loaned To</th>
+                        <th></th>
+                    </tr>
+                </thead>
 
-      <tbody>
-        {{#each list}}
-        <tr>
-          <td>{{this.title}}</td>
-          <td>{{this.bidder_uid}}</td>
-          <td>
-            <form method="POST" action="/dashboard/loan/end/{{this.lid}}">
-              <button class="btn btn-small waves-effect waves-light red">End Transaction</button>
-            </form>
-          </td>
-        </tr>
-        {{/each}}
-      </tbody>
-    </table>
-    {{/if}}
+                <tbody>
+                    {{#each list}}
+                    <tr>
+                        <td>{{this.title}}</td>
+                        <td>{{this.bidder_uid}}</td>
+                        <td>
+                            <form method="POST" action="/dashboard/loan/end/{{this.lid}}">
+                                <button class="btn btn-small waves-effect waves-light red">End Transaction</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+            {{/if}}
 
-    {{#if isBidList}}
-    <table>
-      <thead>
-        <tr>
-          <th>Listing Name</th>
-          <th>Status</th>
-          <th></th>
-        </tr>
-      </thead>
+            {{#if isBidList}}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Listing Name</th>
+                        <th>Status</th>
+                        <th></th>
+                    </tr>
+                </thead>
 
-      <tbody>
-        {{#each list}}
-        <tr>
-          <td>{{this.title}}</td>
-          <td>{{this.status}}</td>
-          <td>
-            <form method="GET" action="/item/{{this.item_iid}}/listing">
-              <button class="btn btn-small waves-effect waves-light red">Go To Listing</button>
-            </form>
-          </td>
-        </tr>
-        {{/each}}
-      </tbody>
-    </table>
-    {{/if}}
+                <tbody>
+                    {{#each list}}
+                    <tr>
+                        <td>{{this.title}}</td>
+                        <td>{{this.status}}</td>
+                        <td>
+                            <form method="GET" action="/item/{{this.item_iid}}/listing">
+                                <button class="btn btn-small waves-effect waves-light red">Go To Listing</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+            {{/if}}
 
-    {{#if isReviewList}}
-    <table>
-      <thead>
-        <tr>
-          <th>Listing Name</th>
-          <th></th>
-        </tr>
-      </thead>
+            {{#if isReviewList}}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Listing Name</th>
+                        <th></th>
+                    </tr>
+                </thead>
 
-      <tbody>
-        {{#each list}}
-        <tr>
-          <td>{{this.item_title}}</td>
-          <td>
-            <form method="GET" action="/item/{{this.item_iid}}/myreview">
-              <button class="btn btn-small waves-effect waves-light red">Add/Edit Review</button>
-            </form>
-          </td>
-        </tr>
-        {{/each}}
-      </tbody>
-    </table>
-    {{/if}}
+                <tbody>
+                    {{#each list}}
+                    <tr>
+                        <td>{{this.item_title}}</td>
+                        <td>
+                            <form method="GET" action="/item/{{this.item_iid}}/myreview">
+                                <button class="btn btn-small waves-effect waves-light red">Add/Edit Review</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+            {{/if}}
 
-    {{#if isUpdateList}}
-    <table>
-      <thead>
-        <tr>
-          <th>What's New From Your Followee</th>
-          <th>Time</th>
-        </tr>
-      </thead>
+            {{#if isUpdateList}}
+            <table>
+                <thead>
+                    <tr>
+                        <th>What's New From Your Followee</th>
+                        <th>Time</th>
+                    </tr>
+                </thead>
 
-      <tbody>
-        {{#each list}}
-        <tr>
-          <td>{{this.followee_uid}} created a new listing for {{this.item_name}}</td>
-          <td>
-            {{this.time_created}}
-          </td>
-        </tr>
-        {{/each}}
-      </tbody>
-    </table>
-    {{/if}}
-
-  </div>
+                <tbody>
+                    {{#each list}}
+                    <tr>
+                        <td>{{this.followee_uid}} created a new listing for {{this.item_name}}</td>
+                        <td>
+                            {{this.time_created}}
+                        </td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+            {{/if}}
+        </div>
+    </div>
 </div>
 {{/inline}}
 {{/_base}}

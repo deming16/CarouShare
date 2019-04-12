@@ -76,7 +76,7 @@
                 <div class="card waves-effect waves-block">
                     <div class="card-image">
                         <div class="img-fit listing-item-image"
-                            style="background-image: url('https://media.karousell.com/media/photos/products/2018/10/07/buy_1538918236_d4243b29.jpg');">
+                            {{#if this.photo}} style="background-image: url('/uploads/{{this.photo}}');" {{/if}}>
                         </div>
                         <form method="POST" action="/item/{{this.iid}}/like">
                             {{#if this.liked}}

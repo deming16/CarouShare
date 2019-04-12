@@ -94,7 +94,7 @@
                         <div class="row">
                             <div class="input-field col s12">
                                 <select name="category" id="category">
-                                    <option value="" disabled selected>---</option>
+                                    <option value="" disabled selected>Category</option>
                                     <option value="Fashion">Fashion</option>
                                     <option value="Home & Living">Home &amp; Living</option>
                                     <option value="Mobiles & Electronics">Mobiles &amp; Electronics</option>
@@ -154,7 +154,7 @@
                 <div class="card waves-effect waves-block">
                     <div class="card-image">
                         <div class="img-fit listing-item-image"
-                            style="background-image: url('https://media.karousell.com/media/photos/products/2018/10/07/buy_1538918236_d4243b29.jpg');">
+                            {{#if this.photo}}style="background-image: url('/uploads/{{this.photo}}');" {{/if}}>
                         </div>
                         <form method="POST" action="/item/{{this.iid}}/delete">
                             <button class="btn-floating btn-large halfway-fab waves-effect waves-red white"><i
@@ -185,7 +185,7 @@
                 <div class="card waves-effect waves-block">
                     <div class="card-image">
                         <div class="img-fit listing-item-image"
-                            style="background-image: url('https://media.karousell.com/media/photos/products/2018/10/07/buy_1538918236_d4243b29.jpg');">
+                            {{#if this.photo}}style="background-image: url('/uploads/{{this.photo}}');" {{/if}}>
                         </div>
                     </div>
                     <div class="card-content black-text">
@@ -213,7 +213,7 @@
                 <div class="card waves-effect waves-block">
                     <div class="card-image">
                         <div class="img-fit listing-item-image"
-                            style="background-image: url('https://media.karousell.com/media/photos/products/2018/10/07/buy_1538918236_d4243b29.jpg');">
+                            {{#if this.photo}}style="background-image: url('/uploads/{{this.photo}}');" {{/if}}>
                         </div>
                         <form method="POST" action="/item/{{this.iid}}/like">
                             <button type="submit"
