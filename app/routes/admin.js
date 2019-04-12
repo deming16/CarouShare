@@ -13,7 +13,7 @@ router.get('/', (req, res, next) => {
 // @desc    Get Item list
 // @access  Private
 router.get('/item', (req, res, next) => {
-    const query = 'select * from Items';
+    const query = 'select * from Items order by iid';
     db.query(query).then((result) => {
         res.render('admin', { list: result.rows, isItemList: true, heading: 'Items' });
     });
@@ -23,7 +23,7 @@ router.get('/item', (req, res, next) => {
 // @desc    Get Listing list
 // @access  Private
 router.get('/listing', (req, res, next) => {
-    const query = 'select * from Listings';
+    const query = 'select * from Listings order by lid';
     db.query(query).then((result) => {
         res.render('admin', { list: result.rows, isListingList: true, heading: 'Listing' });
     });
@@ -33,7 +33,7 @@ router.get('/listing', (req, res, next) => {
 // @desc    Get user list
 // @access  Private
 router.get('/user', (req, res, next) => {
-    const query = 'select * from Users';
+    const query = 'select * from Users order by uid';
     db.query(query).then((result) => {
         res.render('admin', { list: result.rows, isUserList: true, heading: 'Users' });
     });
