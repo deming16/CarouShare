@@ -105,7 +105,7 @@ router.post('/:username', async (req, res, next) => {
 
     try {
         await db.query(query, values);
-        res.redirect('/user');
+        res.redirect('back');
     } catch (err) {
         req.flash('messages', err.message);
         req.session.save(() => {

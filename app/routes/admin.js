@@ -35,7 +35,6 @@ router.get('/listing', (req, res, next) => {
 router.get('/user', (req, res, next) => {
     const query = 'select * from Users';
     db.query(query).then((result) => {
-        console.log(result.rows[0]);
         res.render('admin', { list: result.rows, isUserList: true, heading: 'Users' });
     });
 });

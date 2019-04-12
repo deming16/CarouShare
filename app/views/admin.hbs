@@ -149,6 +149,7 @@
           <th>Address</th>
           <th>Mobile</th>
           <th></th>
+          <th></th>
         </tr>
       </thead>
 
@@ -159,6 +160,50 @@
           <td>{{this.email}}</td>
           <td>{{this.address}}</td>
           <td>{{this.mobile}}</td>
+          <td>
+            <!-- Modal Trigger -->
+            <a class="waves-effect waves-light red darken-1 btn modal-trigger" href="#modal{{this.uid}}">Edit<i
+                class="material-icons text-darken-1 right">edit</i></a>
+            <!-- Modal Structure -->
+            <div id="modal{{this.uid}}" class="modal">
+              <form method="POST" action="/user/{{this.uid}}" class="col s12" id="detailsForm">
+                <div class="modal-content">
+                  <h4>Edit Personal Details</h4>
+                  <div class="row">
+                    <div class="row">
+                      <div class="col s12">
+                        <div class="input-field">
+                          <input value="{{this.email}}" name="email" id="email" type="email" class="validate">
+                          <label for="email">Email</label>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col s12">
+                        <div class="input-field">
+                          <input value="{{this.mobile}}" name="mobile" id="mobile" type="text" class="validate">
+                          <label class="active" for="mobile">Mobile</label>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col s12">
+                        <div class="input-field">
+                          <input value="{{this.address}}" name="address" id="address" type="text" class="validate">
+                          <label for="address">Address</label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Cancel</a>
+                  <button type="submit" form="detailsForm" class="modal-close waves-effect waves-green btn-flat">Save
+                    Changes</button>
+                </div>
+              </form>
+            </div>
+          </td>
           <td>
             <form method="POST" action="/user/{{this.uid}}/delete">
               <button class="btn-floating btn-small waves-effect waves-light red"><i
