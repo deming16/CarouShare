@@ -14,64 +14,62 @@
     <div class="row mb-5">
         {{#if editable}}
         <!-- Modal Trigger -->
-        <a class="waves-effect waves-light red darken-1 btn modal-trigger" href="#modal2">Edit Info</a>
+        <div class="fixed-action-btn">
+            <a class="btn-floating btn-large waves-effect waves-light red darken-1 modal-trigger" href="#modal2"><i
+                    class="material-icons">create</i></a>
+        </div>
         <!-- Modal Structure -->
         <div id="modal2" class="modal">
-            <form method="POST" action="/item/{{item.iid}}" class="col s12" id="newItemForm">
+            <form method="POST" action="/item/{{item.iid}}" enctype="multipart/form-data" class="col s12" id="newItemForm">
                 <div class="modal-content">
                     <h4>Edit Item Information</h4>
                     <div class="row">
-                        <div class="row">
-                            <div class="col s12">
-                                <div class="input-field">
-                                    <input value="{{item.item_name}}" name="itemName" id="itemName" type="text"
-                                        class="validate">
-                                    <label for="itemName">Item Name</label>
-                                </div>
+                        <div class="input-field col s12">
+                            <input value="{{item.item_name}}" name="itemName" id="itemName" type="text"
+                                class="validate">
+                            <label for="itemName">Item Name</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <select name="category" id="category">
+                                <option value="" disabled selected>Category</option>
+                                <option value="Electronics" {{#if category.[0]}}selected="selected" {{/if}}>Electronics
+                                </option>
+                                <option value="Household" {{#if category.[1]}}selected="selected" {{/if}}>Household
+                                </option>
+                                <option value="Book" {{#if category.[2]}}selected="selected" {{/if}}>Book</option>
+                            </select>
+                            <label for="category">Category</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <input value="{{item.status}}" name="status" id="status" type="text" class="validate">
+                            <label for="status">Status</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="file-field input-field col s12">
+                            <div class="btn">
+                                <span>Photo</span>
+                                <input type="file" name="photo" id="photo">
+                            </div>
+                            <div class="file-path-wrapper">
+                                <input class="file-path validate" type="text">
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col s12">
-                                <div class="input-field">
-                                    <input value="{{item.category}}" name="category" id="category" type="text"
-                                        class="validate">
-                                    <label for="category">Category</label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col s12">
-                                <div class="input-field">
-                                    <input value="{{item.status}}" name="status" id="status" type="text"
-                                        class="validate">
-                                    <label for="status">Status</label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col s12">
-                                <div class="input-field">
-                                    <input value="{{item.photo}}" name="photo" id="photo" type="text" class="validate">
-                                    <label for="photo">Photo</label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <form class="col s12">
-                                <div class="row">
-                                    <div class="input-field col s12">
-                                        <textarea name="desc" id="desc"
-                                            class="materialize-textarea">{{item.description}}</textarea>
-                                        <label for="desc">Description</label>
-                                    </div>
-                                </div>
-                            </form>
+                    </div>
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <textarea name="desc" id="desc" class="materialize-textarea">{{item.description}}</textarea>
+                            <label for="desc">Description</label>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Cancel</a>
-                    <button type="submit" form="newItemForm" class="modal-close waves-effect waves-green btn-flat">Add
+                    <button type="submit" form="newItemForm" class="modal-close waves-effect waves-green btn-flat">Edit
                         Item</button>
                 </div>
             </form>
@@ -81,8 +79,8 @@
         <div class="col s12">
             <div class="card no-box-shadow">
                 <div class="card-image">
-                    <div class="img-fit listing-item-image"
-                        {{#if item.photo}} style="background-image: url('/uploads/{{item.photo}}');" {{/if}}>
+                    <div class="img-fit listing-item-image" {{#if item.photo}}
+                        style="background-image: url('/uploads/{{item.photo}}');" {{/if}}>
                     </div>
                     <form method="POST" action="/item/{{item.iid}}/like">
                         {{#if liked}}

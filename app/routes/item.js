@@ -44,7 +44,15 @@ router.get('/:itemId', async (req, res, next) => {
                 });
             }
 
-            res.render('item', { item: result.rows[0], liked: liked, editable: editable, itemId: req.params.itemId });
+            const cat = result.rows[0].category;
+            const category = [cat === 'Electronics', cat === 'Household', cat === 'Book'];
+            res.render('item', {
+                item: result.rows[0],
+                category: category,
+                liked: liked,
+                editable: editable,
+                itemId: req.params.itemId
+            });
         }
     } catch (e) {
         res.render('error', { error: e, message: 'something went wrong' });
@@ -74,17 +82,15 @@ router.post('/', upload.single('photo'), async (req, res, next) => {
 // @route   POST item/:itemId
 // @desc    Update item
 // @access  Private
-router.post('/:itemId', async (req, res, next) => {
-    const query =
-        'update Items set item_name = $1, category = $2, status = $3, photo = $4, description = $5 where iid = $6';
-    const values = [
-        req.body.itemName,
-        req.body.category,
-        req.body.status,
-        req.body.photo,
-        req.body.desc,
-        req.params.itemId
-    ];
+router.post('/:itemId', upload.single('photo'), async (req, res, next) => {
+    let query = 'update Items set item_name = $1, category = $2, status = $3, description = $4 where iid = $5';
+    const values = [req.body.itemName, req.body.category, req.body.status, req.body.desc, req.params.itemId];
+
+    if (req.file && req.file.filename) {
+        query =
+            'update Items set item_name = $1, category = $2, status = $3, description = $4, photo = $6 where iid = $5';
+        values.push(req.file.filename);
+    }
 
     try {
         await db.query(query, values);
@@ -158,7 +164,8 @@ router.post('/:itemId/listing', async (req, res, next) => {
         const result = await db.query(query, values);
         if (result.rows.length === 0) {
             const bidEnd = moment(req.body.bid_end, 'MMM DD, YYYY').format('DD/MM/YYYY');
-            query = "insert into Listings (item_iid, title, delivery_method, min_bid, time_ending) values ($1, $2, $3, $4, to_timestamp($5, 'DD/MM/YYYY'))";
+            query =
+                "insert into Listings (item_iid, title, delivery_method, min_bid, time_ending) values ($1, $2, $3, $4, to_timestamp($5, 'DD/MM/YYYY'))";
             values = [req.params.itemId, req.body.title, req.body.delivery_method, req.body.min_bid, bidEnd];
             await db.query(query, values);
         } else {
@@ -193,7 +200,6 @@ router.post('/:itemId/listing/:listingId/delete', async (req, res, next) => {
         query = 'delete from Listings where lid = $1';
         values = [req.params.listingId];
         await db.query(query, values);
-
 
         await client.query('COMMIT');
         done();
