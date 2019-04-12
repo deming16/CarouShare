@@ -108,7 +108,7 @@ router.get('/search', async (req, res, next) => {
                 const category = ['%', "PC", "PC1", "PC2"];
 
                 query = "SELECT * FROM get_search_results($1, $2, $3, $4, $5, $6)"
-                values = [category[req.query.category], req.query.query, sort[req.query.sortBy], '%', 'open', sortD[req.query.sortBy]];
+                values = [category[req.query.category], req.query.query, sort[req.query.sortBy], '', 'open', sortD[req.query.sortBy]];
 
                 const result = await db.query(query, values);
 

@@ -101,7 +101,7 @@ router.post('/loan/end/:listingId', async (req, res, next) => {
       values = [result.rows[0].bidder_uid, result.rows[0].item_iid, result.rows[0].title];
       await db.query(query, values);
 
-      //delete loan
+      //update loan
       query = "UPDATE Loans SET status = $1 WHERE bid_biid = $2";
       values = ['close', result.rows[0].biid];
       await db.query(query, values);
@@ -157,10 +157,8 @@ router.get('/updates', async (req, res, next) => {
 
       const result = await db.query(query, values);
 
-
-
       query = "UPDATE Users SET time_lastread = CURRENT_TIMESTAMP WHERE uid = $1";
-      await db.query(query, values)
+      await db.query(query, values);
 
       res.render('dashboard', { list: result.rows, isUpdateList: true });
 
