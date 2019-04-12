@@ -106,11 +106,17 @@
         {{/if}}
 
         {{#if user}}
-        <ul>
-            {{#each list}}
-            <li><a href="/user/{{this.uid}}">{{this.uid}}</a></li>
-            {{/each}}
-        </ul>
+        {{#each list}}
+        <a href="/user/{{this.uid}}" class="link-normal">
+            <div class="col s12 m6 l4 xl3">
+                <div class="card waves-effect waves-block">
+                    <div class="card-content black-text">
+                        <span>{{this.uid}}</span>
+                    </div>
+                </div>
+            </div>
+        </a>
+        {{/each}}
         {{/if}}
     </div>
 </div>

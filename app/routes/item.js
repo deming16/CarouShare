@@ -1,8 +1,17 @@
 var express = require('express');
 var router = express.Router();
-const multer = require('multer');
-const upload = multer({ dest: './uploads/' });
 
+const path = require('path');
+const multer = require('multer');
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, './uploads/');
+    },
+    filename: (req, file, cb) => {
+        cb(null, Date.now() + path.extname(file.originalname));
+    }
+});
+const upload = multer({ storage: storage });
 const db = require('../db');
 
 // ROUTES FOR THE ITEM ITSELF
@@ -44,21 +53,27 @@ router.get('/:itemId', async (req, res, next) => {
 // @route   POST item/
 // @desc    Add new item
 // @access  Private
-router.post('/', upload.single('photo'), (req, res, next) => {
+router.post('/', upload.single('photo'), async (req, res, next) => {
     let filename = req.file ? req.file.filename : null;
     const query =
         'insert into Items (owner_uid, item_name, category, status, photo, description) values ($1, $2, $3, $4, $5, $6)';
     const values = [req.user.username, req.body.itemName, req.body.category, req.body.status, filename, req.body.desc];
 
-    db.query(query, values)
-        .then(() => res.redirect('/user'))
-        .catch((err) => res.render('error', { error: err, message: 'something went wrong' }));
+    try {
+        await db.query(query, values);
+        res.redirect('/user');
+    } catch (err) {
+        req.flash('messages', err.message);
+        req.session.save(() => {
+            res.redirect('back');
+        });
+    }
 });
 
 // @route   POST item/:itemId
 // @desc    Update item
 // @access  Private
-router.post('/:itemId', (req, res, next) => {
+router.post('/:itemId', async (req, res, next) => {
     const query =
         'update Items set item_name = $1, category = $2, status = $3, photo = $4, description = $5 where iid = $6';
     const values = [
@@ -70,21 +85,33 @@ router.post('/:itemId', (req, res, next) => {
         req.params.itemId
     ];
 
-    db.query(query, values)
-        .then(() => res.redirect('back'))
-        .catch((err) => res.render('error', { error: err, message: 'something went wrong' }));
+    try {
+        await db.query(query, values);
+        res.redirect('back');
+    } catch (err) {
+        req.flash('messages', err.message);
+        req.session.save(() => {
+            res.redirect('back');
+        });
+    }
 });
 
 // @route   POST item/:itemId/delete
 // @desc    Delete item
 // @access  Private
-router.post('/:itemId/delete', (req, res, next) => {
+router.post('/:itemId/delete', async (req, res, next) => {
     const query = 'delete from Items where iid = $1';
     const values = [req.params.itemId];
 
-    db.query(query, values)
-        .then(() => res.redirect('back'))
-        .catch((err) => res.render('error', { error: err, message: 'something went wrong' }));
+    try {
+        await db.query(query, values);
+        res.redirect('back');
+    } catch (err) {
+        req.flash('messages', err.message);
+        req.session.save(() => {
+            res.redirect('back');
+        });
+    }
 });
 
 // ROUTES FOR THE LISTING OF THE ITEM
@@ -138,9 +165,12 @@ router.post('/:itemId/listing', async (req, res, next) => {
             await db.query(query, values);
         }
 
-        res.redirect(`back`);
-    } catch (e) {
-        res.render('error', { error: e, message: 'something went wrong' });
+        res.redirect('back');
+    } catch (err) {
+        req.flash('messages', err.message);
+        req.session.save(() => {
+            res.redirect('back');
+        });
     }
 });
 
@@ -173,10 +203,13 @@ router.post('/:itemId/listing/delete', async (req, res, next) => {
         done();
 
         res.redirect('back');
-    } catch (e) {
+    } catch (err) {
         await client.query('ROLLBACK');
         done();
-        res.render('error', { error: e, message: 'something went wrong' });
+        req.flash('messages', err.message);
+        req.session.save(() => {
+            res.redirect('back');
+        });
     }
 });
 
@@ -196,8 +229,11 @@ router.post('/:itemId/listing/:listingId/bid', async (req, res, next) => {
         } else {
             res.redirect('/login');
         }
-    } catch (e) {
-        res.render('error', { error: e, message: 'something went wrong' });
+    } catch (err) {
+        req.flash('messages', err.message);
+        req.session.save(() => {
+            res.redirect('back');
+        });
     }
 });
 
@@ -232,10 +268,13 @@ router.post('/:itemId/listing/:listingId/bid/delete', async (req, res, next) => 
             done();
             res.redirect('/login');
         }
-    } catch (e) {
+    } catch (err) {
         await client.query('ROLLBACK');
         done();
-        res.render('error', { error: e, message: 'something went wrong' });
+        req.flash('messages', err.message);
+        req.session.save(() => {
+            res.redirect('back');
+        });
     }
 });
 
@@ -262,10 +301,13 @@ router.post('/:itemId/listing/:listingId/loan/:bidderId', async (req, res, next)
         await client.query('COMMIT');
         done();
         res.redirect('back');
-    } catch (e) {
+    } catch (err) {
         await client.query('ROLLBACK');
         done();
-        res.render('error', { error: e, message: 'something went wrong' });
+        req.flash('messages', err.message);
+        req.session.save(() => {
+            res.redirect('back');
+        });
     }
 });
 
@@ -408,8 +450,11 @@ router.post('/:itemId/like', async (req, res, next) => {
         } else {
             res.redirect('/login');
         }
-    } catch (e) {
-        console.log(e);
+    } catch (err) {
+        req.flash('messages', String(err.message));
+        req.session.save(() => {
+            res.redirect('back');
+        });
     }
 });
 

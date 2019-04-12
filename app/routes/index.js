@@ -192,15 +192,21 @@ router.post('/login', (req, res, next) => {
             req.login(user, (err) => {
                 try {
                     if (err) throw err;
-                    res.redirect('/');
+                    req.session.save(() => {
+                        res.redirect('/');
+                    });
                 } catch (e) {
                     req.flash('messages', String(e.message));
-                    res.redirect('back');
+                    req.session.save(() => {
+                        res.redirect('back');
+                    });
                 }
             });
         } catch (e) {
             req.flash('messages', String(e.message));
-            res.redirect('back');
+            req.session.save(() => {
+                res.redirect('back');
+            });
         }
     })(req, res, next);
 });
@@ -230,12 +236,16 @@ router.post('/signup', async (req, res, next) => {
         await client.query('COMMIT');
         done();
         req.flash('messages', 'User registered successfully!');
-        res.redirect('back');
+        req.session.save(() => {
+            res.redirect('back');
+        });
     } catch (e) {
         await client.query('ROLLBACK');
         done();
         req.flash('messages', String(e.message));
-        res.redirect('back');
+        req.session.save(() => {
+            res.redirect('back');
+        });
     }
 });
 

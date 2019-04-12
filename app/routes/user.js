@@ -99,15 +99,19 @@ router.get('/:username', async (req, res, next) => {
 // @route   POST /user/:username
 // @desc    Update user
 // @access  Private
-router.post('/:username', (req, res, next) => {
+router.post('/:username', async (req, res, next) => {
     const query = 'UPDATE Users ' + 'SET email = $1, address = $2, mobile = $3 ' + 'WHERE uid = $4';
     const values = [req.body.email, req.body.address, req.body.mobile, req.params.username];
 
-    db.query(query, values)
-        .then(() => {
-            res.redirect('/user');
-        })
-        .catch((err) => res.render('error'));
+    try {
+        await db.query(query, values);
+        res.redirect('/user');
+    } catch (err) {
+        req.flash('messages', err.message);
+        req.session.save(() => {
+            res.redirect('back');
+        });
+    }
 });
 
 // @route   POST /user/:username/delete

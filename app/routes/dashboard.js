@@ -69,8 +69,11 @@ router.get('/bid', async (req, res, next) => {
         } else {
             res.redirect('/login');
         }
-    } catch (e) {
-        res.render('error', { error: e, message: 'something went wrong' });
+    } catch (err) {
+        req.flash('messages', err.message);
+        req.session.save(() => {
+            res.redirect('back');
+        });
     }
 });
 
@@ -106,10 +109,13 @@ router.post('/loan/end/:listingId', async (req, res, next) => {
         } else {
             res.redirect('/login');
         }
-    } catch (e) {
+    } catch (err) {
         await client.query('ROLLBACK');
         done();
-        res.render('error', { error: e, message: 'something went wrong' });
+        req.flash('messages', err.message);
+        req.session.save(() => {
+            res.redirect('back');
+        });
     }
 });
 

@@ -21,6 +21,7 @@ const app = express();
 hbs.registerPartials(__dirname + '/views/partials');
 hbs.localsAsTemplateData(app);
 app.set('views', path.join(__dirname, 'views'));
+app.set('uploads', path.join(__dirname, '..', 'uploads'));
 app.set('view engine', 'hbs');
 app.locals.config = {
     siteTitle: 'CarouShare'
@@ -77,7 +78,7 @@ app.use(
     session({
         store: new FileStore(),
         secret: 'cs2102',
-        resave: true,
+        resave: false,
         saveUninitialized: true
     })
 );

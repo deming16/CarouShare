@@ -1,5 +1,9 @@
 {{#if @auth.user}}
-    {{> _nav_member}}
+{{#if @auth.user.isAdmin}}
+{{> _nav_admin}}
 {{else}}
-    {{> _nav_guest}}
+{{> _nav_member}}
+{{/if}}
+{{else}}
+{{> _nav_guest}}
 {{/if}}
