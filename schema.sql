@@ -107,10 +107,10 @@ CREATE TABLE Bids (
     time_start          TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     time_end            TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     time_created        TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE (bidder_uid, listing_lid),
     PRIMARY KEY (biid),
     FOREIGN KEY (bidder_uid) REFERENCES Users on delete cascade,
     FOREIGN KEY (listing_lid) REFERENCES Listings on delete cascade,
-
     CHECK (amount >= 0),
     CHECK (time_start <= time_end)
 );

@@ -18,7 +18,8 @@ router.get('/', async (req, res, next) => {
             query = 'select iid, item_name, category, status, photo from Items where owner_uid = $1';
             result.items = await db.query(query, values);
 
-            query = 'select iid, item_name, category, status, photo from UserLikeItems inner join Items on (item_iid = iid) where user_uid = $1';
+            query =
+                'select iid, item_name, category, status, photo from UserLikeItems inner join Items on (item_iid = iid) where user_uid = $1';
             result.likes = await db.query(query, values);
 
             query = 'select follower_uid from Follows where followee_uid = $1';
@@ -27,36 +28,33 @@ router.get('/', async (req, res, next) => {
             query = 'select followee_uid from Follows where follower_uid = $1';
             result.following = await db.query(query, values);
 
-            query = 'select lid, item_iid, title, Listings.status as status, delivery_method, min_bid, time_ending, photo, owner_uid, description from Items inner join Listings on (item_iid = iid) where owner_uid = $1 and Listings.status = $2';
+            query =
+                'select lid, item_iid, title, Listings.status as status, delivery_method, min_bid, time_ending, photo, owner_uid, description from Items inner join Listings on (item_iid = iid) where owner_uid = $1 and Listings.status = $2';
             values = [req.user.username, 'open'];
             result.listings = await db.query(query, values);
 
             // Find users of the people you followed followed but you have not
-            query = 'SELECT * FROM get_uncommon_followers($1::text)'
+            query = 'SELECT * FROM get_uncommon_followers($1::text)';
             values = [req.user.username];
             result.uncommonFollows = await db.query(query, values);
 
-            res.render('user',
-                {
-                    user: result.userDetails.rows[0],
-                    listings: result.listings.rows,
-                    items: result.items.rows,
-                    likes: result.likes.rows,
-                    following: result.following.rows,
-                    followers: result.followers.rows,
-                    suggestFollows: result.uncommonFollows.rows,
-                    isMyProfile: true
-                });
-
+            res.render('user', {
+                user: result.userDetails.rows[0],
+                listings: result.listings.rows,
+                items: result.items.rows,
+                likes: result.likes.rows,
+                following: result.following.rows,
+                followers: result.followers.rows,
+                suggestFollows: result.uncommonFollows.rows,
+                isMyProfile: true
+            });
         } else {
             res.redirect('/login');
         }
     } catch (e) {
         console.log(e);
     }
-
 });
-
 
 // @route   GET /user/:username
 // @desc    Get info on one user
@@ -72,12 +70,13 @@ router.get('/:username', async (req, res, next) => {
 
     if (result.userDetails.rows.length === 0) {
         res.send('user does not exist');
-    }
-    else {
-        query = 'select lid, title, Listings.status as status, delivery_method, min_bid, time_ending, photo, owner_uid, description from Items inner join Listings on (item_iid = iid) where owner_uid = $1';
+    } else {
+        query =
+            'select lid, title, Listings.status as status, delivery_method, min_bid, time_ending, photo, owner_uid, description from Items inner join Listings on (item_iid = iid) where owner_uid = $1';
         result.listings = await db.query(query, values);
 
-        query = 'select iid, item_name, category, status, photo from UserLikeItems inner join Items on (item_iid = iid) where user_uid = $1';
+        query =
+            'select iid, item_name, category, status, photo from UserLikeItems inner join Items on (item_iid = iid) where user_uid = $1';
         result.likes = await db.query(query, values);
 
         query = 'select follower_uid from Follows where followee_uid = $1';
@@ -86,41 +85,40 @@ router.get('/:username', async (req, res, next) => {
         query = 'select followee_uid from Follows where follower_uid = $1';
         result.following = await db.query(query, values);
 
-        res.render('user',
-            {
-                user: result.userDetails.rows[0],
-                listings: result.listings.rows,
-                likes: result.likes.rows,
-                following: result.following.rows,
-                followers: result.followers.rows,
-                isMyProfile: false
-            });
+        res.render('user', {
+            user: result.userDetails.rows[0],
+            listings: result.listings.rows,
+            likes: result.likes.rows,
+            following: result.following.rows,
+            followers: result.followers.rows,
+            isMyProfile: false
+        });
     }
-
-
 });
 
 // @route   POST /user/:username
 // @desc    Update user
 // @access  Private
-router.post('/:username', (req, res, next) => {
-    const query = "UPDATE Users " +
-        "SET email = $1, address = $2, mobile = $3 " +
-        "WHERE uid = $4";
+router.post('/:username', async (req, res, next) => {
+    const query = 'UPDATE Users ' + 'SET email = $1, address = $2, mobile = $3 ' + 'WHERE uid = $4';
     const values = [req.body.email, req.body.address, req.body.mobile, req.params.username];
 
-    db.query(query, values)
-        .then(() => {
-            res.redirect('/user');
-        })
-        .catch(err => res.render('error'));
+    try {
+        await db.query(query, values);
+        res.redirect('/user');
+    } catch (err) {
+        req.flash('messages', err.message);
+        req.session.save(() => {
+            res.redirect('back');
+        });
+    }
 });
 
 // @route   POST /user/:username/delete
 // @desc    Delete user
 // @access  Private (Only Admin)
 router.post('/:username/delete', (req, res, next) => {
-    const query = "DELETE FROM Users WHERE uid = $1";
+    const query = 'DELETE FROM Users WHERE uid = $1';
     res.send(`delete ${req.params.username}`);
 });
 
@@ -128,24 +126,19 @@ router.post('/:username/delete', (req, res, next) => {
 // @desc    Follow this user
 // @access  Private
 router.post('/:username/follow', async (req, res, next) => {
-
     try {
         if (req.isAuthenticated()) {
-            const query = "SELECT toggle_follows($1, $2)";
+            const query = 'SELECT toggle_follows($1, $2)';
             const values = [req.user.username, req.params.username];
             await db.query(query, values);
 
             res.redirect('back');
-        }
-        else {
+        } else {
             res.redirect('/login');
         }
-
     } catch (e) {
         console.log(e);
     }
-
 });
-
 
 module.exports = router;

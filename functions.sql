@@ -82,6 +82,34 @@ END;
 $$
 LANGUAGE plpgsql;
 
+-- Insert bid, update if already exists
+CREATE OR REPLACE FUNCTION place_bid(
+    username       VARCHAR, 
+    listing_id     INTEGER,
+    bid_amount     NUMERIC
+) 
+RETURNS NUMERIC AS $$
+DECLARE
+    row_exists NUMERIC;
+BEGIN
+
+    SELECT 1 
+    INTO row_exists 
+    FROM Bids
+    WHERE bidder_uid = username and listing_lid = listing_id;
+
+    IF (row_exists > 0) THEN
+        UPDATE Bids SET amount = bid_amount WHERE bidder_uid = username AND listing_lid = listing_id;
+        RETURN 0;
+    ELSE
+        INSERT INTO Bids(bidder_uid, listing_lid, amount) VALUES(username, listing_id, bid_amount);
+        RETURN 1;
+    END IF;
+
+END; 
+$$
+LANGUAGE plpgsql;
+
 -- Get Uncommon Followers
 CREATE OR REPLACE FUNCTION get_uncommon_followers(
     username VARCHAR

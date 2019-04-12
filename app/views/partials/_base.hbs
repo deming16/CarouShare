@@ -20,9 +20,6 @@
                 {{> _nav}}
             </ul>
         </div>
-
-
-
     </nav>
     <ul class="sidenav" id="sidenav-mobile">
         {{> _nav}}
@@ -33,22 +30,18 @@
     </main>
 
     {{#unless hideFooter}}
-    <footer class="page-footer red darken-1">
-        <div class="container">
+    <footer class="page-footer red darken-3">
+        <div class="container pt-0">
             <div class="row">
-                <div class="col l6 s12">
-                    <h4>Contact The Admins</h4>
-                    <p>
-                        Your feedbacks are important to help make this a better platform.
-                        Email us at admin@admin.com!
-                    </p>
+                <div class="col l6 s12 pt-1 pb-1">
+                    <h5 class="no-margin mb-1">CS2102 Group 18</h5>
+                    <p class="no-margin trans-2">Ang Yee Chin | Lin Deming | Nguyen Trong Truong Thanh</p>
                 </div>
-
             </div>
         </div>
         <div class="footer-copyright">
-            <div class="container">
-                © 2019 Copyright
+            <div class="container pt-0 trans-2 text-center">
+                2019 NUS AY2018/2019
             </div>
         </div>
     </footer>
@@ -66,136 +59,101 @@
 
     </script>
 
-    <script src='https://cdn.jsdelivr.net/npm/chart.js@2.8.0'></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
     <script>
-        var myChart = new Chart(ctx, { ...});
-    </script>
+        (function() {
+            var el = document.getElementById('categoryChart');
+            if (!el) return;
+            var ctx = el.getContext('2d');
 
-
-    <script>
-
-        var ctx = document.getElementById('categoryChart').getContext('2d');
-        var chart = new Chart(ctx, {
-            // The type of chart we want to create
-            type: 'pie',
-
-            // The data for our dataset
-            data: {
-                labels: ['PC', 'PC1', 'PC2'],
-                datasets: [{
-                    backgroundColor: ['rgb(255, 99, 132)', 'rgb(54, 162, 235)', 'rgb(255, 205, 86)'],
-                    data: [{{ chartCategory.0.cat_count }}, {{ chartCategory.1.cat_count }}, {{ chartCategory.2.cat_count }}]
-            }]
-        },
-
-        // Configuration options go here
-        options: {
-            maintainAspectRatio: false,
-                title: {
-                display: true,
-                    text: 'Number of Items by Category'
-            }
-        }
-        });
-
-
-        // Bar chart
-        new Chart(document.getElementById("bar-chart"), {
-            type: 'bar',
-            data: {
-                labels: ["User Count", "Item Count", "Listing Count", "Transactions"],
-                datasets: [
-                    {
-                        backgroundColor: ["rgba(54, 162, 235, 0.2)", "#8e5ea2", "#3cba9f", "#e8c3b9"],
-                        data: [{{ count.user }}, {{ count.item }}, {{ count.listing }}, {{ count.transaction }}]
-        }
-                ]
-        },
-            options: {
-                maintainAspectRatio: false,
-                legend: { display: false },
-                title: {
-                    display: true,
-                    text: 'Overview'
-                },
-                scales: {
-                    yAxes: [{
-                        ticks: {
-                            beginAtZero: true
-                        }
+            // Pie chart
+            var chart = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: ['PC', 'PC1', 'PC2'],
+                    datasets: [{
+                        backgroundColor: ['rgb(255, 99, 132)', 'rgb(54, 162, 235)', 'rgb(255, 205, 86)'],
+                        data: [{{ chartCategory.0.cat_count }}, {{ chartCategory.1.cat_count }}, {{ chartCategory.2.cat_count }}]
                     }]
-                }
-            }
-        });
-        //line Charts
-        new Chart(document.getElementById("line-chart"), {
-            type: 'line',
-            data: {
-                labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-                datasets: [{
-                    data: [{{ userChange.[0] }}, {{ userChange.[1] }}, {{ userChange.[2] }}, {{ userChange.[3] }}, {{ userChange.[4] }}, {{ userChange.[5] }}, {{ userChange.[6] }}],
-            borderColor: "rgba(54, 162, 235, 1)",
-            backgroundColor: "rgba(54, 162, 235, 0.2)",
-            fill: true
-            }
-                ]
-        },
-            options: {
-                legend: {
-                    display: false
                 },
-                title: {
-                    display: true,
-                    text: 'User Signups This Week'
+                options: {
+                    maintainAspectRatio: false,
+                    title: { display: true, text: 'Number of Items by Category' }
                 }
-            }
-        });
+            });
 
-        new Chart(document.getElementById("line-chart2"), {
-            type: 'line',
-            data: {
-                labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-                datasets: [{
-                    data: [{{ listingChange.[0] }}, {{ listingChange.[1] }}, {{ listingChange.[2] }}, {{ listingChange.[3] }}, {{ listingChange.[4] }}, {{ listingChange.[5] }}, {{ listingChange.[6] }}],
-            borderColor: "rgba(255, 99, 132, 1)",
-            backgroundColor: "rgba(255, 99, 132, 0.2)",
-            fill: true
-            }
-                ]
-        },
-            options: {
-                legend: {
-                    display: false
+            // Bar chart
+            new Chart(document.getElementById('bar-chart'), {
+                type: 'bar',
+                data: {
+                    labels: ['User Count', 'Item Count', 'Listing Count', 'Transactions'],
+                    datasets: [{
+                        backgroundColor: ['rgba(54, 162, 235, 0.2)', '#8e5ea2', '#3cba9f', '#e8c3b9'],
+                        data: [{{ count.user }}, {{ count.item }}, {{ count.listing }}, {{ count.transaction }}]
+                    }]
                 },
-                title: {
-                    display: true,
-                    text: 'Listings Created This Week'
+                options: {
+                    maintainAspectRatio: false,
+                    title: { display: true, text: 'Overview' },
+                    legend: { display: false },
+                    scales: {
+                        yAxes: [{ ticks: { beginAtZero: true } }]
+                    }
                 }
-            }
-        });
+            });
 
-        new Chart(document.getElementById("line-chart3"), {
-            type: 'line',
-            data: {
-                labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-                datasets: [{
-                    data: [{{ transactChange.[0] }}, {{ transactChange.[1] }}, {{ transactChange.[2] }}, {{ transactChange.[3] }}, {{ transactChange.[4] }}, {{ transactChange.[5] }}, {{ transactChange.[6] }}],
-            borderColor: "rgba(255, 206, 86, 1)",
-            backgroundColor: "rgba(255, 206, 86, 0.2)",
-            fill: true
-            }
-                ]
-        },
-            options: {
-                legend: {
-                    display: false
+            // Line charts
+            new Chart(document.getElementById('line-chart'), {
+                type: 'line',
+                data: {
+                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                    datasets: [{
+                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                        data: [{{ userChange.[0] }}, {{ userChange.[1] }}, {{ userChange.[2] }}, {{ userChange.[3] }}, {{ userChange.[4] }}, {{ userChange.[5] }}, {{ userChange.[6] }}],
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        fill: true
+                    }]
                 },
-                title: {
-                    display: true,
-                    text: 'Transactions Made This Week'
+                options: {
+                    title: { display: true, text: 'User Signups This Week' },
+                    legend: { display: false }
                 }
-            }
-        });
+            });
+
+            new Chart(document.getElementById('line-chart2'), {
+                type: 'line',
+                data: {
+                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                    datasets: [{
+                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                        data: [{{ listingChange.[0] }}, {{ listingChange.[1] }}, {{ listingChange.[2] }}, {{ listingChange.[3] }}, {{ listingChange.[4] }}, {{ listingChange.[5] }}, {{ listingChange.[6] }}],
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        fill: true
+                    }]
+                },
+                options: {
+                    title: { display: true, text: 'Listings Created This Week' },
+                    legend: { display: false }
+                }
+            });
+
+            new Chart(document.getElementById('line-chart3'), {
+                type: 'line',
+                data: {
+                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                    datasets: [{
+                        backgroundColor: 'rgba(255, 206, 86, 0.2)',
+                        data: [{{ transactChange.[0] }}, {{ transactChange.[1] }}, {{ transactChange.[2] }}, {{ transactChange.[3] }}, {{ transactChange.[4] }}, {{ transactChange.[5] }}, {{ transactChange.[6] }}],
+                        borderColor: 'rgba(255, 206, 86, 1)',
+                        fill: true
+                    }]
+                },
+                options: {
+                    title: { display: true, text: 'Transactions Made This Week' },
+                    legend: { display: false }
+                }
+            });
+        })();
     </script>
     {{> _message}}
 </body>
