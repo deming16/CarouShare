@@ -5,6 +5,7 @@ const Utils = require('../utils/utils');
 const { User } = require('../schemas/');
 const passport = require('passport');
 const { ERRORS } = require('../utils/errors');
+const moment = require('moment');
 const db = require('../db/');
 
 router.get('/', async (req, res, next) => {
@@ -24,6 +25,7 @@ router.get('/', async (req, res, next) => {
                         title: row.title,
                         time_created: row.time_created,
                         time_ending: row.time_ending,
+                        time_ending_text: moment(row.time_ending).fromNow(true) + ' left',
                         iid: row.iid,
                         owner_uid: row.owner_uid,
                         item_name: row.item_name,
@@ -47,12 +49,15 @@ router.get('/', async (req, res, next) => {
             const query = 'select * from ListingViews L where L.status = $1 order by time_created';
             const values = ['open'];
 
-            const result = await db.query(query, values);
+            const results = await db.query(query, values);
 
             let noListing = false;
-            if (result.rows.length === 0) noListing = true;
+            if (results.rows.length === 0) noListing = true;
+            results.rows.forEach((item) => {
+                item.time_ending_text = moment(item.time_ending).fromNow(true) + ' left';
+            });
             res.render('index', {
-                list: result.rows,
+                list: results.rows,
                 listing: true,
                 message: 'Latest Listings',
                 hideNav: true

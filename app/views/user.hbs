@@ -238,29 +238,55 @@
 
     {{!-- FOLLOWING --}}
     <h4>Following</h4>
-    <ul>
+    <div class="row">
         {{#each following}}
-        <li><a href="/user/{{this.followee_uid}}">{{this.followee_uid}}</a></li>
+        <a href="/user/{{this.followee_uid}}" class="link-normal">
+            <div class="col s12 m6 l4 xl3">
+                <div class="card waves-effect waves-block">
+                    <div class="card-content black-text">
+                        <span>{{this.followee_uid}}</span>
+                    </div>
+                </div>
+            </div>
+        </a>
         {{/each}}
-    </ul>
+    </div>
 
     {{!-- FOLLOWERS --}}
     <h4>Followers</h4>
-    <ul>
+    <div class="row">
         {{#each followers}}
-        <li><a href="/user/{{this.follower_uid}}">{{this.follower_uid}}</a></li>
+        <a href="/user/{{this.follower_uid}}" class="link-normal">
+            <div class="col s12 m6 l4 xl3">
+                <div class="card waves-effect waves-block">
+                    <div class="card-content black-text">
+                        <span>{{this.follower_uid}}</span>
+                    </div>
+                </div>
+            </div>
+        </a>
         {{/each}}
-    </ul>
+    </div>
 
     {{#if isMyProfile}}
     {{!-- SUGGEST TO FOLLOW --}}
     <h4>Suggested Users To Follow</h4>
-    <ul>
+    <div class="row">
         {{#each suggestFollows}}
-        <li><a href="/user/{{this.followee}}">{{this.followee}}</a></li>
+        <a href="/user/{{this.followee}}" class="link-normal">
+            <div class="col s12 m6 l4 xl3">
+                <div class="card waves-effect waves-block">
+                    <div class="card-content black-text">
+                        <span>{{this.followee}}</span>
+                    </div>
+                </div>
+            </div>
+        </a>
         {{/each}}
-    </ul>
+    </div>
     {{/if}}
+
+    <div class="pb-5"></div>
 </div>
 {{/inline}}
 {{/_base}}
