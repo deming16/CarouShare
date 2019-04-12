@@ -100,7 +100,7 @@ BEGIN
     AND (NEW.time_created > Listings.time_ending OR NEW.amount < Listings.min_bid) ;
 
     IF (row_exists > 0) THEN
-        RAISE NOTICE 'Cannot bid after bidding ends or if bid is under min';
+        RAISE EXCEPTION 'Cannot bid after bidding ends or if bid is under min';
         RETURN NULL;
     ELSE
         RETURN NEW;
