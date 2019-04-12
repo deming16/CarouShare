@@ -4,6 +4,7 @@ const hbs = require('hbs');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
+const flash = require('connect-flash');
 
 // Authentication
 const session = require('express-session');
@@ -44,8 +45,23 @@ passport.use(
 passport.serializeUser((user, done) => {
     done(null, user.uid);
 });
-passport.deserializeUser((username, done) => {
-    done(null, { username: username });
+passport.deserializeUser(async (username, done) => {
+    try {
+        const output = await db.query(
+            'SELECT COUNT(adm.uid) AS is_admin FROM Accounts acc LEFT JOIN Admins adm ON acc.uid = adm.uid WHERE acc.uid = $1::text',
+            [username]
+        );
+        if (output.rows.length <= 0) ERRORS.userNotFound();
+
+        const { is_admin } = output.rows[0];
+        const isAdmin = Boolean(parseInt(is_admin, 10));
+        done(null, {
+            username: username,
+            isAdmin: isAdmin
+        });
+    } catch (e) {
+        done(e);
+    }
 });
 
 // Other middlewares
@@ -54,26 +70,26 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(flash());
 
 // Auth middlewares
 app.use(
     session({
         store: new FileStore(),
         secret: 'cs2102',
-        resave: false,
+        resave: true,
         saveUninitialized: true
     })
 );
 app.use(passport.initialize());
 app.use(passport.session());
 app.use((req, res, next) => {
-    res.locals.auth = {
-        user: req.user
-    };
-    res.locals.message = {
-        body: req.query.message_body,
-        type: req.query.message_type
-    };
+    const auth = {};
+    res.locals.auth = auth;
+    if (req.isAuthenticated()) {
+        auth.user = req.user;
+    }
+    res.locals.messages = req.flash('messages').join('<br>');
     next();
 });
 
@@ -88,8 +104,6 @@ app.use('/user', userRouter);
 app.use('/admin', adminRouter);
 app.use('/item', itemRouter);
 app.use('/dashboard', dashboardRouter);
-
-
 
 // Catch 404 and forward to error handler
 app.use((req, res, next) => {

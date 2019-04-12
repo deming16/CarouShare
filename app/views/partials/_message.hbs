@@ -1,6 +1,6 @@
 <div id="modal-message" class="modal">
     <div class="modal-content">
-        <p>{{@message.body}}</p>
+        <p>{{@messages}}</p>
     </div>
     <div class="modal-footer">
         <a href="#!" class="modal-close waves-effect waves-red btn-flat">OK</a>
@@ -13,7 +13,7 @@
 
         var elem = document.getElementById('modal-message');
         var instance = M.Modal.getInstance(elem);
-        if (instance && '{{@message.body}}') {
+        if (instance && '{{@messages}}') {
             instance.open();
         }
     });

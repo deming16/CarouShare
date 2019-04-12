@@ -138,13 +138,15 @@ router.post('/login', (req, res, next) => {
             req.login(user, (err) => {
                 try {
                     if (err) throw err;
-                    return res.redirect('/');
+                    res.redirect('/');
                 } catch (e) {
-                    res.redirect(`/login?message_body=${e.message}`);
+                    req.flash('messages', String(e.message));
+                    res.redirect('back');
                 }
             });
         } catch (e) {
-            res.redirect(`/login?message_body=${e.message}`);
+            req.flash('messages', String(e.message));
+            res.redirect('back');
         }
     })(req, res, next);
 });
@@ -173,17 +175,22 @@ router.post('/signup', async (req, res, next) => {
 
         await client.query('COMMIT');
         done();
-        res.redirect(`/login?message_body=${encodeURIComponent('User registered successfully!')}`);
+        req.flash('messages', 'User registered successfully!');
+        res.redirect('back');
     } catch (e) {
         await client.query('ROLLBACK');
         done();
-        res.redirect(`/signup?message_body=${e.message}`);
+        req.flash('messages', String(e.message));
+        res.redirect('back');
     }
 });
 
 router.get('/logout', (req, res, next) => {
     req.logout();
-    res.redirect('/');
+    req.session.destroy(() => {
+        res.clearCookie('connect.sid');
+        res.redirect('/');
+    });
 });
 
 module.exports = router;

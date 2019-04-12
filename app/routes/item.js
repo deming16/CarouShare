@@ -1,5 +1,7 @@
 var express = require('express');
 var router = express.Router();
+const multer = require('multer');
+const upload = multer({ dest: './uploads/' });
 
 const db = require('../db');
 
@@ -45,9 +47,10 @@ router.get('/:itemId', async (req, res, next) => {
 // @route   POST item/
 // @desc    Add new item
 // @access  Private
-router.post('/', (req, res, next) => {
+router.post('/', upload.single('photo'), (req, res, next) => {
+  let filename = req.file ? req.file.filename : null;
   const query = "insert into Items (owner_uid, item_name, category, status, photo, description) values ($1, $2, $3, $4, $5, $6)";
-  const values = [req.user.username, req.body.itemName, req.body.category, req.body.status, req.body.photo, req.body.desc];
+  const values = [req.user.username, req.body.itemName, req.body.category, req.body.status, filename, req.body.desc];
 
   db.query(query, values)
     .then(() => res.redirect('/user'))
