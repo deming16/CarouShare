@@ -156,8 +156,8 @@ router.post('/:itemId/listing', async (req, res, next) => {
         let values = ['open', req.params.itemId];
         const result = await db.query(query, values);
         if (result.rows.length === 0) {
-            query = 'insert into Listings (item_iid, title, delivery_method, min_bid) values ($1, $2, $3, $4)';
-            values = [req.params.itemId, req.body.title, req.body.delivery_method, req.body.min_bid];
+            query = "insert into Listings (item_iid, title, delivery_method, min_bid, bid_end) values ($1, $2, $3, $4, to_timestamp($5, 'DD/MM/YYYY'))";
+            values = [req.params.itemId, req.body.title, req.body.delivery_method, req.body.min_bid, req.params.bid_end];
             await db.query(query, values);
         } else {
             query = 'update Listings set title = $1, delivery_method = $2, min_bid = $3 where lid = $4';
@@ -174,30 +174,24 @@ router.post('/:itemId/listing', async (req, res, next) => {
     }
 });
 
-// @route   POST item/:itemId/listing/delete
+// @route   POST item/:itemId/listing/:listingId/delete
 // @desc    Delete listing for item
 // @access  Private
-router.post('/:itemId/listing/delete', async (req, res, next) => {
+router.post('/:itemId/listing/:listingId/delete', async (req, res, next) => {
     const { client, done } = await db.client();
     try {
         await client.query('BEGIN');
 
-        // get the listing id
-        let query = 'select lid from Listings where item_iid = $1';
-        let values = [req.params.itemId];
-        const result = await db.query(query, values);
+        // delete all bids from the listing
+        query = 'delete from Bids where listing_lid = $1';
+        values = [req.params.listingId];
+        await db.query(query, values);
 
-        if (result.rows.length !== 0) {
-            // delete all bids from the listing
-            query = 'delete from Bids where listing_lid = $1';
-            values = [result.rows[0].lid];
-            await db.query(query, values);
+        // delete the listing itself
+        query = 'delete from Listings where lid = $1';
+        values = [req.params.listingId];
+        await db.query(query, values);
 
-            // delete the listing itself
-            query = 'delete from Listings where lid = $1';
-            values = [result.rows[0].lid];
-            await db.query(query, values);
-        }
 
         await client.query('COMMIT');
         done();
