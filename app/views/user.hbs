@@ -13,8 +13,10 @@
 
         {{#if isMyProfile}}
         <!-- Modal Trigger -->
-        <a class="waves-effect waves-light red darken-1 btn modal-trigger" href="#modal1">Edit<i
-                class="material-icons text-darken-1 right">edit</i></a>
+        <div class="mb-2">
+            <a class="waves-effect waves-light red darken-1 btn modal-trigger" href="#modal1">Edit<i
+                    class="material-icons text-darken-1 right">edit</i></a>
+        </div>
         <!-- Modal Structure -->
         <div id="modal1" class="modal">
             <form method="POST" action="/user/{{user.uid}}" class="col s12" id="detailsForm">
@@ -58,13 +60,18 @@
         </div>
         {{/if}}
 
-        <div>
-            <div class="flex-display flex-align-center mt-0-5"><i class="material-icons trans-3 mr-1">local_phone</i>
-                {{user.mobile}}</div>
-            <div class="flex-display flex-align-center mt-0-5"><i
-                    class="material-icons trans-3 mr-1">email</i>{{user.email}}</div>
-            <div class="flex-display flex-align-center mt-0-5"><i
-                    class="material-icons trans-3 mr-1">home</i>{{user.address}}</div>
+        <div class="col s12">
+            <div class="card">
+                <div class="card-content black-text">
+                    <div class="flex-display flex-align-center mt-0-5"><i
+                            class="material-icons trans-3 mr-1">local_phone</i>
+                        {{user.mobile}}</div>
+                    <div class="flex-display flex-align-center mt-0-5"><i
+                            class="material-icons trans-3 mr-1">email</i>{{user.email}}</div>
+                    <div class="flex-display flex-align-center mt-0-5"><i
+                            class="material-icons trans-3 mr-1">home</i>{{user.address}}</div>
+                </div>
+            </div>
         </div>
     </div>
 

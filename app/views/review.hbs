@@ -11,22 +11,29 @@
         </div>
     </div>
 
-    <div class="row">
+    <div class="row mt-2">
         {{#unless reviews.length}}
-            No reviews available
+        <div class="text-center">No reviews available</div>
         {{/unless}}
         {{#each reviews}}
-        <div>
-            <p><b>{{this.user_uid}} on {{this.time_created}}</b></p>
-            {{#each this.sections}}
-            <br>
-            <p><b>{{this.sname}}</b></p>
-            <p>{{this.content}}</p>
-            {{/each}}
+        <div class="card col s12">
+            <div class="card-content black-text">
+                <div class="mb-5">
+                    <h5 class="no-margin">{{this.user_uid}}</h5>
+                    <div class="trans-1">{{this.time_created_text}}</div>
+                </div>
+                {{#each this.sections}}
+                <div class="mt-4">
+                    <h6 class="no-margin mb-1 font-larger">{{this.sname}}</h6>
+                    <p class="trans-1 font-small">{{this.content}}</p>
+                </div>
+                {{/each}}
+            </div>
         </div>
-        <div class="divider"></div>
         {{/each}}
     </div>
+
+    <div class="pb-5"></div>
 </div>
 {{/inline}}
 {{/_base}}

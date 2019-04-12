@@ -326,6 +326,7 @@ router.get('/:itemId/review/', async (req, res, next) => {
                     iid: row.iid,
                     rid: row.rid,
                     time_created: row.time_created,
+                    time_created_text: moment(row.time_created).fromNow(),
                     user_uid: row.user_uid,
                     sections: []
                 });
