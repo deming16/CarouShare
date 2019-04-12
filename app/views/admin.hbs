@@ -17,6 +17,7 @@
           <th>Category</th>
           <th>Status</th>
           <th></th>
+          <th></th>
         </tr>
       </thead>
 
@@ -27,6 +28,73 @@
           <td>{{this.item_name}}</td>
           <td>{{this.category}}</td>
           <td>{{this.status}}</td>
+          <td>
+            <a class="waves-effect waves-light red darken-1 btn modal-trigger" href="#modal{{this.iid}}">Edit Info</a>
+
+            <!-- Modal Structure -->
+            <div id="modal{{this.iid}}" class="modal">
+              <form method="POST" action="/item/{{this.iid}}" class="col s12" id="editItemForm">
+                <div class="modal-content">
+                  <h4>Edit Item Information</h4>
+                  <div class="row">
+
+                    <div class="row">
+                      <div class="col s12">
+                        <div class="input-field">
+                          <input value="{{this.item_name}}" name="itemName" id="itemName" type="text" class="validate">
+                          <label for="itemName">Item Name</label>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col s12">
+                        <div class="input-field">
+                          <input value="{{this.category}}" name="category" id="category" type="text" class="validate">
+                          <label for="category">Category</label>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col s12">
+                        <div class="input-field">
+                          <input value="{{this.status}}" name="status" id="status" type="text" class="validate">
+                          <label for="status">Status</label>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col s12">
+                        <div class="input-field">
+                          <input value="{{this.photo}}" name="photo" id="photo" type="text" class="validate">
+                          <label for="photo">Photo</label>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <form class="col s12">
+                        <div class="row">
+                          <div class="input-field col s12">
+                            <textarea name="desc" id="desc" class="materialize-textarea">{{this.description}}</textarea>
+                            <label for="desc">Description</label>
+                          </div>
+                        </div>
+                      </form>
+                    </div>
+
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Cancel</a>
+                  <button type="submit" form="editItemForm" class="modal-close waves-effect waves-green btn-flat">Save
+                    Changes</button>
+                </div>
+              </form>
+            </div>
+          </td>
           <td>
             <form method="POST" action="/item/{{this.iid}}/delete">
               <button class="btn-floating btn-small waves-effect waves-light red"><i
