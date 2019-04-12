@@ -420,12 +420,6 @@ router.post('/:itemId/review/delete/:sname', async (req, res, next) => {
         query = 'select rid from Reviews inner join ReviewSections on (rid = review_rid)';
         const section = await db.query(query);
 
-        if (section.rows.length === 0) {
-            query = 'delete from Reviews where rid = $1';
-            values = [result.rows[0].rid];
-            await db.query(query, values);
-        }
-
         res.redirect(`back`);
     } catch (e) {
         console.log(e);
