@@ -183,23 +183,9 @@ router.post('/:itemId/listing/delete', async (req, res, next) => {
 router.post('/:itemId/listing/:listingId/bid', async (req, res, next) => {
   try {
     if (req.isAuthenticated()) {
-      let query = "select biid, bidder_uid, listing_lid from Bids where bidder_uid = $1 and listing_lid = $2";
-      let values = [req.user.username, req.params.listingId];
-      const result = await db.query(query, values);
-
-      if (result.rows.length === 0) {
-        // add new bid
-        query = "insert into Bids (bidder_uid, listing_lid, amount) values ($1, $2, $3)";
-        values = [req.user.username, req.params.listingId, req.body.amount];
-        await db.query(query, values);
-      }
-      else {
-        // update bid
-        query = "UPDATE Bids SET amount = $1 WHERE bidder_uid = $2 AND listing_lid = $3";
-        values = [req.body.amount, req.user.username, req.params.listingId];
-
-        await db.query(query, values);
-      }
+      let query = "select place_bid($1, $2, $3)";
+      let values = [req.user.username, req.params.listingId, req.body.amount];
+      await db.query(query, values);
 
       res.redirect('back');
     }
