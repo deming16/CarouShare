@@ -228,3 +228,7 @@ nav .brand-logo {
     padding: 1rem;
     background-color: white;
 }
+
+.card-action-buttons {
+    padding: 0.5rem;
+}
