@@ -43,7 +43,7 @@ router.get('/:itemId', async (req, res, next) => {
                 });
             }
 
-            res.render('item', { item: result.rows[0], liked: liked, editable: editable });
+            res.render('item', { item: result.rows[0], liked: liked, editable: editable, itemId: req.params.itemId });
         }
     } catch (e) {
         res.render('error', { error: e, message: 'something went wrong' });
@@ -140,7 +140,7 @@ router.get('/:itemId/listing', async (req, res, next) => {
             bids: result.rows,
             listingAvailable: listingAvailable,
             isOwner: isOwner,
-            item: req.params.itemId
+            itemId: req.params.itemId
         });
     } catch (e) {
         res.render('error', { error: e, message: 'something went wrong' });
@@ -337,7 +337,7 @@ router.get('/:itemId/review/', async (req, res, next) => {
             parsedResult[parsedResult.length - 1].sections.push({ sname: row.sname, content: row.content });
         });
 
-        res.render('review', { reviews: parsedResult, item: result.rows[0] });
+        res.render('review', { reviews: parsedResult, item: result.rows[0], itemId: req.params.itemId });
     } catch (e) {
         console.log(e);
     }

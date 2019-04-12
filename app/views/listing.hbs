@@ -1,152 +1,151 @@
 {{#> _base }}
 {{#*inline "contents"}}
 <div class="container">
-  <div class="row">
-    <div class="col 12">
-
-      <div class="section">
-        <h1>Item Information</h1>
-        <a class="btn waves-effect waves-light red darken-1" href="/item/{{item}}">Info</a>
-        <a class="btn waves-effect waves-light red darken-1" href="/item/{{item}}/listing">Listing</a>
-        <a class="btn waves-effect waves-light red darken-1" href="/item/{{item}}/review">Reviews</a>
-      </div>
-      <div class="divider"></div>
-
-    </div>
-  </div>
-
-  {{#if isOwner}}
-  <div class="row">
-    <!-- Modal Trigger -->
-    <a class="waves-effect waves-light red darken-1 btn modal-trigger mb-1" href="#modal1">Create/Update Listing</a>
-
-    <!-- Modal Structure -->
-    <div id="modal1" class="modal">
-      <form method="POST" action="/item/{{item}}/listing" class="col s12" id="listingForm">
-        <div class="modal-content">
-          <h4>Create/Update Listing</h4>
-          <div class="row">
-
-            <div class="row">
-              <div class="col s12">
-                <div class="input-field">
-                  <input name="title" id="title" type="text" class="validate">
-                  <label for="title">Title</label>
-                </div>
-              </div>
-            </div>
-
-            <div class="row">
-              <div class="col s12">
-                <div class="input-field">
-                  <input name="min_bid" id="min_bid" type="text" class="validate">
-                  <label for="min_bid">Minimum Bid</label>
-                </div>
-              </div>
-            </div>
-
-            <div class="row">
-              <div class="col s12">
-                <div class="input-field">
-                  <input name="delivery_method" id="delivery_method" type="text" class="validate">
-                  <label for="delivery_method">Delivery Method</label>
-                </div>
-              </div>
-            </div>
-
-          </div>
+    <div class="row mb-0">
+        <div class="col s12">
+            <ul class="tabs">
+                <li class="tab"><a target="_self" href="/item/{{itemId}}">Info</a></li>
+                <li class="tab"><a target="_self" class="active" href="/item/{{itemId}}/listing">Listing</a></li>
+                <li class="tab"><a target="_self" href="/item/{{itemId}}/review">Reviews</a></li>
+            </ul>
         </div>
-        <div class="modal-footer">
-          <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Cancel</a>
-          <button type="submit" form="listingForm" class="modal-close waves-effect waves-green btn-flat">Save
-            Changes</button>
-        </div>
-      </form>
     </div>
 
-    <form method="POST" action="/item/{{item}}/listing/delete">
-      <button class="btn btn-small waves-effect waves-light red">Delete Listing</button>
-    </form>
-  </div>
-  {{else}}
-  <div class="row">
-    <!-- Modal Trigger -->
-    <a class="waves-effect waves-light red darken-1 btn modal-trigger mb-1" href="#modal1">Place Bid</a>
+    {{#if isOwner}}
+    <div class="row">
+        <!-- Modal Trigger -->
+        <a class="waves-effect waves-light red darken-1 btn modal-trigger mb-1" href="#modal1">Create/Update Listing</a>
 
-    <!-- Modal Structure -->
-    <div id="modal1" class="modal">
-      <form method="POST" action="/item/{{listing.item_iid}}/listing/{{listing.lid}}/bid" class="col s12" id="bidForm">
-        <div class="modal-content">
-          <h4>Enter Bid Amount</h4>
-          <div class="row">
+        <!-- Modal Structure -->
+        <div id="modal1" class="modal">
+            <form method="POST" action="/item/{{item}}/listing" class="col s12" id="listingForm">
+                <div class="modal-content">
+                    <h4>Create/Update Listing</h4>
+                    <div class="row">
 
-            <div class="row">
-              <div class="col s12">
-                <div class="input-field">
-                  <input name="amount" id="amount" type="text" class="validate">
-                  <label for="amount">Bid Amount</label>
+                        <div class="row">
+                            <div class="col s12">
+                                <div class="input-field">
+                                    <input name="title" id="title" type="text" class="validate">
+                                    <label for="title">Title</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col s12">
+                                <div class="input-field">
+                                    <input name="min_bid" id="min_bid" type="text" class="validate">
+                                    <label for="min_bid">Minimum Bid</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col s12">
+                                <div class="input-field">
+                                    <input name="delivery_method" id="delivery_method" type="text" class="validate">
+                                    <label for="delivery_method">Delivery Method</label>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
-              </div>
-            </div>
-
-          </div>
-        </div>
-        <div class="modal-footer">
-          <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Cancel</a>
-          <button type="submit" form="bidForm" class="modal-close waves-effect waves-green btn-flat">Place Bid</button>
-        </div>
-      </form>
-    </div>
-
-    <form method="POST" action="/item/{{listing.item_iid}}/listing/{{listing.lid}}/bid/delete">
-      <button class="btn btn-small waves-effect waves-light red">Remove Bid</button>
-    </form>
-  </div>
-  {{/if}}
-
-  {{#if listingAvailable}}
-  <div class="row">
-    <div class="section">
-      <h2>{{listing.title}}</h2>
-      <p><b>Status:</b> {{listing.status}}</p>
-      <p><b>Delivery Method:</b> {{listing.delivery_method}}</p>
-      <p><b>Minimum Bid Required:</b> ${{listing.min_bid}}</p>
-      <p><b>Bid Start:</b> {{listing.listingstart}}</p>
-      <p><b>Bid End:</b> {{listing.time_ending}}</p>
-    </div>
-    <div class="divider"></div>
-  </div>
-
-  <div class="row">
-    <table>
-      <thead>
-        <tr>
-          <th>Bidder</th>
-          <th>Amount</th>
-          <th>Bidded On</th>
-          {{#if isOwner}}<th></th>{{/if}}
-        </tr>
-      </thead>
-
-      <tbody>
-        {{#each bids}}
-        <tr>
-          <td>{{this.bidder_uid}}</td>
-          <td>${{this.amount}}</td>
-          <td>{{this.biddedon}}</td>
-          {{#if ../isOwner}}
-          <td>
-            <form method="POST" action="/item/{{this.item_iid}}/listing/{{this.lid}}/loan/{{this.bidder_uid}}">
-              <button class="btn btn-small waves-effect waves-light red">Accept Transaction</button>
+                <div class="modal-footer">
+                    <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Cancel</a>
+                    <button type="submit" form="listingForm" class="modal-close waves-effect waves-green btn-flat">Save
+                        Changes</button>
+                </div>
             </form>
-          </td>
-          {{/if}}
-        </tr>
-        {{/each}}
-      </tbody>
-    </table>
-  </div>
-  {{/if}}
+        </div>
+
+        <form method="POST" action="/item/{{item}}/listing/delete">
+            <button class="btn btn-small waves-effect waves-light red">Delete Listing</button>
+        </form>
+    </div>
+    {{else}}
+    <div class="row">
+        <!-- Modal Trigger -->
+        <a class="waves-effect waves-light red darken-1 btn modal-trigger mb-1" href="#modal1">Place Bid</a>
+
+        <!-- Modal Structure -->
+        <div id="modal1" class="modal">
+            <form method="POST" action="/item/{{listing.item_iid}}/listing/{{listing.lid}}/bid" class="col s12"
+                id="bidForm">
+                <div class="modal-content">
+                    <h4>Enter Bid Amount</h4>
+                    <div class="row">
+
+                        <div class="row">
+                            <div class="col s12">
+                                <div class="input-field">
+                                    <input name="amount" id="amount" type="text" class="validate">
+                                    <label for="amount">Bid Amount</label>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Cancel</a>
+                    <button type="submit" form="bidForm" class="modal-close waves-effect waves-green btn-flat">Place
+                        Bid</button>
+                </div>
+            </form>
+        </div>
+
+        <form method="POST" action="/item/{{listing.item_iid}}/listing/{{listing.lid}}/bid/delete">
+            <button class="btn btn-small waves-effect waves-light red">Remove Bid</button>
+        </form>
+    </div>
+    {{/if}}
+
+    {{#if listingAvailable}}
+    <div class="row">
+        <div class="section">
+            <h2>{{listing.title}}</h2>
+            <p><b>Status:</b> {{listing.status}}</p>
+            <p><b>Delivery Method:</b> {{listing.delivery_method}}</p>
+            <p><b>Minimum Bid Required:</b> ${{listing.min_bid}}</p>
+            <p><b>Bid Start:</b> {{listing.listingstart}}</p>
+            <p><b>Bid End:</b> {{listing.time_ending}}</p>
+        </div>
+        <div class="divider"></div>
+    </div>
+
+    <div class="row">
+        <table>
+            <thead>
+                <tr>
+                    <th>Bidder</th>
+                    <th>Amount</th>
+                    <th>Bidded On</th>
+                    {{#if isOwner}}<th></th>{{/if}}
+                </tr>
+            </thead>
+
+            <tbody>
+                {{#each bids}}
+                <tr>
+                    <td>{{this.bidder_uid}}</td>
+                    <td>${{this.amount}}</td>
+                    <td>{{this.biddedon}}</td>
+                    {{#if ../isOwner}}
+                    <td>
+                        <form method="POST"
+                            action="/item/{{this.item_iid}}/listing/{{this.lid}}/loan/{{this.bidder_uid}}">
+                            <button class="btn btn-small waves-effect waves-light red">Accept Transaction</button>
+                        </form>
+                    </td>
+                    {{/if}}
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
+    {{/if}}
 
 
 </div>

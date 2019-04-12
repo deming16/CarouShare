@@ -1,121 +1,112 @@
 {{#> _base }}
 {{#*inline "contents"}}
 <div class="container">
-  <div class="row">
-    <div class="col 12">
-
-      <div class="section">
-        <h1>Item Information</h1>
-        <a class="btn waves-effect waves-light red darken-1" href="/item/{{item.iid}}">Info</a>
-        <a class="btn waves-effect waves-light red darken-1" href="/item/{{item.iid}}/listing">Listing</a>
-        <a class="btn waves-effect waves-light red darken-1" href="/item/{{item.iid}}/review">Reviews</a>
-      </div>
-      <div class="divider"></div>
-
-    </div>
-  </div>
-
-  <div class="row">
-    {{#if editable}}
-    <!-- Modal Trigger -->
-    <a class="waves-effect waves-light red darken-1 btn modal-trigger" href="#modal2">Edit Info</a>
-
-    <!-- Modal Structure -->
-    <div id="modal2" class="modal">
-      <form method="POST" action="/item/{{item.iid}}" class="col s12" id="newItemForm">
-        <div class="modal-content">
-          <h4>Edit Item Information</h4>
-          <div class="row">
-
-            <div class="row">
-              <div class="col s12">
-                <div class="input-field">
-                  <input value="{{item.item_name}}" name="itemName" id="itemName" type="text" class="validate">
-                  <label for="itemName">Item Name</label>
-                </div>
-              </div>
-            </div>
-
-            <div class="row">
-              <div class="col s12">
-                <div class="input-field">
-                  <input value="{{item.category}}" name="category" id="category" type="text" class="validate">
-                  <label for="category">Category</label>
-                </div>
-              </div>
-            </div>
-
-            <div class="row">
-              <div class="col s12">
-                <div class="input-field">
-                  <input value="{{item.status}}" name="status" id="status" type="text" class="validate">
-                  <label for="status">Status</label>
-                </div>
-              </div>
-            </div>
-
-            <div class="row">
-              <div class="col s12">
-                <div class="input-field">
-                  <input value="{{item.photo}}" name="photo" id="photo" type="text" class="validate">
-                  <label for="photo">Photo</label>
-                </div>
-              </div>
-            </div>
-
-            <div class="row">
-              <form class="col s12">
-                <div class="row">
-                  <div class="input-field col s12">
-                    <textarea name="desc" id="desc" class="materialize-textarea">{{item.description}}</textarea>
-                    <label for="desc">Description</label>
-                  </div>
-                </div>
-              </form>
-            </div>
-
-          </div>
+    <div class="row mb-0">
+        <div class="col s12">
+            <ul class="tabs">
+                <li class="tab"><a target="_self" class="active" href="/item/{{itemId}}">Info</a></li>
+                <li class="tab"><a target="_self" href="/item/{{itemId}}/listing">Listing</a></li>
+                <li class="tab"><a target="_self" href="/item/{{itemId}}/review">Reviews</a></li>
+            </ul>
         </div>
-        <div class="modal-footer">
-          <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Cancel</a>
-          <button type="submit" form="newItemForm" class="modal-close waves-effect waves-green btn-flat">Add
-            Item</button>
-        </div>
-      </form>
     </div>
-    {{/if}}
 
-    <div class="section">
-      <div class="col s12">
-        <div class="card waves-effect waves-block">
-          <div class="card-image">
-            <div class="img-fit listing-item-image"
-              style="background-image: url('https://media.karousell.com/media/photos/products/2018/10/07/buy_1538918236_d4243b29.jpg');">
-            </div>
-            <form method="POST" action="/item/{{item.iid}}/like">
-              {{#if liked}}
-              <button type="submit" class="btn-floating btn-large halfway-fab waves-effect waves-red white"><i
-                  class="material-icons red-text text-darken-1">favorite</i></button>
-              {{else}}
-              <button type="submit" class="btn-floating btn-large halfway-fab waves-effect waves-red white"><i
-                  class="material-icons red-text text-darken-1">favorite_border</i></button>
-              {{/if}}
+    <div class="row mb-5">
+        {{#if editable}}
+        <!-- Modal Trigger -->
+        <a class="waves-effect waves-light red darken-1 btn modal-trigger" href="#modal2">Edit Info</a>
+        <!-- Modal Structure -->
+        <div id="modal2" class="modal">
+            <form method="POST" action="/item/{{item.iid}}" class="col s12" id="newItemForm">
+                <div class="modal-content">
+                    <h4>Edit Item Information</h4>
+                    <div class="row">
+                        <div class="row">
+                            <div class="col s12">
+                                <div class="input-field">
+                                    <input value="{{item.item_name}}" name="itemName" id="itemName" type="text"
+                                        class="validate">
+                                    <label for="itemName">Item Name</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col s12">
+                                <div class="input-field">
+                                    <input value="{{item.category}}" name="category" id="category" type="text"
+                                        class="validate">
+                                    <label for="category">Category</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col s12">
+                                <div class="input-field">
+                                    <input value="{{item.status}}" name="status" id="status" type="text"
+                                        class="validate">
+                                    <label for="status">Status</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col s12">
+                                <div class="input-field">
+                                    <input value="{{item.photo}}" name="photo" id="photo" type="text" class="validate">
+                                    <label for="photo">Photo</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <form class="col s12">
+                                <div class="row">
+                                    <div class="input-field col s12">
+                                        <textarea name="desc" id="desc"
+                                            class="materialize-textarea">{{item.description}}</textarea>
+                                        <label for="desc">Description</label>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Cancel</a>
+                    <button type="submit" form="newItemForm" class="modal-close waves-effect waves-green btn-flat">Add
+                        Item</button>
+                </div>
             </form>
-          </div>
-          <div class="card-content">
-            <span class="card-title"><b>{{item.item_name}}</b></span>
-            <p><b>Uploaded By:</b> {{item.owner_uid}}</p>
-            <p><b>Category:</b> {{item.category}}</p>
-            <p><b>Status:</b> {{item.status}}</p>
-            <hr>
-            <span><b>Description</b></span>
-            <br>
-            <p>{{item.description}}</p>
-          </div>
         </div>
-      </div>
+        {{/if}}
+
+        <div class="col s12">
+            <div class="card no-box-shadow">
+                <div class="card-image">
+                    <div class="img-fit listing-item-image"
+                        style="background-image: url('https://media.karousell.com/media/photos/products/2018/10/07/buy_1538918236_d4243b29.jpg');">
+                    </div>
+                    <form method="POST" action="/item/{{item.iid}}/like">
+                        {{#if liked}}
+                        <button type="submit" class="btn-floating btn-large halfway-fab waves-effect waves-red white"><i
+                                class="material-icons red-text text-darken-1">favorite</i></button>
+                        {{else}}
+                        <button type="submit" class="btn-floating btn-large halfway-fab waves-effect waves-red white"><i
+                                class="material-icons red-text text-darken-1">favorite_border</i></button>
+                        {{/if}}
+                    </form>
+                </div>
+                <div class="card-content">
+                    <span class="card-title"><b>{{item.item_name}}</b></span>
+                    <p><b>Uploaded By:</b> {{item.owner_uid}}</p>
+                    <p><b>Category:</b> {{item.category}}</p>
+                    <p><b>Status:</b> {{item.status}}</p>
+                    <hr>
+                    <span><b>Description</b></span>
+                    <br>
+                    <p>{{item.description}}</p>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
 
 </div>
 {{/inline}}

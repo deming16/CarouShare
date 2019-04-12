@@ -10,6 +10,7 @@
 .anim-slower { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
 
 .no-margin { margin: 0; }
+.no-box-shadow { box-shadow: none !important; }
 .link-normal { text-decoration: none; color: inherit; }
 
 .mt-0 { margin-top: 0 !important; }
@@ -93,6 +94,7 @@
 .pos-absolute { position: absolute; }
 .absolute-top { top: 0; }
 .absolute-fit { top: 0; left: 0; right: 0; bottom: 0; width: 100%; height: 100%; }
+.width-full { width: 100%; }
 
 .inline-display { display: inline-block; }
 .block-display { display: block; }
@@ -214,5 +216,8 @@ nav .brand-logo {
     width: 100%;
     padding-bottom: 60%;
     position: relative;
+}
+
+.waves-block .listing-item-image {
     z-index: -1;
 }
