@@ -1,4 +1,4 @@
-{{#> _base }}
+{{#> _base title=item.item_name}}
 {{#*inline "contents"}}
 <div class="container">
     <div class="row mb-0">
@@ -20,7 +20,8 @@
         </div>
         <!-- Modal Structure -->
         <div id="modal2" class="modal">
-            <form method="POST" action="/item/{{item.iid}}" enctype="multipart/form-data" class="col s12" id="newItemForm">
+            <form method="POST" action="/item/{{item.iid}}" enctype="multipart/form-data" class="col s12"
+                id="newItemForm">
                 <div class="modal-content">
                     <h4>Edit Item Information</h4>
                     <div class="row">

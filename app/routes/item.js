@@ -321,7 +321,7 @@ router.post('/:itemId/listing/:listingId/loan/:bidderId', async (req, res, next)
 router.get('/:itemId/review/', async (req, res, next) => {
     try {
         let query =
-            'select iid, rid, user_uid, R.time_created, sname, content from Items I inner join Reviews R on (R.item_iid = I.iid) inner join ReviewSections RS on (RS.review_rid = R.rid) where I.iid = $1 order by R.rid, R.time_created';
+            'select iid, item_name, rid, user_uid, R.time_created, sname, content from Items I inner join Reviews R on (R.item_iid = I.iid) inner join ReviewSections RS on (RS.review_rid = R.rid) where I.iid = $1 order by R.rid, R.time_created';
         let values = [req.params.itemId];
         const result = await db.query(query, values);
 
