@@ -28,7 +28,22 @@
                 <button type="submit" form="search-form" class="hide"></button>
             </div>
 
-            <div class="row">
+            <div class="flex-display flex-justify-center mb-2">
+                <div class="mr-4">
+                    <label>
+                        <input value="listing" class="with-gap" name="searchFor" type="radio" checked="checked" />
+                        <span>Listing</span>
+                    </label>
+                </div>
+                <div>
+                    <label>
+                        <input value="user" class="with-gap" name="searchFor" type="radio" />
+                        <span>User</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="row" id="search-options">
                 <div class="input-field col s12 m6 no-margin">
                     <select name="category" form="search-form">
                         <option value="0" selected>Category</option>
@@ -49,20 +64,19 @@
                 </div>
             </div>
 
-            <div class="flex-display flex-justify-center">
-                <div class="mr-4">
-                    <label>
-                        <input value="listing" class="with-gap" name="searchFor" type="radio" checked="checked" />
-                        <span>Listing</span>
-                    </label>
-                </div>
-                <div>
-                    <label>
-                        <input value="user" class="with-gap" name="searchFor" type="radio" />
-                        <span>User</span>
-                    </label>
-                </div>
-            </div>
+            <script>
+                (function () {
+                    var searchForm = document.getElementById('search-form');
+                    var searchOptions = document.getElementById('search-options');
+                    var choices = searchForm.searchFor;
+                    choices.forEach(function (choice) {
+                        choice.addEventListener('change', function () {
+                            var isUser = this.value === 'user' ? 'none' : '';
+                            searchOptions.style.display = isUser;
+                        });
+                    });
+                })();
+            </script>
         </form>
     </div>
     <div class="row pt-3 pb-3">

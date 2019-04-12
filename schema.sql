@@ -46,7 +46,7 @@ CREATE TABLE Follows (
 CREATE TABLE Items (
     iid                 SERIAL,
     owner_uid           VARCHAR(64) NOT NULL,
-    item_name          VARCHAR(64) NOT NULL,
+    item_name           VARCHAR(64) NOT NULL,
     category            VARCHAR(64) NOT NULL,
     status              VARCHAR(64),
     photo               VARCHAR(255),
