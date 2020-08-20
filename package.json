@@ -20,7 +20,7 @@
   },
   "homepage": "https://github.com/Ang-YC/cs2102-group-18#readme",
   "dependencies": {
-    "bcrypt": "^3.0.5",
+    "bcrypt": "^5.0.0",
     "connect-flash": "^0.1.1",
     "cookie-parser": "^1.4.4",
     "debug": "^4.1.1",
